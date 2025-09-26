@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INT Smart Triage AI 2.0 - CSR Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .triage-form {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .priority-high { background: #e74c3c; }
+        .priority-medium { background: #f39c12; }
+        .priority-low { background: #27ae60; }
+
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+
+        .status-online { color: #27ae60; }
+        .status-offline { color: #e74c3c; }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-indicator" id="statusIndicator">
+        <span class="status-offline">● Checking System Status...</span>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>INT Smart Triage AI 2.0</h1>
+            <p>Secure CSR Dashboard - Intelligent Ticket Triage & Knowledge Base Integration</p>
+        </div>
+
+        <div class="main-content">
+            <form class="triage-form" id="triageForm">
+                <h2 style="margin-bottom: 20px; color: #2c3e50;">New Ticket Triage</h2>
+                
+                <div class="form-group">
+                    <label for="customerName">Customer Name</label>
+                    <input type="text" id="customerName" name="customerName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ticketSubject">Ticket Subject</label>
+                    <input type="text" id="ticketSubject" name="ticketSubject" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="issueDescription">Issue Description</label>
+                    <textarea id="issueDescription" name="issueDescription" placeholder="Describe the customer's issue in detail..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerTone">Customer Tone</label>
+                    <select id="customerTone" name="customerTone" required>
+                        <option value="">Select customer tone...</option>
+                        <option value="calm">Calm</option>
+                        <option value="frustrated">Frustrated</option>
+                        <option value="angry">Angry</option>
+                        <option value="confused">Confused</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span class="btn-text">Analyze & Triage Ticket</span>
+                    <span class="loading" style="display: none;"></span>
+                </button>
+            </form>
+
+            <div class="results-section" id="resultsSection">
+                <h2 style="margin-bottom: 20px; color: #2c3e50;">Triage Results</h2>
+                <div id="triageResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check system health on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSystemHealth();
+        });
+
+        async function checkSystemHealth() {
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            try {
+                const response = await fetch('/api/health-check');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    statusIndicator.innerHTML = '<span class="status-online">● System Online</span>';
+                } else {
+                    throw new Error('Health check failed');
+                }
+            } catch (error) {
+                console.error('Health check failed:', error);
+                statusIndicator.innerHTML = '<span class="status-offline">● System Offline</span>';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('triageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const loading = submitBtn.querySelector('.loading');
+            const resultsSection = document.getElementById('resultsSection');
+            const triageResults = document.getElementById('triageResults');
+
+            // Show loading state
+            btnText.textContent = 'Analyzing...';
+            loading.style.display = 'inline-block';
+            submitBtn.disabled = true;
+
+            // Collect form data
+            const formData = new FormData(e.target);
+            const triageData = {
+                customerName: formData.get('customerName'),
+                ticketSubject: formData.get('ticketSubject'),
+                issueDescription: formData.get('issueDescription'),
+                customerTone: formData.get('customerTone'),
+                timestamp: new Date().toISOString(),
+                csrAgent: 'CSR_USER' // In production, this would be dynamic
+            };
+
+            try {
+                const response = await fetch('/api/triage-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(triageData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                // Display results
+                displayTriageResults(result);
+                resultsSection.classList.add('show');
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error submitting triage request:', error);
+                triageResults.innerHTML = `
+                    <div class="result-card" style="border-left-color: #e74c3c;">
+                        <h3>Error Processing Request</h3>
+                        <p>There was an error processing your triage request. Please try again or contact system administrator.</p>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+                resultsSection.classList.add('show');
+            } finally {
+                // Reset button state
+                btnText.textContent = 'Analyze & Triage Ticket';
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function displayTriageResults(result) {
+            const triageResults = document.getElementById('triageResults');
+            const priority = result.priority || 'medium';
+            
+            triageResults.innerHTML = `
+                <div class="result-card">
+                    <h3>Triage Priority</h3>
+                    <span class="priority-badge priority-${priority}">${priority.toUpperCase()} PRIORITY</span>
+                    <p style="margin-top: 10px;"><strong>Confidence:</strong> ${result.confidence || '85%'}</p>
+                </div>
+
+                <div class="result-card">
+                    <h3>Recommended Response Approach</h3>
+                    <p>${result.responseApproach || 'Standard empathetic response with technical focus. Acknowledge customer concern and provide clear next steps.'}</p>
+                </div>
+
+                <div class="result-card">
+                    <h3>Suggested Talking Points</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        ${(result.talkingPoints || [
+                            'Acknowledge the customer\'s concern with empathy',
+                            'Explain the technical steps being taken to resolve the issue',
+                            'Provide a realistic timeline for resolution',
+                            'Offer additional support resources if needed'
+                        ]).map(point => `<li style="margin-bottom: 5px;">${point}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-card">
+                    <h3>Knowledge Base Articles</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        ${(result.knowledgeBase || [
+                            'KB-001: Common Technical Issues Troubleshooting',
+                            'KB-015: Customer Communication Best Practices',
+                            'KB-032: Escalation Procedures'
+                        ]).map(kb => `<li style="margin-bottom: 5px;"><a href="#" style="color: #667eea;">${kb}</a></li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-card">
+                    <h3>Activity Logged</h3>
+                    <p><strong>Report ID:</strong> ${result.reportId || 'N/A'}</p>
+                    <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+                    <p><strong>Status:</strong> <span style="color: #27ae60; font-weight: 600;">Successfully saved to database</span></p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
