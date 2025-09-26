@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INT Smart Triage AI 2.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .status-indicator {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 INT Smart Triage AI</h1>
+            <p>Secure, AI-powered ticket triage for superior client success</p>
+        </div>
+        
+        <form id="triageForm">
+            <div class="form-group">
+                <label for="clientName">Client Name</label>
+                <input type="text" id="clientName" name="clientName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="ticketType">Ticket Type</label>
+                <select id="ticketType" name="ticketType" required>
+                    <option value="">Select ticket type...</option>
+                    <option value="technical">Technical Issue</option>
+                    <option value="billing">Billing Inquiry</option>
+                    <option value="feature">Feature Request</option>
+                    <option value="general">General Support</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Issue Description</label>
+                <textarea id="description" name="description" placeholder="Please describe the client's issue in detail..." required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-submit">🚀 Generate Triage Report</button>
+        </form>
+        
+        <div id="results" class="results">
+            <h3>Triage Results</h3>
+            <div id="triageOutput"></div>
+        </div>
+        
+        <div id="healthStatus" class="status-indicator">
+            Checking system health...
+        </div>
+    </div>
+
+    <script>
+        // Check system health on page load
+        async function checkHealth() {
+            try {
+                const response = await fetch('/api/health-check');
+                const healthDiv = document.getElementById('healthStatus');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    healthDiv.textContent = `System Status: ${data.status} - ${data.message}`;
+                    healthDiv.className = 'status-indicator status-success';
+                } else {
+                    throw new Error('Health check failed');
+                }
+            } catch (error) {
+                const healthDiv = document.getElementById('healthStatus');
+                healthDiv.textContent = 'System Status: Error - Service unavailable';
+                healthDiv.className = 'status-indicator status-error';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('triageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                clientName: formData.get('clientName'),
+                ticketType: formData.get('ticketType'),
+                description: formData.get('description')
+            };
+            
+            const resultsDiv = document.getElementById('results');
+            const outputDiv = document.getElementById('triageOutput');
+            
+            try {
+                const response = await fetch('/api/triage-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    outputDiv.innerHTML = `
+                        <div class="status-success">
+                            <h4>Triage Complete ✅</h4>
+                            <p><strong>Priority:</strong> ${result.priority}</p>
+                            <p><strong>Category:</strong> ${result.category}</p>
+                            <p><strong>Suggested Response:</strong> ${result.suggestedResponse}</p>
+                            <p><strong>Knowledge Base Articles:</strong> ${result.knowledgeBase.join(', ')}</p>
+                            <p><strong>Report ID:</strong> ${result.reportId}</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Triage processing failed');
+                }
+                
+                resultsDiv.style.display = 'block';
+                
+            } catch (error) {
+                outputDiv.innerHTML = `
+                    <div class="status-error">
+                        <h4>Error ❌</h4>
+                        <p>Failed to process triage request. Please try again.</p>
+                    </div>
+                `;
+                resultsDiv.style.display = 'block';
+            }
+        });
+
+        // Initialize health check
+        checkHealth();
+        
+        // Refresh health check every 30 seconds
+        setInterval(checkHealth, 30000);
+    </script>
+</body>
+</html>
