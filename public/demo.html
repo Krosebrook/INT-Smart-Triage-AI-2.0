@@ -266,9 +266,33 @@
 
         function generateMockResponse(payload) {
             const persona = payload.persona;
-            return `Dear ${payload.ticket.includes('Mr.') ? 'Mr.' : payload.ticket.includes('Ms.') ? 'Ms.' : 'Valued Customer'},\n\nThank you for contacting us regarding your ${payload.domain} inquiry. As a ${persona.role}, I understand your ${payload.domain} needs are important to you.\n\n${persona.communication_style === 'formal' ? 'We have reviewed your request and' : "I've looked into your issue and"} will provide you with the appropriate assistance.\n\nBest regards,\nINT Customer Success Team`;
+            const salutation = getSalutation(payload.ticket);
+            const body = getContentBody(payload.domain, persona);
+            const signature = getSignature();
+            return `${salutation}\n\n${body}\n\n${signature}`;
         }
 
+        function getSalutation(ticket) {
+            if (ticket.includes('Mr.')) {
+                return 'Dear Mr.';
+            } else if (ticket.includes('Ms.')) {
+                return 'Dear Ms.';
+            }
+            return 'Dear Valued Customer';
+        }
+
+        function getContentBody(domain, persona) {
+            const intro = `Thank you for contacting us regarding your ${domain} inquiry.`;
+            const roleStatement = `As a ${persona.role}, I understand your ${domain} needs are important to you.`;
+            const reviewStatement = persona.communication_style === 'formal'
+                ? 'We have reviewed your request and'
+                : "I've looked into your issue and";
+            return `${intro} ${roleStatement}\n\n${reviewStatement} will provide you with the appropriate assistance.`;
+        }
+
+        function getSignature() {
+            return 'Best regards,\nINT Customer Success Team';
+        }
         function findRelevantKBArticles(domain) {
             return knowledgeBase.filter(article => 
                 article.category === domain || article.tags.includes(domain)
