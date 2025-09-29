@@ -5,10 +5,10 @@
   "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
   "main": "index.js",
   "scripts": {
-    "dev": "echo 'Development server not yet configured'",
+    "dev": "node --watch index.js",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write .",
-    "test": "echo 'Tests not yet configured'",
+    "test": "node --test",
     "check": "npm run lint && npm run test"
   },
   "engines": {
