@@ -1,31 +1,30 @@
 {
   "name": "int-smart-triage-ai-2.0",
   "version": "1.0.0",
-  "type": "module",
   "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
   "main": "index.js",
   "scripts": {
-    "dev": "node --watch index.js",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write .",
-    "test": "node --test",
-    "check": "npm run lint && npm run test"
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "deploy": "vercel --prod",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engines": {
-    "node": ">=20"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.4.1"
   },
   "keywords": [
-    "ai",
     "triage",
-    "customer-success",
+    "ai",
+    "customer-support",
     "vercel",
     "supabase"
   ],
   "author": "INT Inc.",
-  "license": "UNLICENSED",
-  "private": true,
-  "devDependencies": {
-    "eslint": "^8.50.0",
-    "prettier": "^3.0.0"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

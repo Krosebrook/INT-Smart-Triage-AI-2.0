@@ -1,59 +1,100 @@
-# INT-Smart-Triage-AI-2.0
+# INT Smart Triage AI 2.0 🎯
 
-Secure, production-ready AI Triage Tool for INT Inc. Client Success. It instantly triages client tickets, provides CSRs with empathetic talking points, suggests Knowledge Base articles, and securely logs all activity to Supabase using Vercel Serverless Functions. This system ensures low response times, data persistence, and full security.
+**Secure, production-ready AI Triage Tool for INT Inc. Client Success**
 
-## Quickstart
+Instantly triages client tickets, provides CSRs with empathetic talking points, suggests Knowledge Base articles, and securely logs all activity to Supabase using Vercel Serverless Functions. This system ensures low response times, data persistence, and full security compliance.
 
-### Prerequisites
+## 🚀 Production Features
 
-- Node.js >= 20
-- pnpm (recommended package manager)
+- **🎯 Intelligent Ticket Triage**: AI-powered priority assignment with confidence scoring
+- **💬 Empathetic Response Guidelines**: Tone-aware talking points for improved customer relations
+- **📚 Knowledge Base Integration**: Contextual article suggestions based on issue analysis
+- **🔐 Enterprise Security**: Mandatory Row Level Security (RLS) with zero client-side database access
+- **📊 Complete Audit Trail**: Comprehensive logging with IP tracking and session management
+- **⚡ Serverless Architecture**: Vercel-hosted with automatic scaling and edge optimization
 
-### Installation
+## 🛡️ Security Architecture
 
-```bash
-# Clone the repository
-git clone https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0.git
-cd INT-Smart-Triage-AI-2.0
+- **Mandatory RLS Enforcement**: Database access restricted to server-side operations only
+- **Service Role Authentication**: Secure API-to-database communications
+- **Comprehensive Security Headers**: Protection against XSS, CSRF, and clickjacking
+- **Input Sanitization**: Full validation and sanitization of all user inputs
+- **Environment Variable Security**: All secrets managed through Vercel's encrypted storage
 
-# Install dependencies
-pnpm install
+## 🔧 Tech Stack
 
-# Run development server
-pnpm dev
-```
+- **Frontend**: Vanilla JavaScript with modern CSS Grid/Flexbox
+- **Backend**: Vercel Serverless Functions (Node.js)
+- **Database**: Supabase (PostgreSQL) with mandatory RLS
+- **Deployment**: Vercel with CI/CD integration
+- **Security**: Enterprise-grade with comprehensive audit logging
 
-## Available Scripts
-
-| Script        | Description                      |
-| ------------- | -------------------------------- |
-| `pnpm dev`    | Start the development server     |
-| `pnpm lint`   | Run ESLint to check code quality |
-| `pnpm format` | Format code with Prettier        |
-| `pnpm test`   | Run the test suite               |
-| `pnpm check`  | Run both linting and tests       |
-
-## Repository Structure
+## 📁 Project Structure
 
 ```
-INT-Smart-Triage-AI-2.0/
-├── .github/
-│   └── workflows/
-│       └── ci.yml          # GitHub Actions CI pipeline
-├── .eslintrc.cjs           # ESLint configuration
-├── .prettierrc             # Prettier configuration
-├── .gitignore              # Git ignore patterns
-├── index.js                # Main application entry point
-├── package.json            # Node.js project configuration
-├── pnpm-lock.yaml          # pnpm lockfile for reproducible installs
-└── README.md               # Project documentation
+├── index.html              # CSR Dashboard Interface
+├── package.json            # Dependencies and build configuration
+├── vercel.json            # Vercel deployment configuration
+├── api/
+│   ├── health-check.js    # System health and RLS verification
+│   └── triage-report.js   # Secure triage processing and logging
+├── supabase-setup.sql     # Database schema with RLS policies
+├── DEPLOYMENT.md          # Complete production deployment guide
+└── .gitignore            # Security-focused ignore patterns
 ```
 
-## CI/CD
+## 🚀 Quick Start
 
-This project uses GitHub Actions for continuous integration. The CI pipeline:
+1. **Deploy to Vercel**:
+   ```bash
+   git clone https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0.git
+   cd INT-Smart-Triage-AI-2.0
+   npm install
+   vercel --prod
+   ```
 
-- Runs on Node.js 20 with pnpm
-- Installs dependencies with `--frozen-lockfile`
-- Disables network access during testing for security
-- Runs linting and tests to ensure code quality
+2. **Configure Environment Variables**:
+   - `SUPABASE_URL`: Your Supabase project URL
+   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (NOT anon key)
+
+3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor
+
+4. **Verify Deployment**: Check `/api/health-check` endpoint returns 200 OK
+
+## 📋 API Endpoints
+
+### GET `/api/health-check`
+System health verification with RLS status confirmation
+
+### POST `/api/triage-report`
+Secure triage processing with database logging
+
+## 🔒 Security Compliance
+
+✅ **Row Level Security (RLS)** - Enforced with public access denied  
+✅ **Environment Variables** - Stored as Vercel secrets  
+✅ **HTTPS Enforcement** - All communications encrypted  
+✅ **Input Validation** - Comprehensive sanitization  
+✅ **Audit Logging** - Complete request tracking  
+✅ **Security Headers** - XSS, CSRF, and clickjacking protection  
+
+## 📖 Documentation
+
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
+- **[supabase-setup.sql](./supabase-setup.sql)** - Database schema and RLS configuration
+
+## 🎯 For CSR Teams
+
+This tool is designed specifically for Customer Success Representatives to:
+- Quickly assess ticket priority and urgency
+- Receive tone-appropriate response guidance
+- Access relevant Knowledge Base articles
+- Maintain complete audit compliance
+
+## 📞 Support
+
+For technical support or security questions, refer to the deployment documentation or contact the INT Inc. technical team.
+
+---
+
+**Built with ❤️ for INT Inc. Customer Success** | **Security-First Design** | **Production Ready**

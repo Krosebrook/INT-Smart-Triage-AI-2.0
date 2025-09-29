@@ -98,7 +98,8 @@ tmp
 .idea/
 *.swp
 *.swo
+*~
 
-# OS files
+# OS generated files
 .DS_Store
 Thumbs.db
