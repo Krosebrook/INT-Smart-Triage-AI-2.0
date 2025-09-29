@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "vercel dev",
     "build": "vercel build",
@@ -10,7 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.38.0"
+    "@supabase/supabase-js": "^2.38.0",
+    "@clerk/clerk-js": "^4.72.0"
   },
   "devDependencies": {
     "vercel": "^32.4.1"

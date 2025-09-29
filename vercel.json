@@ -23,6 +23,8 @@
   ],
   "env": {
     "SUPABASE_URL": "@supabase-url",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key"
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
+    "CLERK_PUBLISHABLE_KEY": "@clerk-publishable-key",
+    "CLERK_SECRET_KEY": "@clerk-secret-key"
   }
 }

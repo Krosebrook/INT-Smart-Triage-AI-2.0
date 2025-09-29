@@ -157,10 +157,40 @@
             border-radius: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             font-weight: 600;
+            z-index: 1000;
         }
 
         .status-online { color: #27ae60; }
         .status-offline { color: #e74c3c; }
+
+        .auth-section {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .auth-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(102, 126, 234, 0.3);
+        }
 
         .loading {
             display: inline-block;
@@ -178,6 +208,11 @@
     </style>
 </head>
 <body>
+    <div class="auth-section" id="authSection">
+        <span id="authStatus">● Initializing Authentication...</span>
+        <button class="auth-btn" id="authBtn" style="display: none;">Sign In</button>
+    </div>
+
     <div class="status-indicator" id="statusIndicator">
         <span class="status-offline">● Checking System Status...</span>
     </div>
@@ -232,11 +267,71 @@
         </div>
     </div>
 
+    <script src="./secure-auth.js"></script>
     <script>
-        // Check system health on page load
+        // Global authentication instance
+        let authInstance;
+        
+        // Check system health and initialize authentication on page load
         document.addEventListener('DOMContentLoaded', function() {
+            initializeAuthentication();
             checkSystemHealth();
         });
+        
+        // Initialize secure authentication
+        async function initializeAuthentication() {
+            const authStatus = document.getElementById('authStatus');
+            const authBtn = document.getElementById('authBtn');
+            
+            try {
+                authStatus.textContent = '● Initializing Authentication...';
+                
+                // Initialize secure authentication
+                authInstance = window.SecureClerkAuth;
+                await authInstance.initialize();
+                
+                // Set up auth state listener
+                document.addEventListener('authStateChanged', handleAuthStateChange);
+                
+                // Set up auth button click handler
+                authBtn.addEventListener('click', handleAuthButtonClick);
+                
+                authStatus.textContent = '● Authentication Ready';
+                authBtn.style.display = 'inline-block';
+                
+            } catch (error) {
+                console.error('Authentication initialization failed:', error);
+                authStatus.textContent = '● Authentication Error';
+            }
+        }
+        
+        // Handle authentication state changes
+        function handleAuthStateChange(event) {
+            const { user, isAuthenticated } = event.detail;
+            const authStatus = document.getElementById('authStatus');
+            const authBtn = document.getElementById('authBtn');
+            
+            if (isAuthenticated) {
+                authStatus.textContent = `● Welcome, ${user.firstName || 'User'}!`;
+                authBtn.textContent = 'Sign Out';
+            } else {
+                authStatus.textContent = '● Not Authenticated';
+                authBtn.textContent = 'Sign In';
+            }
+        }
+        
+        // Handle auth button clicks
+        async function handleAuthButtonClick() {
+            try {
+                if (authInstance.isAuthenticated()) {
+                    await authInstance.signOut();
+                } else {
+                    await authInstance.signIn();
+                }
+            } catch (error) {
+                console.error('Authentication action failed:', error);
+            }
+        }
 
         async function checkSystemHealth() {
             const statusIndicator = document.getElementById('statusIndicator');
@@ -283,13 +378,22 @@
             };
 
             try {
-                const response = await fetch('/api/triage-report', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(triageData)
-                });
+                // Use authenticated fetch if user is signed in
+                let response;
+                if (authInstance && authInstance.isAuthenticated()) {
+                    response = await authInstance.authenticatedFetch('/api/triage-report', {
+                        method: 'POST',
+                        body: JSON.stringify(triageData)
+                    });
+                } else {
+                    response = await fetch('/api/triage-report', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(triageData)
+                    });
+                }
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
