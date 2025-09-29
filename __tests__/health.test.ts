@@ -1,11 +1,11 @@
 /**
  * Simplified test suite for the health check API endpoint
  */
+import handler from '../api/health'
 
 describe('Health Check API', () => {
   // Simple smoke tests without complex mocking
   test('should export a function', () => {
-    const handler = require('../api/health').default
     expect(typeof handler).toBe('function')
   })
 
