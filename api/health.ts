@@ -140,15 +140,25 @@ async function checkGemini(abortController: AbortController): Promise<ServiceChe
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
     
     // Simple ping with minimal token usage
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: 'ping' }] }],
-      generationConfig: { maxOutputTokens: 1 }
-    })
-    
-    if (abortController.signal.aborted) {
-      throw new Error('Request timed out')
-    }
-    
+    const timeoutMs = 3000;
+    const timeoutPromise = new Promise((_, reject) => {
+      const timer = setTimeout(() => {
+        abortController.abort();
+        reject(new Error('Request timed out'));
+      }, timeoutMs);
+      abortController.signal.addEventListener('abort', () => {
+        clearTimeout(timer);
+        reject(new Error('Request aborted'));
+      });
+    });
+
+    const result = await Promise.race([
+      model.generateContent({
+        contents: [{ role: 'user', parts: [{ text: 'ping' }] }],
+        generationConfig: { maxOutputTokens: 1 }
+      }),
+      timeoutPromise
+    ]);
     return {
       status: 'up',
       response_time: Date.now() - startTime
