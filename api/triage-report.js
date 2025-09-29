@@ -279,9 +279,15 @@ export default async function handler(req, res) {
                     }
                 });
             } else {
+                // Trigger notification for new triage report
+                await triggerTriageNotification(sanitizedData, reportId, triageResults);
+                
                 throw insertError;
             }
         }
+
+        // Trigger notification for new triage report
+        await triggerTriageNotification(sanitizedData, reportId, triageResults);
 
         // Successful insert (should only happen if RLS is properly configured)
         return res.status(200).json({
@@ -311,5 +317,49 @@ export default async function handler(req, res) {
             // Don't expose internal error details in production
             details: process.env.NODE_ENV === 'development' ? error.message : 'Contact system administrator'
         });
+    }
+}
+
+async function triggerTriageNotification(triageData, reportId, triageResults) {
+    try {
+        // Create notification payload for new triage report
+        const notificationPayload = {
+            type: 'new_triage_report',
+            message: `New triage report created for ${triageData.customerName}: ${triageData.ticketSubject}`,
+            data: {
+                reportId: reportId,
+                customerName: triageData.customerName,
+                ticketSubject: triageData.ticketSubject,
+                priority: triageResults.priority,
+                confidence: triageResults.confidence,
+                csrAgent: triageData.csrAgent,
+                timestamp: new Date().toISOString()
+            },
+            targetUserId: triageData.csrAgent
+        };
+
+        // Make HTTP request to notifications endpoint to broadcast the notification
+        const notificationsUrl = process.env.VERCEL_URL ? 
+            `https://${process.env.VERCEL_URL}/api/notifications` :
+            `${process.env.HOST || 'http://localhost:3000'}/api/notifications`;
+
+        const response = await fetch(notificationsUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(notificationPayload)
+        });
+
+        if (!response.ok) {
+            console.warn('Failed to send triage notification:', response.status, response.statusText);
+        } else {
+            const result = await response.json();
+            console.log('Triage notification sent successfully:', result);
+        }
+
+    } catch (error) {
+        console.error('Failed to trigger triage notification:', error);
+        // Don't fail the triage report creation if notification fails
     }
 }

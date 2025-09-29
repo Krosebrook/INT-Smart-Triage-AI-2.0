@@ -9,6 +9,7 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 - **🎯 Intelligent Ticket Triage**: AI-powered priority assignment with confidence scoring
 - **💬 Empathetic Response Guidelines**: Tone-aware talking points for improved customer relations
 - **📚 Knowledge Base Integration**: Contextual article suggestions based on issue analysis
+- **🔔 Real-time Notifications**: WebSocket/SSE system for instant alerts on comments and reports
 - **🔐 Enterprise Security**: Mandatory Row Level Security (RLS) with zero client-side database access
 - **📊 Complete Audit Trail**: Comprehensive logging with IP tracking and session management
 - **⚡ Serverless Architecture**: Vercel-hosted with automatic scaling and edge optimization
@@ -69,6 +70,16 @@ System health verification with RLS status confirmation
 ### POST `/api/triage-report`
 Secure triage processing with database logging
 
+### GET/POST `/api/notifications`
+Real-time notification system using Server-Sent Events (SSE)
+- GET: Establishes SSE connection for real-time updates
+- POST: Broadcasts notifications to connected clients
+
+### GET/POST `/api/comments`  
+Comment system with automatic notification triggers
+- GET: Retrieves comments for specific ideas
+- POST: Creates new comments and triggers real-time notifications
+
 ## 🔒 Security Compliance
 
 ✅ **Row Level Security (RLS)** - Enforced with public access denied  
@@ -81,6 +92,7 @@ Secure triage processing with database logging
 ## 📖 Documentation
 
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
+- **[NOTIFICATIONS.md](./NOTIFICATIONS.md)** - Real-time notification system documentation  
 - **[supabase-setup.sql](./supabase-setup.sql)** - Database schema and RLS configuration
 
 ## 🎯 For CSR Teams
