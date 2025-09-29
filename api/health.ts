@@ -83,15 +83,16 @@ async function checkSupabase(abortController: AbortController): Promise<ServiceC
       .abortSignal(abortController.signal)
     
     // If the ping function doesn't exist, try a simple select
-    if (error && error.message.includes('function ping_health_check')) {
+    // Use error code '42883' for "function does not exist" (PostgreSQL)
+    if (error && error.code === '42883') {
       const { error: selectError } = await supabase
         .from('_supabase_health_check')
         .select('count(*)')
         .limit(1)
         .abortSignal(abortController.signal)
       
-      // This is expected to fail for non-existent table, which means connection works
-      if (selectError && !selectError.message.includes('does not exist')) {
+      // Use error code '42P01' for "table does not exist" (PostgreSQL)
+      if (selectError && selectError.code !== '42P01') {
         return {
           status: 'down',
           response_time: Date.now() - startTime,
