@@ -1,0 +1,30 @@
+{
+  "name": "int-smart-triage-ai-2.0",
+  "version": "1.0.0",
+  "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint lib/**/*.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+  },
+  "keywords": ["ai", "triage", "vercel", "typescript"],
+  "author": "INT Inc",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.8.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}
