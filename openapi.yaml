@@ -1,0 +1,849 @@
+openapi: 3.0.3
+info:
+  title: INT Smart Triage AI 2.0 API
+  description: |
+    **Secure, production-ready AI Triage Tool for INT Inc. Client Success**
+    
+    This API provides intelligent ticket triage capabilities, system health monitoring, 
+    and example endpoints for ideas and user management. The system ensures low response 
+    times, data persistence, and full security compliance with Row Level Security (RLS) 
+    enforcement.
+    
+    ## Key Features
+    - 🎯 **Intelligent Ticket Triage**: AI-powered priority assignment with confidence scoring
+    - 💬 **Empathetic Response Guidelines**: Tone-aware talking points for improved customer relations  
+    - 📚 **Knowledge Base Integration**: Contextual article suggestions based on issue analysis
+    - 🔐 **Enterprise Security**: Mandatory Row Level Security (RLS) with comprehensive audit trails
+    - ⚡ **Serverless Architecture**: Vercel-hosted with automatic scaling and edge optimization
+    
+    ## Benefits for Development & QA Teams
+    - **Interactive Documentation**: Use Swagger UI to test endpoints directly
+    - **Consistent API Contracts**: Standardized request/response schemas prevent integration issues
+    - **Automated Testing**: Generate test cases from OpenAPI specifications  
+    - **API Mocking**: Create mock servers for frontend development before backend completion
+    - **Code Generation**: Auto-generate client SDKs in multiple programming languages
+    - **Validation**: Automatic request/response validation against defined schemas
+  version: 1.0.0
+  contact:
+    name: INT Inc. Technical Team
+    url: https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://int-smart-triage-ai-2-0.vercel.app
+    description: Production server
+  - url: http://localhost:3000
+    description: Local development server
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /api/health-check:
+    get:
+      summary: System Health Check
+      description: |
+        Verifies system status and Supabase database connectivity with Row Level Security (RLS) enforcement.
+        Includes caching (10 seconds) and timeout protection (3 seconds) for reliable monitoring.
+        
+        **Purpose**: Essential for monitoring system availability, database connectivity, and security compliance.
+      tags:
+        - System Monitoring
+      responses:
+        '200':
+          description: System is healthy and operational
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                healthy:
+                  summary: All systems operational
+                  value:
+                    status: "healthy"
+                    timestamp: "2024-01-15T12:00:00.000Z"
+                    service: "INT Smart Triage AI 2.0"
+                    version: "1.0.0"
+                    environment: "production"
+                    checks:
+                      api: "healthy"
+                      database: "healthy" 
+                      rls: "enforced"
+                    security: "RLS properly enforced"
+                cached:
+                  summary: Cached response (within 10s)
+                  value:
+                    status: "healthy"
+                    timestamp: "2024-01-15T12:00:00.000Z"
+                    service: "INT Smart Triage AI 2.0"
+                    version: "1.0.0"
+                    environment: "production"
+                    checks:
+                      api: "healthy"
+                      database: "healthy"
+                      rls: "enforced"
+                    cached: true
+                    cacheAge: 5
+        '500':
+          description: System is unhealthy or experiencing issues
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthErrorResponse'
+              examples:
+                timeout:
+                  summary: Health check timeout
+                  value:
+                    status: "unhealthy"
+                    timestamp: "2024-01-15T12:00:00.000Z"
+                    service: "INT Smart Triage AI 2.0"
+                    version: "1.0.0"
+                    checks:
+                      api: "error"
+                      database: "timeout"
+                      rls: "unknown"
+                    error:
+                      message: "Health check timeout after 3 seconds"
+                      timestamp: "2024-01-15T12:00:00.000Z"
+
+  /api/triage-report:
+    post:
+      summary: Process Triage Request
+      description: |
+        Processes customer support tickets using AI-powered triage logic to determine priority,
+        generate empathetic response guidelines, and suggest relevant knowledge base articles.
+        All requests are securely logged to Supabase with comprehensive audit trails.
+        
+        **Purpose**: Core triage functionality that helps CSR teams respond effectively to customer issues
+        with appropriate priority handling and contextual guidance.
+      tags:
+        - Triage Processing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriageRequest'
+            examples:
+              frustrated_customer:
+                summary: Frustrated customer with login issue
+                value:
+                  customerName: "Sarah Johnson"
+                  ticketSubject: "Cannot access my account"
+                  issueDescription: "I've been trying to log into my account for the past hour and keep getting error messages. This is very frustrating as I need to access my files urgently."
+                  customerTone: "frustrated"
+                  csrAgent: "CSR_JANE_DOE"
+                  timestamp: "2024-01-15T12:00:00.000Z"
+              urgent_outage:
+                summary: Urgent system outage report
+                value:
+                  customerName: "Tech Solutions Inc"
+                  ticketSubject: "System completely down"
+                  issueDescription: "Our entire system crashed this morning and we can't access any of our data. This is critical for our business operations."
+                  customerTone: "urgent"
+                  csrAgent: "CSR_MIKE_SMITH"
+      responses:
+        '200':
+          description: Triage processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriageResponse'
+              examples:
+                successful_triage:
+                  summary: Successful triage with recommendations
+                  value:
+                    success: true
+                    reportId: "TR-1705316400000-A1B2"
+                    timestamp: "2024-01-15T12:00:00.000Z"
+                    priority: "high"
+                    confidence: "90%"
+                    responseApproach: "Empathetic response with clear action plan and frequent updates."
+                    talkingPoints:
+                      - "Acknowledge their frustration and validate their concerns"
+                      - "Provide clear timeline with milestone updates"
+                      - "Offer alternative solutions where possible"
+                      - "Ensure direct contact for follow-up"
+                    knowledgeBase:
+                      - "KB-AUTH-01: Authentication Issues Resolution"
+                      - "KB-001: General Troubleshooting Guide"
+                      - "KB-015: Customer Communication Best Practices"
+                    security:
+                      rlsEnforced: true
+                      auditLogged: true
+                      serverAuthorized: true
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_fields:
+                  summary: Missing required fields
+                  value:
+                    error: "Validation Error"
+                    message: "Missing required fields: customerName, ticketSubject, issueDescription, customerTone"
+                invalid_tone:
+                  summary: Invalid customer tone
+                  value:
+                    error: "Validation Error"  
+                    message: "Invalid customer tone. Must be one of: calm, frustrated, angry, confused, urgent"
+        '500':
+          description: Internal server error during processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriageErrorResponse'
+
+  # Example endpoints for ideas management (as requested)
+  /api/ideas:
+    post:
+      summary: Create New Idea
+      description: |
+        Creates a new idea in the system for tracking innovation and feature requests.
+        
+        **Purpose**: Allows users to submit new ideas for features, improvements, or innovations
+        that can be tracked and evaluated by the development team.
+      tags:
+        - Ideas Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdeaRequest'
+            examples:
+              feature_request:
+                summary: New feature idea
+                value:
+                  title: "AI-powered customer sentiment analysis"
+                  description: "Implement real-time sentiment analysis to automatically detect customer emotions and adjust response strategies accordingly"
+                  category: "feature"
+                  priority: "medium"
+                  submittedBy: "user123"
+                  tags: ["ai", "sentiment", "customer-service"]
+      responses:
+        '201':
+          description: Idea created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaResponse'
+              examples:
+                created_idea:
+                  summary: Successfully created idea
+                  value:
+                    success: true
+                    id: "idea_1705316400000"
+                    title: "AI-powered customer sentiment analysis"
+                    status: "pending"
+                    createdAt: "2024-01-15T12:00:00.000Z"
+                    submittedBy: "user123"
+        '400':
+          description: Invalid idea data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/ideas/{id}:
+    get:
+      summary: Get Idea by ID
+      description: |
+        Retrieves a specific idea by its unique identifier including all details,
+        status, and any associated comments or evaluations.
+        
+        **Purpose**: Allows viewing of individual ideas for detailed review, status tracking,
+        and collaboration around specific innovation proposals.
+      tags:
+        - Ideas Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier for the idea
+          schema:
+            type: string
+            pattern: '^idea_[0-9]+$'
+          example: "idea_1705316400000"
+      responses:
+        '200':
+          description: Idea found and returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaDetailResponse'
+              examples:
+                detailed_idea:
+                  summary: Complete idea details
+                  value:
+                    id: "idea_1705316400000"
+                    title: "AI-powered customer sentiment analysis"
+                    description: "Implement real-time sentiment analysis to automatically detect customer emotions and adjust response strategies accordingly"
+                    category: "feature"
+                    priority: "medium"
+                    status: "under_review"
+                    submittedBy: "user123"
+                    assignedTo: "dev_team_ai"
+                    tags: ["ai", "sentiment", "customer-service"]
+                    votes: 15
+                    comments: 3
+                    createdAt: "2024-01-15T12:00:00.000Z"
+                    updatedAt: "2024-01-16T10:30:00.000Z"
+                    estimatedEffort: "high"
+                    businessValue: "high"
+        '404':
+          description: Idea not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  summary: Idea does not exist
+                  value:
+                    error: "Not Found"
+                    message: "Idea with id 'idea_1705316400000' not found"
+
+  # Example endpoint for user management (as requested)  
+  /api/users/me:
+    get:
+      summary: Get Current User Profile
+      description: |
+        Retrieves the profile information for the currently authenticated user,
+        including preferences, role, and account details.
+        
+        **Purpose**: Provides user profile data for personalization, access control,
+        and user experience customization within the application.
+      tags:
+        - User Management
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+              examples:
+                csr_user:
+                  summary: Customer Service Representative profile
+                  value:
+                    id: "user_csr_001"
+                    username: "jane.doe"
+                    email: "jane.doe@intinc.com"
+                    fullName: "Jane Doe"
+                    role: "customer_service_representative"
+                    department: "Customer Success"
+                    permissions:
+                      - "triage:create"
+                      - "triage:read"
+                      - "knowledge_base:read"
+                    preferences:
+                      theme: "light"
+                      notifications: true
+                      defaultPriority: "medium"
+                    stats:
+                      ticketsProcessed: 247
+                      averageResponseTime: "2.3 hours"
+                      customerSatisfactionScore: 4.7
+                    createdAt: "2023-06-15T09:00:00.000Z"
+                    lastLogin: "2024-01-15T08:30:00.000Z"
+                admin_user:
+                  summary: Administrative user profile
+                  value:
+                    id: "user_admin_001"
+                    username: "admin.user"
+                    email: "admin@intinc.com"
+                    fullName: "System Administrator"
+                    role: "administrator"
+                    department: "IT"
+                    permissions:
+                      - "triage:*"
+                      - "users:*"
+                      - "system:*"
+                      - "ideas:*"
+                    preferences:
+                      theme: "dark"
+                      notifications: true
+                      defaultPriority: "high"
+                    stats:
+                      systemUptime: "99.97%"
+                      usersManaged: 45
+                      systemAlerts: 2
+                    createdAt: "2023-01-01T00:00:00.000Z"
+                    lastLogin: "2024-01-15T12:00:00.000Z"
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Missing or invalid authentication
+                  value:
+                    error: "Unauthorized"
+                    message: "Valid authentication required to access user profile"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (in production environment)
+
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+        - service
+        - version
+        - checks
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+          description: Overall system health status
+          example: "healthy"
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of health check
+          example: "2024-01-15T12:00:00.000Z"
+        service:
+          type: string
+          description: Service name identifier
+          example: "INT Smart Triage AI 2.0"
+        version:
+          type: string
+          description: Current service version
+          example: "1.0.0"
+        environment:
+          type: string
+          description: Deployment environment
+          enum: [development, staging, production]
+          example: "production"
+        checks:
+          type: object
+          required:
+            - api
+            - database
+            - rls
+          properties:
+            api:
+              type: string
+              enum: [healthy, error]
+              description: API service status
+            database:
+              type: string
+              enum: [healthy, unhealthy, timeout, table_missing]
+              description: Database connectivity status
+            rls:
+              type: string
+              enum: [enforced, disabled, unknown, table_missing]
+              description: Row Level Security enforcement status
+        security:
+          type: string
+          description: Security status message
+          example: "RLS properly enforced"
+        warnings:
+          type: array
+          items:
+            type: string
+          description: Any system warnings
+        cached:
+          type: boolean
+          description: Whether response is from cache
+        cacheAge:
+          type: integer
+          description: Age of cached data in seconds
+          minimum: 0
+          maximum: 10
+
+    HealthErrorResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+        - service
+        - version
+        - checks
+        - error
+      properties:
+        status:
+          type: string
+          enum: [unhealthy]
+          example: "unhealthy"
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+          example: "INT Smart Triage AI 2.0"
+        version:
+          type: string
+          example: "1.0.0"
+        checks:
+          type: object
+          properties:
+            api:
+              type: string
+              enum: [error, timeout]
+            database:
+              type: string
+              enum: [error, timeout, unreachable]
+            rls:
+              type: string
+              enum: [unknown, error]
+        error:
+          type: object
+          required:
+            - message
+            - timestamp
+          properties:
+            message:
+              type: string
+              example: "Health check timeout after 3 seconds"
+            timestamp:
+              type: string
+              format: date-time
+
+    TriageRequest:
+      type: object
+      required:
+        - customerName
+        - ticketSubject
+        - issueDescription
+        - customerTone
+      properties:
+        customerName:
+          type: string
+          maxLength: 100
+          description: Customer's name (truncated to 100 characters)
+          example: "Sarah Johnson"
+        ticketSubject:
+          type: string
+          maxLength: 200
+          description: Brief subject line for the ticket
+          example: "Cannot access my account"
+        issueDescription:
+          type: string
+          maxLength: 2000
+          description: Detailed description of the customer's issue
+          example: "I've been trying to log into my account for the past hour and keep getting error messages. This is very frustrating as I need to access my files urgently."
+        customerTone:
+          type: string
+          enum: [calm, frustrated, angry, confused, urgent]
+          description: Customer's emotional state/tone
+          example: "frustrated"
+        csrAgent:
+          type: string
+          maxLength: 50
+          description: CSR agent identifier (optional, defaults to 'SYSTEM')
+          example: "CSR_JANE_DOE"
+        timestamp:
+          type: string
+          format: date-time
+          description: Request timestamp (optional, defaults to current time)
+
+    TriageResponse:
+      type: object
+      required:
+        - success
+        - reportId
+        - timestamp
+        - priority
+        - confidence
+        - responseApproach
+        - talkingPoints
+        - knowledgeBase
+        - security
+      properties:
+        success:
+          type: boolean
+          description: Indicates successful processing
+          example: true
+        reportId:
+          type: string
+          pattern: '^TR-[0-9]+-[A-F0-9]+$'
+          description: Unique report identifier
+          example: "TR-1705316400000-A1B2"
+        timestamp:
+          type: string
+          format: date-time
+          description: Processing timestamp
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+          description: AI-determined ticket priority
+          example: "high"
+        confidence:
+          type: string
+          pattern: '^[0-9]+%$'
+          description: AI confidence score as percentage
+          example: "90%"
+        responseApproach:
+          type: string
+          description: Recommended approach for customer communication
+          example: "Empathetic response with clear action plan and frequent updates."
+        talkingPoints:
+          type: array
+          items:
+            type: string
+          description: Suggested talking points for CSR
+          example: 
+            - "Acknowledge their frustration and validate their concerns"
+            - "Provide clear timeline with milestone updates"
+        knowledgeBase:
+          type: array
+          items:
+            type: string
+          description: Relevant knowledge base articles
+          example:
+            - "KB-AUTH-01: Authentication Issues Resolution"
+            - "KB-001: General Troubleshooting Guide"
+        security:
+          type: object
+          required:
+            - rlsEnforced
+            - auditLogged
+          properties:
+            rlsEnforced:
+              type: boolean
+              description: Whether Row Level Security is enforced
+            auditLogged:
+              type: boolean
+              description: Whether request is logged for audit
+            serverAuthorized:
+              type: boolean
+              description: Server-side authorization used
+            directInsert:
+              type: boolean
+              description: Direct database insert (without RLS override)
+
+    TriageErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - reportId
+        - timestamp
+      properties:
+        error:
+          type: string
+          example: "Internal Server Error"
+        message:
+          type: string
+          example: "Failed to process triage request"
+        reportId:
+          type: string
+          nullable: true
+          description: Will be null on error
+        timestamp:
+          type: string
+          format: date-time
+        details:
+          type: string
+          description: Detailed error information (only in development)
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error category
+          example: "Validation Error"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Missing required fields: customerName, ticketSubject, issueDescription, customerTone"
+
+    # Example schemas for ideas management
+    IdeaRequest:
+      type: object
+      required:
+        - title
+        - description
+        - category
+      properties:
+        title:
+          type: string
+          maxLength: 200
+          description: Brief title for the idea
+          example: "AI-powered customer sentiment analysis"
+        description:
+          type: string
+          maxLength: 2000
+          description: Detailed description of the idea
+          example: "Implement real-time sentiment analysis to automatically detect customer emotions and adjust response strategies accordingly"
+        category:
+          type: string
+          enum: [feature, improvement, bug_fix, enhancement]
+          description: Category of the idea
+          example: "feature"
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+          description: Suggested priority level
+          default: "medium"
+        submittedBy:
+          type: string
+          description: User ID of the person submitting the idea
+          example: "user123"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags for categorization and search
+          example: ["ai", "sentiment", "customer-service"]
+
+    IdeaResponse:
+      type: object
+      required:
+        - success
+        - id
+        - title
+        - status
+        - createdAt
+        - submittedBy
+      properties:
+        success:
+          type: boolean
+          example: true
+        id:
+          type: string
+          pattern: '^idea_[0-9]+$'
+          example: "idea_1705316400000"
+        title:
+          type: string
+          example: "AI-powered customer sentiment analysis"
+        status:
+          type: string
+          enum: [pending, under_review, approved, rejected, implemented]
+          default: "pending"
+        createdAt:
+          type: string
+          format: date-time
+        submittedBy:
+          type: string
+          example: "user123"
+
+    IdeaDetailResponse:
+      allOf:
+        - $ref: '#/components/schemas/IdeaResponse'
+        - type: object
+          properties:
+            description:
+              type: string
+            category:
+              type: string
+              enum: [feature, improvement, bug_fix, enhancement]
+            priority:
+              type: string
+              enum: [low, medium, high, critical]
+            assignedTo:
+              type: string
+              nullable: true
+            tags:
+              type: array
+              items:
+                type: string
+            votes:
+              type: integer
+              minimum: 0
+            comments:
+              type: integer
+              minimum: 0
+            updatedAt:
+              type: string
+              format: date-time
+            estimatedEffort:
+              type: string
+              enum: [low, medium, high]
+              nullable: true
+            businessValue:
+              type: string
+              enum: [low, medium, high]
+              nullable: true
+
+    # Example schema for user management
+    UserProfileResponse:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - fullName
+        - role
+        - permissions
+        - createdAt
+      properties:
+        id:
+          type: string
+          pattern: '^user_[a-z_0-9]+$'
+          example: "user_csr_001"
+        username:
+          type: string
+          example: "jane.doe"
+        email:
+          type: string
+          format: email
+          example: "jane.doe@intinc.com"
+        fullName:
+          type: string
+          example: "Jane Doe"
+        role:
+          type: string
+          enum: [administrator, customer_service_representative, manager, analyst]
+          example: "customer_service_representative"
+        department:
+          type: string
+          example: "Customer Success"
+        permissions:
+          type: array
+          items:
+            type: string
+          description: List of permissions for the user
+          example: ["triage:create", "triage:read", "knowledge_base:read"]
+        preferences:
+          type: object
+          properties:
+            theme:
+              type: string
+              enum: [light, dark]
+            notifications:
+              type: boolean
+            defaultPriority:
+              type: string
+              enum: [low, medium, high]
+        stats:
+          type: object
+          description: User-specific statistics (varies by role)
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        lastLogin:
+          type: string
+          format: date-time
+
+tags:
+  - name: System Monitoring
+    description: Health checks and system status monitoring
+  - name: Triage Processing  
+    description: AI-powered ticket triage and processing
+  - name: Ideas Management
+    description: Feature requests and innovation tracking (example endpoints)
+  - name: User Management
+    description: User profiles and authentication (example endpoints)
