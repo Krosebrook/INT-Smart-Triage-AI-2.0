@@ -1,0 +1,33 @@
+Category,Severity,Owner,Response_SLA,Resolution_SLA,Update_Cadence,Escalation_Path,Notes
+Technical,Critical,Senior Technical Team,15 minutes,4 hours,Every 30 minutes,CTO → VP Engineering,System outages and critical bugs
+Technical,High,Technical Support Team,2 hours,24 hours,Every 4 hours,Technical Lead → Senior Technical Team,Major functionality issues
+Technical,Medium,Technical Support Team,8 hours,72 hours,Daily,Technical Support Lead,Minor bugs with workarounds
+Technical,Low,Junior Technical Support,24 hours,7 days,Every 48 hours,Technical Support Team,Enhancement requests and questions
+Billing,Critical,Billing Manager,15 minutes,4 hours,Every 30 minutes,Finance Director → CFO,Payment processing failures
+Billing,High,Senior Billing Specialist,2 hours,24 hours,Every 4 hours,Billing Manager,Invoice disputes and payment issues
+Billing,Medium,Billing Support Team,8 hours,72 hours,Daily,Senior Billing Specialist,Account adjustments and changes
+Billing,Low,Billing Support Team,24 hours,7 days,Every 48 hours,Billing Manager,General billing inquiries
+Product,Critical,Product Manager,15 minutes,4 hours,Every 30 minutes,VP Product → CPO,Product unavailability or data loss
+Product,High,Senior Product Specialist,2 hours,24 hours,Every 4 hours,Product Manager,Major feature issues affecting workflow
+Product,Medium,Product Support Team,8 hours,72 hours,Daily,Senior Product Specialist,Feature requests and usability issues
+Product,Low,Product Support Team,24 hours,7 days,Every 48 hours,Product Manager,General product questions and training
+General,Critical,Customer Success Manager,15 minutes,4 hours,Every 30 minutes,Director Customer Success → CCO,Account cancellations or executive complaints
+General,High,Senior CSR,2 hours,24 hours,Every 4 hours,Customer Success Manager,Contract issues or significant concerns
+General,Medium,CSR Team,8 hours,72 hours,Daily,Senior CSR,General account questions and requests
+General,Low,CSR Team,24 hours,7 days,Every 48 hours,CSR Team Lead,Documentation requests and basic inquiries
+Security,Critical,Security Team Lead,15 minutes,2 hours,Every 15 minutes,CISO → CTO,Data breaches or security incidents
+Security,High,Security Analyst,1 hour,12 hours,Every 2 hours,Security Team Lead,Suspected security issues or vulnerabilities
+Security,Medium,Security Support,4 hours,48 hours,Every 8 hours,Security Analyst,Security configuration questions
+Security,Low,CSR Team,24 hours,7 days,Every 48 hours,Security Support,General security inquiries
+Integration,Critical,Integration Architect,15 minutes,4 hours,Every 30 minutes,VP Engineering,API or integration complete failure
+Integration,High,Senior Integration Specialist,2 hours,24 hours,Every 4 hours,Integration Architect,Major integration issues
+Integration,Medium,Integration Support Team,8 hours,72 hours,Daily,Senior Integration Specialist,Integration configuration issues
+Integration,Low,Integration Support Team,24 hours,7 days,Every 48 hours,Integration Team Lead,Integration questions and documentation
+Data,Critical,Data Team Lead,15 minutes,4 hours,Every 30 minutes,Chief Data Officer,Data corruption or loss
+Data,High,Senior Data Analyst,2 hours,24 hours,Every 4 hours,Data Team Lead,Data processing or reporting issues
+Data,Medium,Data Support Team,8 hours,72 hours,Daily,Senior Data Analyst,Data export or formatting questions
+Data,Low,Data Support Team,24 hours,7 days,Every 48 hours,Data Team Lead,General data inquiries
+VIP_Customer,Critical,Customer Success Director,10 minutes,2 hours,Every 15 minutes,CCO → CEO,Any critical issue for VIP customers
+VIP_Customer,High,Customer Success Manager,1 hour,8 hours,Every 2 hours,Customer Success Director,High priority VIP customer issues
+VIP_Customer,Medium,Senior CSR,4 hours,24 hours,Every 4 hours,Customer Success Manager,Standard VIP customer requests
+VIP_Customer,Low,Senior CSR,8 hours,48 hours,Every 8 hours,Customer Success Manager,General VIP customer inquiries
