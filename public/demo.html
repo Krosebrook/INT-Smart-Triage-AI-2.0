@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INT Smart Triage AI 2.0 - Demo</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS CDN with fallback -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./styles.css">
     <style>
-        /* Custom styles for JSON formatting */
+        /* Enhanced custom styles */
         .json-output {
             background-color: #1f2937;
             color: #e5e7eb;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             white-space: pre-wrap;
             word-wrap: break-word;
+        }
+        
+        /* Override Tailwind when it loads */
+        .tw-loaded .fallback-hidden {
+            display: none;
         }
     </style>
 </head>
@@ -120,7 +126,7 @@
         // Load personas from /data/personas.json
         async function loadPersonas() {
             try {
-                const response = await fetch('/data/personas.json');
+                const response = await fetch('./data/personas.json');
                 if (!response.ok) throw new Error('Failed to load personas');
                 
                 personas = await response.json();
@@ -145,7 +151,7 @@
         // Load knowledge base from /data/kb.json
         async function loadKnowledgeBase() {
             try {
-                const response = await fetch('../data/kb.json');
+                const response = await fetch('./data/kb.json');
                 if (!response.ok) throw new Error('Failed to load knowledge base');
                 
                 knowledgeBase = await response.json();
@@ -156,30 +162,47 @@
             }
         }
 
-        // Submit triage request
+        // Submit triage request with enhanced validation
         async function submitTriage() {
             const domain = document.getElementById('domain').value;
             const personaId = document.getElementById('persona').value;
             const ticket = document.getElementById('ticket').value;
 
-            // Validation
+            // Clear previous errors
+            hideError();
+
+            // Enhanced validation
             if (!domain) {
-                showError('Please select a domain');
+                showError('⚠️ Please select a domain to categorize your request');
                 return;
             }
             if (!personaId) {
-                showError('Please select a persona');
+                showError('⚠️ Please select a persona to handle your request');
                 return;
             }
             if (!ticket.trim()) {
-                showError('Please enter ticket content');
+                showError('⚠️ Please enter ticket content describing your issue');
                 return;
             }
+            
+            // Validate ticket length
+            const trimmedTicket = ticket.trim();
+            if (trimmedTicket.length < 10) {
+                showError('⚠️ Ticket content too short. Please provide more details (minimum 10 characters)');
+                return;
+            }
+            if (trimmedTicket.length > 5000) {
+                showError('⚠️ Ticket content too long. Please keep it under 5000 characters');
+                return;
+            }
+
+            // Sanitize input
+            const sanitizedTicket = sanitizeInput(trimmedTicket);
 
             // Find selected persona
             const selectedPersona = personas.find(p => p.id === personaId);
             if (!selectedPersona) {
-                showError('Invalid persona selection');
+                showError('❌ Invalid persona selection. Please refresh and try again');
                 return;
             }
 
@@ -189,9 +212,14 @@
             try {
                 // Prepare request payload
                 const payload = {
-                    ticket: ticket.trim(),
+                    ticket: sanitizedTicket,
                     domain: domain,
-                    persona: selectedPersona
+                    persona: selectedPersona,
+                    metadata: {
+                        timestamp: new Date().toISOString(),
+                        user_agent: navigator.userAgent,
+                        ticket_length: sanitizedTicket.length
+                    }
                 };
 
                 // POST to triage API
@@ -210,39 +238,107 @@
             }
         }
 
-        // Mock API function for demonstration
+        // Enhanced Mock API function for demonstration
         // In production, this would be: fetch('/api/triage', { method: 'POST', ... })
-        const MOCK_API_DELAY_MS = 2000;
+        const MOCK_API_DELAY_MS = 1500; // Reduced delay for better UX
         async function mockTriageAPI(payload) {
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, MOCK_API_DELAY_MS));
+            // Simulate realistic API delay with some variance
+            const delay = MOCK_API_DELAY_MS + Math.floor(Math.random() * 1000);
+            await new Promise(resolve => setTimeout(resolve, delay));
             
-            // Mock response based on input
+            // Simulate occasional network issues (5% chance)
+            if (Math.random() < 0.05) {
+                throw new Error('Network timeout - please try again');
+            }
+            
+            // Enhanced mock response based on input
             const mockResponse = {
                 success: true,
                 ticket_id: `TKT-${Date.now()}`,
                 priority: determineMockPriority(payload.ticket),
                 category: determineMockCategory(payload.domain),
                 sentiment: determineMockSentiment(payload.ticket),
+                confidence_score: calculateConfidenceScore(payload.ticket),
                 suggested_response: generateMockResponse(payload),
                 kb_articles: findRelevantKBArticles(payload.domain),
                 persona_context: payload.persona,
                 processing_time_ms: Math.floor(Math.random() * 500) + 100,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                metadata: payload.metadata,
+                analytics: {
+                    word_count: payload.ticket.split(/\s+/).length,
+                    urgency_indicators: countUrgencyIndicators(payload.ticket),
+                    sentiment_keywords: extractSentimentKeywords(payload.ticket),
+                    estimated_resolution_time: estimateResolutionTime(payload.ticket, payload.domain)
+                }
             };
             
             return mockResponse;
         }
 
-        // Helper functions for mock API
+        // Enhanced helper functions for mock API
         function determineMockPriority(ticket) {
             const lowercaseTicket = ticket.toLowerCase();
-            if (lowercaseTicket.includes('urgent') || lowercaseTicket.includes('critical') || lowercaseTicket.includes('down')) {
-                return 'high';
-            } else if (lowercaseTicket.includes('issue') || lowercaseTicket.includes('problem')) {
-                return 'medium';
-            }
+            let priorityScore = 0;
+            
+            // High priority indicators
+            const highPriorityTerms = ['urgent', 'critical', 'down', 'outage', 'emergency', 'asap', 'immediately', 'production', 'broken', 'not working'];
+            const mediumPriorityTerms = ['issue', 'problem', 'error', 'bug', 'help', 'support', 'question'];
+            
+            highPriorityTerms.forEach(term => {
+                if (lowercaseTicket.includes(term)) priorityScore += 3;
+            });
+            
+            mediumPriorityTerms.forEach(term => {
+                if (lowercaseTicket.includes(term)) priorityScore += 1;
+            });
+            
+            if (priorityScore >= 3) return 'high';
+            else if (priorityScore >= 1) return 'medium';
             return 'low';
+        }
+
+        function calculateConfidenceScore(ticket) {
+            // Simple confidence calculation based on ticket length and specificity
+            const wordCount = ticket.split(/\s+/).length;
+            let confidence = Math.min(wordCount / 50, 1) * 0.7; // Up to 70% for length
+            
+            // Add confidence for specific terms
+            const specificTerms = ['error code', 'version', 'steps to reproduce', 'expected', 'actual'];
+            specificTerms.forEach(term => {
+                if (ticket.toLowerCase().includes(term)) confidence += 0.1;
+            });
+            
+            return Math.min(Math.round(confidence * 100), 95); // Cap at 95%
+        }
+
+        function countUrgencyIndicators(ticket) {
+            const urgencyTerms = ['urgent', 'critical', 'asap', 'emergency', 'immediately', 'now'];
+            return urgencyTerms.filter(term => ticket.toLowerCase().includes(term)).length;
+        }
+
+        function extractSentimentKeywords(ticket) {
+            const positiveTerms = ['thank', 'please', 'appreciate', 'great', 'good', 'excellent'];
+            const negativeTerms = ['frustrated', 'angry', 'terrible', 'awful', 'horrible', 'hate'];
+            
+            const positive = positiveTerms.filter(term => ticket.toLowerCase().includes(term));
+            const negative = negativeTerms.filter(term => ticket.toLowerCase().includes(term));
+            
+            return { positive, negative };
+        }
+
+        function estimateResolutionTime(ticket, domain) {
+            const baseTime = {
+                'technical': 4, // hours
+                'billing': 2,
+                'general': 1,
+                'sales': 0.5
+            };
+            
+            const complexity = ticket.split(/\s+/).length > 100 ? 1.5 : 1;
+            const urgency = ticket.toLowerCase().includes('urgent') ? 0.5 : 1;
+            
+            return Math.round((baseTime[domain] || 2) * complexity * urgency * 100) / 100;
         }
 
         function determineMockCategory(domain) {
@@ -317,13 +413,91 @@
         function showResults(data) {
             document.getElementById('results').classList.remove('hidden');
             document.getElementById('error').classList.add('hidden');
-            document.getElementById('resultsContent').textContent = JSON.stringify(data, null, 2);
+            
+            // Create structured results display
+            const resultsContent = document.getElementById('resultsContent');
+            resultsContent.innerHTML = createStructuredResults(data);
+        }
+
+        function createStructuredResults(data) {
+            const priorityClass = `priority-${data.priority}`;
+            const sentiment = data.sentiment || 'neutral';
+            const sentimentIcon = sentiment === 'positive' ? '😊' : sentiment === 'negative' ? '😟' : '😐';
+            
+            return `
+                <div class="results-content">
+                    <div class="result-item">
+                        <h3>Ticket Summary</h3>
+                        <p><strong>ID:</strong> ${data.ticket_id}</p>
+                        <p><strong>Priority:</strong> <span class="${priorityClass}">${data.priority.toUpperCase()}</span></p>
+                        <p><strong>Category:</strong> ${data.category}</p>
+                        <p><strong>Sentiment:</strong> ${sentimentIcon} ${data.sentiment}</p>
+                        <p><strong>Processing Time:</strong> ${data.processing_time_ms}ms</p>
+                    </div>
+                    
+                    ${data.suggested_response ? `
+                    <div class="result-item">
+                        <h3>Suggested Response</h3>
+                        <div class="suggested-response">
+                            <h4>📝 Draft Response for ${data.persona_context?.name}</h4>
+                            <pre>${data.suggested_response}</pre>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    ${data.kb_articles && data.kb_articles.length > 0 ? `
+                    <div class="result-item">
+                        <h3>📚 Relevant Knowledge Base Articles</h3>
+                        <div class="kb-articles">
+                            ${data.kb_articles.map(article => `
+                                <div class="kb-article">
+                                    <h4>${article.title}</h4>
+                                    <p>${article.summary}</p>
+                                    <p><strong>Popularity:</strong> ${article.popularity_score}/100 | <strong>Helpful votes:</strong> ${article.helpful_votes}</p>
+                                    <a href="${article.url}" target="_blank">View Article →</a>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="result-item">
+                        <h3>🔍 Raw Data</h3>
+                        <div class="json-output">${JSON.stringify(data, null, 2)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Input sanitization function
+        function sanitizeInput(input) {
+            if (typeof input !== 'string') return '';
+            
+            // Remove potential XSS patterns while preserving normal text
+            return input
+                .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+                .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Remove iframe tags
+                .replace(/javascript:/gi, '') // Remove javascript: URLs
+                .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '') // Remove event handlers
+                .trim();
+        }
+
+        // Enhanced error handling
+        function hideError() {
+            document.getElementById('error').classList.add('hidden');
         }
 
         function showError(message) {
+            console.error('UI Error:', message);
             document.getElementById('error').classList.remove('hidden');
             document.getElementById('results').classList.add('hidden');
-            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorMessage').innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 1.2rem; margin-right: 0.5rem;">❌</span>
+                    <strong>Error</strong>
+                </div>
+                ${message}
+            `;
         }
     </script>
 </body>
