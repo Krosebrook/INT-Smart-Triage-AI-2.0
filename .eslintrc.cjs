@@ -11,8 +11,22 @@ module.exports = {
   },
   rules: {
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    'no-console': 'warn',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     'prefer-const': 'error',
     'no-var': 'error',
   },
+  overrides: [
+    {
+      files: ['index.js'],
+      rules: {
+        'no-console': 'off', // Allow console in main entry point
+      },
+    },
+    {
+      files: ['test/**/*.js'],
+      rules: {
+        'no-console': 'off', // Allow console in test files
+      },
+    },
+  ],
 };
