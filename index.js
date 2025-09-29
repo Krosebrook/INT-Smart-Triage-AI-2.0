@@ -7,6 +7,6 @@ export default function main() {
 
 // Make the function executable when run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  console.log('INT Smart Triage AI 2.0 - Ready for development');
+  console.log('INT Smart Triage AI 2.0 - Ready for development (watching for changes)');
   console.log(main());
 }
