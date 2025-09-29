@@ -212,9 +212,10 @@
 
         // Mock API function for demonstration
         // In production, this would be: fetch('/api/triage', { method: 'POST', ... })
+        const MOCK_API_DELAY_MS = 2000;
         async function mockTriageAPI(payload) {
             // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, MOCK_API_DELAY_MS));
             
             // Mock response based on input
             const mockResponse = {
