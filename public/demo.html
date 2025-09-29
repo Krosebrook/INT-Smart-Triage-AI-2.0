@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INT Smart Triage AI 2.0 - Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .demo-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007acc;
+            background-color: #f8f9fa;
+        }
+        .api-test {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007acc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>INT Smart Triage AI 2.0</h1>
+            <p>Secure, production-ready AI Triage Tool for INT Inc. Client Success</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎯 Features</h2>
+            <ul>
+                <li>Instantly triages client tickets</li>
+                <li>Provides CSRs with empathetic talking points</li>
+                <li>Suggests Knowledge Base articles</li>
+                <li>Securely logs all activity to Supabase</li>
+                <li>Uses Vercel Serverless Functions for optimal performance</li>
+            </ul>
+        </div>
+
+        <div class="api-test">
+            <h3>🧪 API Tests</h3>
+            <p>Test the serverless API functionality:</p>
+            <button onclick="testHealthAPI()">Test Health API</button>
+            <button onclick="testTriageAPI()">Test Triage AI</button>
+            <div id="apiResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 Deployment Status</h2>
+            <p>✅ Static files served from /public/**</p>
+            <p>✅ Serverless functions available at /api/**</p>
+            <p>✅ Node 20 runtime configured</p>
+            <p>✅ Optimized cache headers for performance</p>
+        </div>
+    </div>
+
+    <script>
+        async function testHealthAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Testing Health API...';
+            
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                resultDiv.textContent = `✅ Health API Response: ${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.textContent = `❌ Health API Error: ${error.message}`;
+            }
+        }
+
+        async function testTriageAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Testing Triage AI API...';
+            
+            try {
+                const testTicket = {
+                    ticket: "I'm having trouble accessing my account and need urgent help with password reset",
+                    priority: "high",
+                    category: "account"
+                };
+
+                const response = await fetch('/api/triage', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testTicket)
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = `✅ Triage AI Response: ${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.textContent = `❌ Triage AI Error: ${error.message}`;
+            }
+        }
+
+        // Legacy function for backward compatibility
+        async function testAPI() {
+            await testHealthAPI();
+        }
+    </script>
+</body>
+</html>
