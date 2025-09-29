@@ -1,0 +1,25 @@
+# Temporary files
+/tmp/
+*.tmp
+*.log
+
+# Node modules (if added later)
+node_modules/
+npm-debug.log*
+
+# Build artifacts (if added later)
+dist/
+build/
+.env
+.env.local
+.env.production
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

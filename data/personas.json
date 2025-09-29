@@ -1,0 +1,82 @@
+[
+  {
+    "id": "tech_support_lead",
+    "name": "Alex Thompson",
+    "role": "Technical Support Lead",
+    "department": "Technical Support",
+    "experience_level": "senior",
+    "communication_style": "technical",
+    "specialties": ["system_integration", "api_troubleshooting", "database_issues"],
+    "tone_preference": "professional_helpful",
+    "escalation_threshold": "high",
+    "response_templates": {
+      "greeting": "Thank you for contacting technical support.",
+      "investigation": "I'm investigating this technical issue and will provide a resolution.",
+      "resolution": "I've identified the solution to your technical problem."
+    }
+  },
+  {
+    "id": "billing_specialist",
+    "name": "Sarah Chen",
+    "role": "Billing Specialist",
+    "department": "Finance",
+    "experience_level": "intermediate",
+    "communication_style": "empathetic",
+    "specialties": ["payment_processing", "account_management", "subscription_billing"],
+    "tone_preference": "understanding_supportive",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Hello! I'm here to help with your billing inquiry.",
+      "investigation": "Let me review your account details to resolve this billing matter.",
+      "resolution": "I've updated your account and resolved the billing issue."
+    }
+  },
+  {
+    "id": "general_support",
+    "name": "Mike Rodriguez",
+    "role": "Customer Success Representative",
+    "department": "Customer Success",
+    "experience_level": "intermediate",
+    "communication_style": "friendly",
+    "specialties": ["general_inquiries", "account_setup", "feature_guidance"],
+    "tone_preference": "warm_professional",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Hi there! I'm excited to help you today.",
+      "investigation": "I'm looking into this for you and will have an answer shortly.",
+      "resolution": "Great news! I've got this sorted out for you."
+    }
+  },
+  {
+    "id": "sales_consultant",
+    "name": "Jennifer Walsh",
+    "role": "Senior Sales Consultant",
+    "department": "Sales",
+    "experience_level": "senior",
+    "communication_style": "consultative",
+    "specialties": ["product_demos", "pricing_discussions", "solution_architecture"],
+    "tone_preference": "confident_consultative",
+    "escalation_threshold": "low",
+    "response_templates": {
+      "greeting": "Thank you for your interest in our solutions.",
+      "investigation": "Let me understand your requirements to recommend the best solution.",
+      "resolution": "Based on your needs, I recommend our premium package."
+    }
+  },
+  {
+    "id": "enterprise_support",
+    "name": "Robert Kim",
+    "role": "Enterprise Support Manager",
+    "department": "Enterprise Services",
+    "experience_level": "expert",
+    "communication_style": "formal",
+    "specialties": ["enterprise_integrations", "sla_management", "custom_solutions"],
+    "tone_preference": "executive_level",
+    "escalation_threshold": "low",
+    "response_templates": {
+      "greeting": "Good day. I will personally ensure your enterprise needs are addressed.",
+      "investigation": "I am coordinating with our technical teams to provide a comprehensive solution.",
+      "resolution": "We have implemented a strategic solution for your enterprise requirements."
+    }
+  }
+]
