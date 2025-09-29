@@ -37,12 +37,72 @@ CREATE INDEX IF NOT EXISTS idx_reports_created_at ON reports(created_at);
 CREATE INDEX IF NOT EXISTS idx_reports_priority ON reports(priority);
 CREATE INDEX IF NOT EXISTS idx_reports_csr_agent ON reports(csr_agent);
 
+-- Create notifications table for real-time notification system
+CREATE TABLE IF NOT EXISTS notifications (
+    id BIGSERIAL PRIMARY KEY,
+    notification_id VARCHAR(50) UNIQUE NOT NULL,
+    
+    -- Notification content
+    type VARCHAR(50) NOT NULL,
+    message TEXT NOT NULL,
+    data JSONB DEFAULT '{}',
+    
+    -- Targeting
+    target_user_id VARCHAR(100),
+    broadcast_count INTEGER DEFAULT 0,
+    
+    -- Metadata
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create indexes for notifications
+CREATE INDEX IF NOT EXISTS idx_notifications_notification_id ON notifications(notification_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications(created_at);
+CREATE INDEX IF NOT EXISTS idx_notifications_type ON notifications(type);
+CREATE INDEX IF NOT EXISTS idx_notifications_target_user_id ON notifications(target_user_id);
+
+-- Create comments table to simulate the idea commenting system
+CREATE TABLE IF NOT EXISTS comments (
+    id BIGSERIAL PRIMARY KEY,
+    comment_id VARCHAR(50) UNIQUE NOT NULL,
+    
+    -- Comment content
+    idea_id VARCHAR(50) NOT NULL,
+    user_id VARCHAR(100) NOT NULL,
+    comment_text TEXT NOT NULL,
+    
+    -- Metadata
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create indexes for comments
+CREATE INDEX IF NOT EXISTS idx_comments_comment_id ON comments(comment_id);
+CREATE INDEX IF NOT EXISTS idx_comments_idea_id ON comments(idea_id);
+CREATE INDEX IF NOT EXISTS idx_comments_user_id ON comments(user_id);
+CREATE INDEX IF NOT EXISTS idx_comments_created_at ON comments(created_at);
+
 -- MANDATORY: Enable Row Level Security (RLS)
 ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
 
 -- CRITICAL SECURITY REQUIREMENT: Set default DENY ALL policy for public role
 -- This ensures NO client-side access to the database
 CREATE POLICY "Deny all public access" ON reports
+    FOR ALL 
+    TO public
+    USING (false)
+    WITH CHECK (false);
+
+CREATE POLICY "Deny all public access" ON notifications
+    FOR ALL 
+    TO public
+    USING (false)
+    WITH CHECK (false);
+
+CREATE POLICY "Deny all public access" ON comments
     FOR ALL 
     TO public
     USING (false)
