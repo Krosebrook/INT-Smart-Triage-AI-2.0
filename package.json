@@ -1,0 +1,30 @@
+{
+  "name": "int-smart-triage-ai-2.0",
+  "version": "1.0.0",
+  "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "deploy": "vercel --prod",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.4.1"
+  },
+  "keywords": [
+    "triage",
+    "ai",
+    "customer-support",
+    "vercel",
+    "supabase"
+  ],
+  "author": "INT Inc.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
