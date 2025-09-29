@@ -52,17 +52,4 @@ build/
 # Temporary files
 tmp/
 temp/
-
-# Database files (if any local SQLite files)
-*.sqlite
-*.sqlite3
-*.db
-
-# Security keys and certificates
-*.pem
-*.key
-*.crt
-
-# Backup files
-*.bak
-*.backup
+.tmp/
