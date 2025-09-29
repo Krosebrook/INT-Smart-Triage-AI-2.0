@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "vercel dev",
+    "dev": "node server.js",
+    "start": "node server.js",
     "build": "vercel build"
   },
   "keywords": ["ai", "triage", "customer-support", "vercel", "serverless"],
