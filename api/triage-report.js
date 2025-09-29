@@ -1,10 +1,13 @@
 /**
  * Triage Report API Endpoint
  * Processes triage requests and securely logs to Supabase with RLS enforcement
+ * Enhanced with centralized error handling and structured logging
  */
 
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { generateRequestId, createContextLogger, logRequest, logResponse } from '../lib/logger.js';
+import { handleApiError, APIError, ErrorTypes, ValidationHelpers } from '../lib/errorHandler.js';
 
 // Initialize Supabase client with service role for secure server-side operations
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -126,32 +129,45 @@ function processTriageRequest(ticketData) {
 }
 
 export default async function handler(req, res) {
-    // Set comprehensive security headers
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-    res.setHeader('Content-Security-Policy', 'default-src \'self\'');
-    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-    // Only allow POST requests
-    if (req.method !== 'POST') {
-        return res.status(405).json({
-            error: 'Method Not Allowed',
-            message: 'Only POST requests are allowed'
-        });
-    }
-
-    // Verify Supabase configuration
-    if (!supabase) {
-        console.error('Supabase not configured - missing environment variables');
-        return res.status(500).json({
-            error: 'Service Configuration Error',
-            message: 'Database service not properly configured'
-        });
-    }
+    // Generate request ID for correlation
+    const requestId = generateRequestId();
+    req.requestId = requestId;
+    
+    // Create context logger
+    const contextLogger = createContextLogger(requestId, null, '/api/triage-report');
+    
+    // Log incoming request
+    logRequest(contextLogger, req);
+    
+    // Record start time for response time tracking
+    const startTime = Date.now();
 
     try {
+        // Set comprehensive security headers
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.setHeader('X-Frame-Options', 'DENY');
+        res.setHeader('X-XSS-Protection', '1; mode=block');
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+        res.setHeader('Content-Security-Policy', 'default-src \'self\'');
+        res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+        // Only allow POST requests
+        if (req.method !== 'POST') {
+            throw new APIError(
+                ErrorTypes.VALIDATION_ERROR,
+                'Only POST requests are allowed',
+                { allowedMethods: ['POST'] }
+            );
+        }
+
+        // Verify Supabase configuration
+        if (!supabase) {
+            contextLogger.error('Supabase not configured - missing environment variables');
+            throw new APIError(
+                ErrorTypes.EXTERNAL_SERVICE_ERROR,
+                'Database service not properly configured'
+            );
+        }
         // Validate request body
         const {
             customerName,
@@ -162,13 +178,10 @@ export default async function handler(req, res) {
             csrAgent
         } = req.body;
 
-        // Input validation
-        if (!customerName || !ticketSubject || !issueDescription || !customerTone) {
-            return res.status(400).json({
-                error: 'Validation Error',
-                message: 'Missing required fields: customerName, ticketSubject, issueDescription, customerTone'
-            });
-        }
+        // Input validation using ValidationHelpers
+        ValidationHelpers.validateRequiredFields(req.body, [
+            'customerName', 'ticketSubject', 'issueDescription', 'customerTone'
+        ]);
 
         // Sanitize inputs (basic sanitization)
         const sanitizedData = {
@@ -182,26 +195,41 @@ export default async function handler(req, res) {
 
         // Validate customer tone
         const validTones = ['calm', 'frustrated', 'angry', 'confused', 'urgent'];
-        if (!validTones.includes(sanitizedData.customerTone)) {
-            return res.status(400).json({
-                error: 'Validation Error',
-                message: 'Invalid customer tone. Must be one of: calm, frustrated, angry, confused, urgent'
-            });
-        }
+        ValidationHelpers.validateFieldOptions(
+            sanitizedData.customerTone, 
+            validTones, 
+            'customer tone'
+        );
+
+        contextLogger.debug('Request validation completed', {
+            customerName: sanitizedData.customerName,
+            ticketSubject: sanitizedData.ticketSubject,
+            customerTone: sanitizedData.customerTone
+        });
 
         // Process triage request using AI logic
         const triageResults = processTriageRequest(sanitizedData);
 
         // Validate LLM JSON response structure as required
         if (!triageResults || typeof triageResults !== 'object') {
-            throw new Error('Invalid triage results structure');
+            throw new APIError(
+                ErrorTypes.INTERNAL_SERVER_ERROR,
+                'Invalid triage results structure',
+                null,
+                new Error('AI processing returned invalid structure')
+            );
         }
         
         // Ensure required JSON fields are valid
         const requiredFields = ['priority', 'confidence', 'responseApproach', 'talkingPoints', 'knowledgeBase'];
         for (const field of requiredFields) {
             if (!triageResults[field]) {
-                throw new Error(`Missing or invalid field in LLM response: ${field}`);
+                throw new APIError(
+                    ErrorTypes.INTERNAL_SERVER_ERROR,
+                    `Missing or invalid field in AI response: ${field}`,
+                    { missingField: field },
+                    new Error(`AI processing missing field: ${field}`)
+                );
             }
         }
 
@@ -250,7 +278,7 @@ export default async function handler(req, res) {
                 insertError.code === '42501') {
                 
                 // This is actually good - it means RLS is working!
-                console.log('RLS policy correctly blocking insert - using service role override');
+                contextLogger.info('RLS policy correctly blocking insert - using service role override');
                 
                 // Use service role with RLS bypass for legitimate server operations
                 const { data: serviceInsert, error: serviceError } = await supabase
@@ -260,11 +288,26 @@ export default async function handler(req, res) {
                     .single();
 
                 if (serviceError) {
-                    throw serviceError;
+                    throw new APIError(
+                        ErrorTypes.DATABASE_ERROR,
+                        'Failed to save triage report to database',
+                        null,
+                        serviceError
+                    );
                 }
 
+                const responseTime = Date.now() - startTime;
+                logResponse(contextLogger, res, 200, responseTime);
+                
+                contextLogger.info('Triage request processed successfully', {
+                    reportId: serviceInsert.report_id,
+                    priority: triageResults.priority,
+                    responseTime: `${responseTime}ms`
+                });
+
                 return res.status(200).json({
-                    success: true,
+                    status: 'success',
+                    requestId,
                     reportId: serviceInsert.report_id,
                     timestamp: serviceInsert.created_at,
                     priority: triageResults.priority,
@@ -279,13 +322,28 @@ export default async function handler(req, res) {
                     }
                 });
             } else {
-                throw insertError;
+                throw new APIError(
+                    ErrorTypes.DATABASE_ERROR,
+                    'Database insert failed',
+                    null,
+                    insertError
+                );
             }
         }
 
         // Successful insert (should only happen if RLS is properly configured)
+        const responseTime = Date.now() - startTime;
+        logResponse(contextLogger, res, 200, responseTime);
+        
+        contextLogger.info('Triage request processed successfully via direct insert', {
+            reportId: insertResult.report_id,
+            priority: triageResults.priority,
+            responseTime: `${responseTime}ms`
+        });
+
         return res.status(200).json({
-            success: true,
+            status: 'success',
+            requestId,
             reportId: insertResult.report_id,
             timestamp: insertResult.created_at,
             priority: triageResults.priority,
@@ -301,15 +359,9 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error('Triage report processing error:', error);
+        const responseTime = Date.now() - startTime;
+        logResponse(contextLogger, res, error.statusCode || 500, responseTime);
         
-        return res.status(500).json({
-            error: 'Internal Server Error',
-            message: 'Failed to process triage request',
-            reportId: null,
-            timestamp: new Date().toISOString(),
-            // Don't expose internal error details in production
-            details: process.env.NODE_ENV === 'development' ? error.message : 'Contact system administrator'
-        });
+        return handleApiError(error, req, res, contextLogger, requestId);
     }
 }

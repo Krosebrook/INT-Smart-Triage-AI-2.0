@@ -1,9 +1,12 @@
 /**
  * Health Check API Endpoint
  * Verifies system status and Supabase connectivity
+ * Enhanced with centralized error handling and structured logging
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { generateRequestId, createContextLogger, logRequest, logResponse } from '../lib/logger.js';
+import { handleApiError, APIError, ErrorTypes } from '../lib/errorHandler.js';
 
 // Initialize Supabase client with service role for admin operations
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -23,35 +26,61 @@ if (supabaseUrl && supabaseServiceKey) {
 }
 
 export default async function handler(req, res) {
-    // Set security headers
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-
-    // Only allow GET requests
-    if (req.method !== 'GET') {
-        return res.status(405).json({
-            error: 'Method Not Allowed',
-            message: 'Only GET requests are allowed'
-        });
-    }
-
-    // Check cache first (10s cache as required)
-    const now = Date.now();
-    if (healthCheckCache.data && (now - healthCheckCache.timestamp) < CACHE_DURATION) {
-        return res.status(200).json({
-            ...healthCheckCache.data,
-            cached: true,
-            cacheAge: Math.floor((now - healthCheckCache.timestamp) / 1000)
-        });
-    }
+    // Generate request ID for correlation
+    const requestId = generateRequestId();
+    req.requestId = requestId;
+    
+    // Create context logger
+    const contextLogger = createContextLogger(requestId, null, '/api/health-check');
+    
+    // Log incoming request
+    logRequest(contextLogger, req);
+    
+    // Record start time for response time tracking
+    const startTime = Date.now();
 
     try {
+        // Set security headers
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.setHeader('X-Frame-Options', 'DENY');
+        res.setHeader('X-XSS-Protection', '1; mode=block');
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+
+        // Only allow GET requests
+        if (req.method !== 'GET') {
+            throw new APIError(
+                ErrorTypes.VALIDATION_ERROR,
+                'Only GET requests are allowed',
+                { allowedMethods: ['GET'] }
+            );
+        }
+
+        // Check cache first (10s cache as required)
+        const now = Date.now();
+        if (healthCheckCache.data && (now - healthCheckCache.timestamp) < CACHE_DURATION) {
+            const responseTime = Date.now() - startTime;
+            logResponse(contextLogger, res, 200, responseTime);
+            
+            contextLogger.debug('Health check served from cache', {
+                cacheAge: Math.floor((now - healthCheckCache.timestamp) / 1000),
+                responseTime: `${responseTime}ms`
+            });
+
+            return res.status(200).json({
+                ...healthCheckCache.data,
+                requestId,
+                cached: true,
+                cacheAge: Math.floor((now - healthCheckCache.timestamp) / 1000)
+            });
+        }
+
         // Create promise with 3s timeout as required
         const healthCheck = new Promise(async (resolve, reject) => {
             const timeout = setTimeout(() => {
-                reject(new Error('Health check timeout after 3 seconds'));
+                reject(new APIError(
+                    ErrorTypes.EXTERNAL_SERVICE_ERROR,
+                    'Health check timeout after 3 seconds'
+                ));
             }, 3000);
 
             try {
@@ -66,36 +95,29 @@ export default async function handler(req, res) {
 
         const healthData = await healthCheck;
         
+        const responseTime = Date.now() - startTime;
+        logResponse(contextLogger, res, 200, responseTime);
+        
         // Cache successful results for 10s as required
         healthCheckCache = {
-            data: healthData,
+            data: { ...healthData, requestId },
             timestamp: now
         };
 
-        return res.status(200).json(healthData);
+        contextLogger.info('Health check completed successfully', {
+            status: healthData.status,
+            databaseStatus: healthData.checks.database,
+            rlsStatus: healthData.checks.rls,
+            responseTime: `${responseTime}ms`
+        });
+
+        return res.status(200).json({ ...healthData, requestId });
 
     } catch (error) {
-        console.error('Health check error:', error);
+        const responseTime = Date.now() - startTime;
+        logResponse(contextLogger, res, error.statusCode || 500, responseTime);
         
-        const errorResponse = {
-            status: 'unhealthy',
-            timestamp: new Date().toISOString(),
-            service: 'INT Smart Triage AI 2.0',
-            version: '1.0.0',
-            checks: {
-                api: 'error',
-                database: 'timeout',
-                rls: 'unknown'
-            },
-            error: {
-                message: error.message.includes('timeout') ? 
-                    'Health check timeout after 3 seconds' : 
-                    'Internal server error during health check',
-                timestamp: new Date().toISOString()
-            }
-        };
-
-        return res.status(500).json(errorResponse);
+        return handleApiError(error, req, res, contextLogger, requestId);
     }
 }
 
@@ -170,3 +192,4 @@ async function performHealthCheck() {
         }
 
         return healthData;
+}
