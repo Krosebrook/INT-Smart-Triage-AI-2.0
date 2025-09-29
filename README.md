@@ -38,6 +38,15 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 ├── api/
 │   ├── health-check.js    # System health and RLS verification
 │   └── triage-report.js   # Secure triage processing and logging
+├── lib/
+│   ├── errorHandler.js    # Centralized error handling and validation
+│   └── logger.js          # Structured logging with Winston
+├── test/
+│   ├── index.test.js           # Basic application tests
+│   ├── test-error-handling.js  # Error handling module tests
+│   └── test-api-integration.js # API endpoint integration tests
+├── docs/
+│   └── ERROR_HANDLING_AND_LOGGING.md # Comprehensive error handling documentation
 ├── supabase-setup.sql     # Database schema with RLS policies
 ├── DEPLOYMENT.md          # Complete production deployment guide
 └── .gitignore            # Security-focused ignore patterns
@@ -66,8 +75,76 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 ### GET `/api/health-check`
 System health verification with RLS status confirmation
 
+**Response Format:**
+```json
+{
+  "status": "healthy",
+  "requestId": "uuid-v4",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "service": "INT Smart Triage AI 2.0",
+  "version": "1.0.0",
+  "checks": {
+    "api": "healthy",
+    "database": "healthy", 
+    "rls": "enabled"
+  }
+}
+```
+
 ### POST `/api/triage-report`
 Secure triage processing with database logging
+
+**Request Body:**
+```json
+{
+  "customerName": "John Doe",
+  "ticketSubject": "Account Issue", 
+  "issueDescription": "Cannot access account features",
+  "customerTone": "frustrated",
+  "csrAgent": "Agent001"
+}
+```
+
+**Response Format:**
+```json
+{
+  "status": "success",
+  "requestId": "uuid-v4",
+  "reportId": "report-123",
+  "priority": "high",
+  "confidence": "85%",
+  "responseApproach": "Empathetic response...",
+  "talkingPoints": ["..."],
+  "knowledgeBase": ["KB-001"]
+}
+```
+
+## 🛡️ Enterprise Error Handling & Logging
+
+### Centralized Error Handling
+- **Standardized Error Responses**: Consistent JSON error format across all endpoints
+- **Error Type Classification**: Validation, authentication, database, and server errors
+- **Security-First Design**: Sensitive information never exposed to clients
+- **Request Correlation**: Unique request IDs for tracking across system boundaries
+
+### Structured Logging
+- **Winston-Based Logging**: Professional logging with multiple output formats
+- **Request/Response Logging**: Complete audit trail with timing information
+- **Critical Error Alerting**: 5xx errors logged with full context for investigation
+- **Log Levels**: Info, warn, error, debug with appropriate filtering by environment
+
+### Error Response Format
+```json
+{
+  "status": "error",
+  "message": "User-friendly error message",
+  "requestId": "uuid-v4-correlation-id",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "details": "Additional context (development only)"
+}
+```
+
+**📚 Documentation**: See `docs/ERROR_HANDLING_AND_LOGGING.md` for complete implementation details.
 
 ## 🔒 Security Compliance
 
