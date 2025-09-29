@@ -17,15 +17,27 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['index.js'],
+      files: ['index.js', 'dev-server.js'],
       rules: {
-        'no-console': 'off', // Allow console in main entry point
+        'no-console': 'off', // Allow console in main entry points and dev tools
       },
     },
     {
       files: ['test/**/*.js'],
       rules: {
         'no-console': 'off', // Allow console in test files
+      },
+    },
+    {
+      files: ['public/js/**/*.js'],
+      rules: {
+        'no-console': 'warn', // Allow console in frontend with warnings
+      },
+    },
+    {
+      files: ['src/**/*.js'],
+      rules: {
+        'no-console': 'warn', // Allow console in source files with warnings
       },
     },
   ],
