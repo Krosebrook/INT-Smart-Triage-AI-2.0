@@ -145,7 +145,7 @@
         // Load knowledge base from /data/kb.json
         async function loadKnowledgeBase() {
             try {
-                const response = await fetch('../data/kb.json');
+                const response = await fetch('/data/kb.json');
                 if (!response.ok) throw new Error('Failed to load knowledge base');
                 
                 knowledgeBase = await response.json();
@@ -298,7 +298,8 @@
         function findRelevantKBArticles(domain) {
             return knowledgeBase.filter(article => 
                 article.category === domain || article.tags.includes(domain)
-            ).slice(0, MAX_KB_ARTICLES); // Return top N relevant articles
+            ).sort((a, b) => b.popularity_score - a.popularity_score) // Sort by popularity (highest first)
+            .slice(0, MAX_KB_ARTICLES); // Return top N relevant articles
         }
 
         // UI Helper Functions
@@ -306,12 +307,18 @@
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('results').classList.add('hidden');
             document.getElementById('error').classList.add('hidden');
-            document.getElementById('submitBtn').disabled = true;
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            submitBtn.classList.remove('hover:bg-blue-700');
         }
 
         function hideLoading() {
             document.getElementById('loading').classList.add('hidden');
-            document.getElementById('submitBtn').disabled = false;
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            submitBtn.classList.add('hover:bg-blue-700');
         }
 
         function showResults(data) {
