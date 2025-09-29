@@ -44,13 +44,19 @@ Configure these as **Vercel Environment Variables** (NOT in code):
 # Add environment variables via Vercel Dashboard or CLI
 vercel env add SUPABASE_URL
 vercel env add SUPABASE_SERVICE_ROLE_KEY
+vercel env add CLERK_PUBLISHABLE_KEY
+vercel env add CLERK_SECRET_KEY
 ```
 
 **Values to configure:**
 - `SUPABASE_URL`: Your Supabase project URL (e.g., `https://xxxxx.supabase.co`)
 - `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase service role key (NOT the anon key!)
+- `CLERK_PUBLISHABLE_KEY`: Your Clerk publishable key (e.g., `pk_test_xxxxx`)  
+- `CLERK_SECRET_KEY`: Your Clerk secret key (e.g., `sk_test_xxxxx`)
 
-⚠️ **Critical Security Note**: Never use the `anon` key in production. Always use the `service_role` key for server-side operations with RLS bypass capabilities.
+⚠️ **Critical Security Notes**: 
+- Never use the `anon` key in production. Always use the `service_role` key for server-side operations with RLS bypass capabilities.
+- **Clerk publishableKey is dynamically fetched from server** to prevent client-side exposure (security vulnerability prevention).
 
 ### 3. Supabase Database Setup
 
@@ -82,6 +88,27 @@ SELECT * FROM pg_policies WHERE tablename = 'reports';
 - Policy names: "Deny all public access", "Allow service role access"
 
 ### 4. Functional Testing
+
+#### Authentication Config Endpoint
+```bash
+curl -X GET https://your-app.vercel.app/api/auth-config
+```
+
+**Expected Response (200 OK):**
+```json
+{
+  "success": true,
+  "publishableKey": "pk_test_xxxxx",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "service": "INT Smart Triage AI 2.0",
+  "authProvider": "Clerk",
+  "security": {
+    "serverProvided": true,
+    "environmentManaged": true,
+    "clientSafe": true
+  }
+}
+```
 
 #### Health Check Endpoint
 ```bash
@@ -141,10 +168,12 @@ curl -X POST https://your-app.vercel.app/api/triage-report \
 - [ ] **Public Access Denied**: Default policy blocks all public access
 - [ ] **Service Role Access**: API can write to database using service role
 - [ ] **Environment Variables**: Secrets configured in Vercel (not in code)
+- [ ] **Clerk Authentication**: Keys managed server-side, not hardcoded in client
 - [ ] **HTTPS Enforced**: All communications encrypted
 - [ ] **Security Headers**: XSS, CSRF, and other protections active
 - [ ] **Input Validation**: All user inputs sanitized and validated
 - [ ] **Audit Logging**: All requests logged with metadata
+- [ ] **Authentication Middleware**: API endpoints protected with optional/required auth
 
 ## 🔧 System Architecture
 

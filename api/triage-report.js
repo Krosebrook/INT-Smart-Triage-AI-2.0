@@ -1,10 +1,12 @@
 /**
  * Triage Report API Endpoint
  * Processes triage requests and securely logs to Supabase with RLS enforcement
+ * Now includes Clerk authentication for enhanced security
  */
 
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { optionalAuthentication } from './auth-middleware.js';
 
 // Initialize Supabase client with service role for secure server-side operations
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -126,6 +128,9 @@ function processTriageRequest(ticketData) {
 }
 
 export default async function handler(req, res) {
+    // Apply optional authentication middleware
+    await optionalAuthentication(req, res);
+    
     // Set comprehensive security headers
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
