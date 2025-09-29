@@ -1,0 +1,21 @@
+{
+  "name": "int-smart-triage-ai-2.0",
+  "version": "1.0.0",
+  "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success. It instantly triages client tickets, provides CSRs with empathetic talking points, suggests Knowledge Base articles, and securely logs all activity to Supabase using Vercel Serverless Functions. This system ensures low response times, data persistence, and full security",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "test": "node test-endpoint.js",
+    "test:validation": "node test-validation.js",
+    "test:scenarios": "node test-scenarios.js",
+    "build": "echo 'Build successful'"
+  },
+  "keywords": ["ai", "triage", "customer-service", "vercel", "supabase"],
+  "author": "INT Inc",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.58.0"
+  }
+}

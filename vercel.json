@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/triage-report.js": {
+      "maxDuration": 30
+    }
+  }
+}
