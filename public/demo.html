@@ -117,10 +117,10 @@
             loadKnowledgeBase();
         });
 
-        // Load personas from /data/personas.json
+        // Load personas from ../data/personas.json
         async function loadPersonas() {
             try {
-                const response = await fetch('/data/personas.json');
+                const response = await fetch('../data/personas.json');
                 if (!response.ok) throw new Error('Failed to load personas');
                 
                 personas = await response.json();
