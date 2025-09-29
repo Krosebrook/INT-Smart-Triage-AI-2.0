@@ -1,33 +1,31 @@
 {
   "name": "int-smart-triage-ai-2.0",
-  "version": "2.0.0",
+  "version": "1.0.0",
+  "type": "module",
   "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
-  "main": "api/index.js",
-  "engines": {
-    "node": "20.x"
-  },
+  "main": "index.js",
   "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'No build required - using Vercel serverless functions'",
-    "start": "vercel dev --listen 3000",
-    "deploy": "vercel --prod"
+    "dev": "echo 'Development server not yet configured'",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write .",
+    "test": "echo 'Tests not yet configured'",
+    "check": "npm run lint && npm run test"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "keywords": [
     "ai",
     "triage",
-    "customer-support",
+    "customer-success",
     "vercel",
-    "serverless",
     "supabase"
   ],
   "author": "INT Inc.",
-  "license": "MIT",
-  "dependencies": {},
+  "license": "UNLICENSED",
+  "private": true,
   "devDependencies": {
-    "@vercel/node": "^3.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0"
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0"
   }
 }
