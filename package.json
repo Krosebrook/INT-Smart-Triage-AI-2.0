@@ -8,6 +8,7 @@
     "dev": "vercel dev",
     "test": "node test-endpoint.js",
     "test:validation": "node test-validation.js",
+    "test:scenarios": "node test-scenarios.js",
     "build": "echo 'Build successful'"
   },
   "keywords": ["ai", "triage", "customer-service", "vercel", "supabase"],
