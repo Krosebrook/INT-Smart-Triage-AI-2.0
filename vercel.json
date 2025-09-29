@@ -26,11 +26,6 @@
       "headers": {
         "Cache-Control": "public, max-age=3600"
       }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1",
-      "status": 404
     }
   ],
   
