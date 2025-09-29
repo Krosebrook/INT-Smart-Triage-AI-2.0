@@ -293,10 +293,11 @@
         function getSignature() {
             return 'Best regards,\nINT Customer Success Team';
         }
+        const MAX_KB_ARTICLES = 3;
         function findRelevantKBArticles(domain) {
             return knowledgeBase.filter(article => 
                 article.category === domain || article.tags.includes(domain)
-            ).slice(0, 3); // Return top 3 relevant articles
+            ).slice(0, MAX_KB_ARTICLES); // Return top N relevant articles
         }
 
         // UI Helper Functions
