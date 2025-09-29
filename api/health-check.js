@@ -115,7 +115,7 @@ async function performHealthCheck() {
         // Check Supabase connection and RLS status
         if (supabase) {
             // Test basic connectivity
-            const { data: connectionTest, error: connectionError } = await supabase
+            const { error: connectionError } = await supabase
                 .from('reports')
                 .select('count', { count: 'exact', head: true });
 
@@ -149,7 +149,7 @@ async function performHealthCheck() {
                 if (!rlsError && rlsCheck) {
                     healthData.checks.rls = rlsCheck.rls_enabled ? 'enabled' : 'disabled';
                 }
-            } catch (rlsCheckError) {
+            } catch (_rlsCheckError) {
                 // RLS check function may not exist, which is expected
                 healthData.checks.rls = 'manual_verification_required';
             }
@@ -170,3 +170,4 @@ async function performHealthCheck() {
         }
 
         return healthData;
+}
