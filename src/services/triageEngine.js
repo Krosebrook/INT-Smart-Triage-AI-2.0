@@ -1,5 +1,13 @@
 /**
  * AI Triage Engine - Improved logic with better categorization
+ * 
+ * Current Implementation: Rule-based triage with keyword matching
+ * LLM Integration Ready: Can be enhanced with Gemini API for:
+ *   - Advanced KB Article Drafting
+ *   - Management Summary Generation
+ *   - Natural language understanding
+ * 
+ * To enable LLM features, configure GEMINI_API_KEY in Vercel environment variables
  */
 
 export class TriageEngine {
