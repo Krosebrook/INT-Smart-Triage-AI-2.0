@@ -5,7 +5,9 @@
 
 /**
  * Sets security headers on the response object
+ * Includes protection against XSS, clickjacking, and MIME sniffing
  * @param {Object} res - Express response object
+ * @returns {void}
  */
 export function setSecurityHeaders(res) {
   res.setHeader('X-Content-Type-Options', 'nosniff');

@@ -14,6 +14,12 @@ import {
 
 let healthCheckCache = { data: null, timestamp: 0 };
 
+/**
+ * Health Check API Handler
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<Object>} Health status response
+ */
 export default async function handler(req, res) {
   // Set security headers
   setSecurityHeaders(res);
@@ -90,6 +96,10 @@ export default async function handler(req, res) {
   }
 }
 
+/**
+ * Performs health check on system components
+ * @returns {Promise<Object>} Health data including status of API, database, and RLS
+ */
 async function performHealthCheck() {
   const healthData = {
     status: 'healthy',

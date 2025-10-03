@@ -15,6 +15,20 @@ import {
   MAX_CSR_AGENT_LENGTH,
 } from './utils/constants.js';
 
+/**
+ * Triage Report API Handler
+ * Processes customer support tickets and generates triage recommendations
+ * @param {Object} req - Express request object
+ * @param {Object} req.body - Request body containing ticket data
+ * @param {string} req.body.customerName - Customer name
+ * @param {string} req.body.ticketSubject - Ticket subject line
+ * @param {string} req.body.issueDescription - Detailed issue description
+ * @param {string} req.body.customerTone - Customer's emotional tone
+ * @param {string} [req.body.csrAgent] - CSR agent identifier
+ * @param {string} [req.body.timestamp] - Request timestamp
+ * @param {Object} res - Express response object
+ * @returns {Promise<Object>} Triage results with priority, approach, and suggestions
+ */
 export default async function handler(req, res) {
   // Set comprehensive security headers
   setSecurityHeaders(res);

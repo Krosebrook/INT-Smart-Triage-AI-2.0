@@ -13,7 +13,8 @@ import {
  * Determines priority level based on ticket content and customer tone
  * @param {string} fullText - Combined issue description and subject
  * @param {string} customerTone - Customer's emotional state
- * @returns {Object} Priority level and confidence score
+ * @returns {{priority: string, confidence: number}} Priority level and confidence score
+ * @private
  */
 function determinePriority(fullText, customerTone) {
   const text = fullText.toLowerCase();
@@ -43,7 +44,8 @@ function determinePriority(fullText, customerTone) {
 /**
  * Generates response approach and talking points based on customer tone
  * @param {string} customerTone - Customer's emotional state
- * @returns {Object} Response approach and talking points
+ * @returns {{responseApproach: string, talkingPoints: string[]}} Response approach and talking points
+ * @private
  */
 function generateResponseStrategy(customerTone) {
   const strategies = {
@@ -112,7 +114,8 @@ function generateResponseStrategy(customerTone) {
 /**
  * Suggests relevant knowledge base articles based on issue content
  * @param {string} fullText - Combined issue description and subject
- * @returns {Array<string>} Knowledge base article identifiers
+ * @returns {string[]} Knowledge base article identifiers
+ * @private
  */
 function suggestKnowledgeBase(fullText) {
   const text = fullText.toLowerCase();
@@ -140,7 +143,17 @@ function suggestKnowledgeBase(fullText) {
 /**
  * Processes a triage request and returns recommendations
  * @param {Object} ticketData - Ticket information
- * @returns {Object} Triage results with priority, approach, and suggestions
+ * @param {string} ticketData.issueDescription - Detailed issue description
+ * @param {string} ticketData.customerTone - Customer's emotional tone
+ * @param {string} ticketData.ticketSubject - Ticket subject line
+ * @returns {{
+ *   priority: string,
+ *   confidence: string,
+ *   responseApproach: string,
+ *   talkingPoints: string[],
+ *   knowledgeBase: string[],
+ *   processedAt: string
+ * }} Triage results with priority, approach, and suggestions
  */
 export function processTriageRequest(ticketData) {
   const { issueDescription, customerTone, ticketSubject } = ticketData;
