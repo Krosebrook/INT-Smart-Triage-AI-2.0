@@ -132,3 +132,5 @@ async function performHealthCheck() {
     if (hasErrors) {
         healthData.status = 'degraded';
     }
+
+}
