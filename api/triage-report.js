@@ -106,6 +106,13 @@ export default async function handler(req, res) {
         // Attempt secure database write with RLS enforcement
         const insertResult = await dbService.insertReport(reportData);
 
+        // Simulated CRM Forwarding - Placeholder for cross-functional workflow
+        // In production, this would forward high-priority tickets to CRM system
+        if (triageResults.priority === 'high') {
+            console.log(`[CRM_FORWARDING] High-priority ticket ${reportId} marked for CRM escalation`);
+            // Future implementation: await crmService.forwardTicket(reportData);
+        }
+
         // Return successful response
         return res.status(200).json({
             success: true,
