@@ -133,4 +133,5 @@ async function performHealthCheck() {
         healthData.status = 'degraded';
     }
 
+    return healthData;
 }
