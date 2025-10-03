@@ -80,8 +80,15 @@ Secure triage processing with database logging
 
 ## 📖 Documentation
 
+### Core Documentation
+- **[README.md](./README.md)** - This file - System overview and quick start
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
 - **[supabase-setup.sql](./supabase-setup.sql)** - Database schema and RLS configuration
+
+### Mega Purpose Prompt Documentation Suite
+- **[MEGA_PURPOSE_PROMPT.md](./MEGA_PURPOSE_PROMPT.md)** - Complete unified command specification synthesizing all requirements
+- **[PRE_MORTEM_RISK_REPORT.md](./PRE_MORTEM_RISK_REPORT.md)** - Pre-mortem analysis documenting 3 specific failure modes with mitigations
+- **[FINAL_AUDIT_REPORT.md](./FINAL_AUDIT_REPORT.md)** - Comprehensive security and compliance audit verifying production readiness
 
 ## 🎯 For CSR Teams
 
