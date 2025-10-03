@@ -7,7 +7,5 @@
     "undici": "^6.3.0"
   },
   "scripts": {
-    "start": "echo 'Run this in a Vercel environment'",
-    "test": "echo 'Testing complete via CI/CD gates'"
   }
 }
