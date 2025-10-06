@@ -52,9 +52,43 @@ vercel env add SUPABASE_SERVICE_ROLE_KEY
 
 ⚠️ **Critical Security Note**: Never use the `anon` key in production. Always use the `service_role` key for server-side operations with RLS bypass capabilities.
 
-### 3. Supabase Database Setup
+### 3. Database Setup
 
-#### Step 1: Create Database Table
+**⚠️ IMPORTANT: The project now supports both manual SQL setup (legacy) and automated migrations (recommended).**
+
+#### Option A: Database Migrations (Recommended)
+
+The project now includes a robust migration system using Knex.js for better database version control.
+
+**Setup Environment Variables:**
+```bash
+# Add migration-specific environment variables
+vercel env add DATABASE_URL  # postgres://postgres:[password]@db.[project-id].supabase.co:5432/postgres
+vercel env add SUPABASE_PASSWORD  # Your database password
+```
+
+**Run Migrations:**
+```bash
+# Check current migration status
+npm run migrate:status
+
+# Apply all pending migrations
+npm run migrate:latest
+
+# Verify deployment
+npm run test:migrations
+```
+
+**Available Migration Commands:**
+- `npm run migrate:latest` - Apply all pending migrations
+- `npm run migrate:rollback` - Rollback last batch of migrations  
+- `npm run migrate:status` - Check which migrations have been applied
+- `npm run migrate:make -- migration_name` - Create new migration
+- `npm run seed:run` - Insert sample data
+
+#### Option B: Manual SQL Setup (Legacy)
+
+##### Step 1: Create Database Table
 1. Open your Supabase project dashboard
 2. Go to SQL Editor
 3. Copy and paste the contents of `supabase-setup.sql`

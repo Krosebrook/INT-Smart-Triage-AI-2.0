@@ -26,6 +26,7 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 - **Frontend**: Vanilla JavaScript with modern CSS Grid/Flexbox
 - **Backend**: Vercel Serverless Functions (Node.js)
 - **Database**: Supabase (PostgreSQL) with mandatory RLS
+- **Migrations**: Knex.js for database version control
 - **Deployment**: Vercel with CI/CD integration
 - **Security**: Enterprise-grade with comprehensive audit logging
 
@@ -35,11 +36,15 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 ├── index.html              # CSR Dashboard Interface
 ├── package.json            # Dependencies and build configuration
 ├── vercel.json            # Vercel deployment configuration
+├── knexfile.js            # Database migrations configuration
 ├── api/
 │   ├── health-check.js    # System health and RLS verification
 │   └── triage-report.js   # Secure triage processing and logging
-├── supabase-setup.sql     # Database schema with RLS policies
+├── migrations/            # Database schema migrations
+├── seeds/                 # Database seed files
+├── supabase-setup.sql     # Manual database schema (legacy)
 ├── DEPLOYMENT.md          # Complete production deployment guide
+├── MIGRATIONS.md          # Database migrations guide
 └── .gitignore            # Security-focused ignore patterns
 ```
 
@@ -57,7 +62,9 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    - `SUPABASE_URL`: Your Supabase project URL
    - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (NOT anon key)
 
-3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor
+3. **Setup Database**: 
+   - **Option A (Recommended)**: `npm run migrate:latest` - Run automated migrations
+   - **Option B (Legacy)**: Execute `supabase-setup.sql` in your Supabase SQL editor
 
 4. **Verify Deployment**: Check `/api/health-check` endpoint returns 200 OK
 
