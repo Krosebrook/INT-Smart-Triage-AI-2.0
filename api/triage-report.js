@@ -4,15 +4,16 @@
  */
 
 import crypto from 'crypto';
+import { GeminiService } from '../src/services/geminiService.js';
 import { TriageEngine } from '../src/services/triageEngine.js';
 import { DatabaseService } from '../src/services/database.js';
 import { validateTriageRequest, sanitizeTriageData } from '../src/utils/validation.js';
 import { setSecurityHeaders, validateHttpMethod, extractClientInfo, createRateLimiter } from '../src/utils/security.js';
 
-// Initialize services
+const geminiService = new GeminiService();
 const triageEngine = new TriageEngine();
 const dbService = new DatabaseService();
-const rateLimiter = createRateLimiter(60000, 50); // 50 requests per minute
+const rateLimiter = createRateLimiter(60000, 50);
 
 export default async function handler(req, res) {
     // Set security headers
@@ -53,32 +54,45 @@ export default async function handler(req, res) {
         // Sanitize input data
         const sanitizedData = sanitizeTriageData(requestData);
         
-        // Extract client information for audit
         const clientInfo = extractClientInfo(req);
 
-        // Process triage request using AI logic
-        const triageResults = triageEngine.processTriageRequest(sanitizedData);
+        let triageResults;
+        let usedLLM = false;
 
-        // Validate LLM JSON response structure as required
+        if (geminiService.isConfigured) {
+            try {
+                triageResults = await geminiService.generateTriageAnalysis(sanitizedData);
+                usedLLM = true;
+            } catch (llmError) {
+                console.warn('LLM triage failed, falling back to rule-based engine:', llmError.message);
+                triageResults = triageEngine.processTriageRequest(sanitizedData);
+                usedLLM = false;
+            }
+        } else {
+            triageResults = triageEngine.processTriageRequest(sanitizedData);
+            usedLLM = false;
+        }
+
         if (!triageResults || typeof triageResults !== 'object') {
             throw new Error('Invalid triage results structure');
         }
-        
-        // Ensure required JSON fields are valid
+
         const requiredFields = ['priority', 'confidence', 'responseApproach', 'talkingPoints', 'knowledgeBase', 'category'];
         for (const field of requiredFields) {
             if (!triageResults[field]) {
-                throw new Error(`Missing or invalid field in LLM response: ${field}`);
+                throw new Error(`Missing or invalid field in triage response: ${field}`);
             }
         }
 
-        // Validate JSON arrays
         if (!Array.isArray(triageResults.talkingPoints) || !Array.isArray(triageResults.knowledgeBase)) {
-            throw new Error('Invalid JSON array structure in LLM response');
+            throw new Error('Invalid JSON array structure in triage response');
         }
 
-        // Generate unique report ID
         const reportId = `TR-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+
+        const kbArticleDraft = triageResults.kbArticleDraft || null;
+        const managementSummary = triageResults.managementSummary || null;
+        const crmData = triageResults.crmForwardingData || null;
 
         // Prepare data for secure database insertion
         const reportData = {
@@ -95,18 +109,31 @@ export default async function handler(req, res) {
             knowledge_base_articles: triageResults.knowledgeBase,
             csr_agent: sanitizedData.csrAgent,
             created_at: sanitizedData.timestamp,
-            processed_at: triageResults.processedAt,
-            // Security and audit fields
+            processed_at: triageResults.processedAt || new Date().toISOString(),
             ip_address: clientInfo.ipAddress,
             user_agent: clientInfo.userAgent,
             session_id: clientInfo.sessionId,
-            metadata: triageResults.metadata
+            metadata: {
+                ...(triageResults.metadata || {}),
+                usedLLM,
+                kbArticleDraft,
+                managementSummary,
+                crmForwardingData: crmData
+            }
         };
 
-        // Attempt secure database write with RLS enforcement
         const insertResult = await dbService.insertReport(reportData);
 
-        // Return successful response
+        if (usedLLM && crmData) {
+            console.log('CRM Forwarding Simulation:', {
+                reportId: insertResult.report_id,
+                customerSegment: crmData.customerSegment,
+                accountHealth: crmData.accountHealth,
+                churnRisk: crmData.churnRisk,
+                upsellOpportunity: crmData.upsellOpportunity
+            });
+        }
+
         return res.status(200).json({
             success: true,
             reportId: insertResult.report_id,
@@ -117,7 +144,14 @@ export default async function handler(req, res) {
             responseApproach: triageResults.responseApproach,
             talkingPoints: triageResults.talkingPoints,
             knowledgeBase: triageResults.knowledgeBase,
-            metadata: triageResults.metadata,
+            kbArticleDraft,
+            managementSummary,
+            crmForwardingData: crmData,
+            metadata: {
+                usedLLM,
+                processedAt: triageResults.processedAt || new Date().toISOString(),
+                ...(triageResults.metadata || {})
+            },
             security: {
                 rlsEnforced: true,
                 auditLogged: true,

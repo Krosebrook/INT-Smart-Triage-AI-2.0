@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -77,7 +77,7 @@
 
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #3b82f6;
         }
 
         textarea {
@@ -86,7 +86,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -100,7 +100,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
         }
 
         .btn-primary:disabled {
@@ -126,7 +126,7 @@
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #3b82f6;
         }
 
         .result-card h3 {
@@ -355,9 +355,36 @@
                             'KB-001: Common Technical Issues Troubleshooting',
                             'KB-015: Customer Communication Best Practices',
                             'KB-032: Escalation Procedures'
-                        ]).map(kb => `<li style="margin-bottom: 5px;"><a href="#" style="color: #667eea;">${kb}</a></li>`).join('')}
+                        ]).map(kb => `<li style="margin-bottom: 5px;"><a href="#" style="color: #3b82f6;">${kb}</a></li>`).join('')}
                     </ul>
                 </div>
+
+                ${result.managementSummary ? `
+                <div class="result-card">
+                    <h3>Management Summary</h3>
+                    <p style="background: #f1f5f9; padding: 15px; border-radius: 5px; margin-top: 10px;">${result.managementSummary}</p>
+                </div>
+                ` : ''}
+
+                ${result.kbArticleDraft ? `
+                <div class="result-card">
+                    <h3>Knowledge Base Article Draft</h3>
+                    <div style="background: #f1f5f9; padding: 15px; border-radius: 5px; margin-top: 10px; max-height: 300px; overflow-y: auto; white-space: pre-wrap;">${result.kbArticleDraft}</div>
+                </div>
+                ` : ''}
+
+                ${result.crmForwardingData ? `
+                <div class="result-card">
+                    <h3>CRM Forwarding Data</h3>
+                    <div style="margin-top: 10px;">
+                        <p><strong>Customer Segment:</strong> ${result.crmForwardingData.customerSegment || 'N/A'}</p>
+                        <p><strong>Account Health:</strong> ${result.crmForwardingData.accountHealth || 'N/A'}</p>
+                        <p><strong>Churn Risk:</strong> ${result.crmForwardingData.churnRisk || 'N/A'}</p>
+                        <p><strong>Upsell Opportunity:</strong> ${result.crmForwardingData.upsellOpportunity ? 'Yes' : 'No'}</p>
+                        ${result.crmForwardingData.recommendedFollowUp ? `<p style="margin-top: 10px; padding: 10px; background: #fef3c7; border-radius: 5px;"><strong>Recommended Follow-up:</strong> ${result.crmForwardingData.recommendedFollowUp}</p>` : ''}
+                    </div>
+                </div>
+                ` : ''}
 
                 <div class="result-card">
                     <h3>Activity Logged</h3>

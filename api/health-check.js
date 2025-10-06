@@ -125,7 +125,7 @@ async function performHealthCheck() {
     }
 
     // Determine overall health status
-    const hasErrors = Object.values(healthData.checks).some(check => 
+    const hasErrors = Object.values(healthData.checks).some(check =>
         check === 'error' || check === 'not_configured'
     );
 
@@ -133,4 +133,5 @@ async function performHealthCheck() {
         healthData.status = 'degraded';
     }
 
+    return healthData;
 }
