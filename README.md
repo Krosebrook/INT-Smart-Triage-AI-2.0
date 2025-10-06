@@ -33,11 +33,14 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 
 ```
 ├── index.html              # CSR Dashboard Interface
+├── openapi.yaml            # OpenAPI 3.0.3 specification for all APIs
 ├── package.json            # Dependencies and build configuration
 ├── vercel.json            # Vercel deployment configuration
 ├── api/
 │   ├── health-check.js    # System health and RLS verification
 │   └── triage-report.js   # Secure triage processing and logging
+├── docs/
+│   └── API-DOCUMENTATION.md # Complete API documentation guide
 ├── supabase-setup.sql     # Database schema with RLS policies
 ├── DEPLOYMENT.md          # Complete production deployment guide
 └── .gitignore            # Security-focused ignore patterns
@@ -60,6 +63,20 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor
 
 4. **Verify Deployment**: Check `/api/health-check` endpoint returns 200 OK
+
+## 📖 API Documentation
+
+Complete **OpenAPI/Swagger documentation** is available for all endpoints:
+
+- **📄 Specification**: [`openapi.yaml`](./openapi.yaml) - Full OpenAPI 3.0.3 specification
+- **📚 Documentation Guide**: [`docs/API-DOCUMENTATION.md`](./docs/API-DOCUMENTATION.md) - Usage instructions and benefits
+- **🌐 Interactive Docs**: Open `openapi.yaml` in [Swagger Editor](https://editor.swagger.io/) for interactive testing
+
+### Benefits for Development & QA Teams:
+- **Interactive Testing**: Test all endpoints directly in Swagger UI
+- **Client Code Generation**: Auto-generate SDKs in multiple languages (JavaScript, Python, Java, etc.)
+- **Contract Testing**: Validate API responses against defined schemas
+- **API Mocking**: Create mock servers for frontend development
 
 ## 📋 API Endpoints
 
