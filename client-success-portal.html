@@ -105,6 +105,8 @@
 
     <div class="nav-tabs">
       <button class="nav-tab active" onclick="switchTab('dashboard')">Dashboard</button>
+      <button class="nav-tab" onclick="switchTab('assignment')">Assignment</button>
+      <button class="nav-tab" onclick="switchTab('followup')">Follow-Ups</button>
       <button class="nav-tab" onclick="switchTab('templates')">Templates</button>
       <button class="nav-tab" onclick="switchTab('knowledge')">Knowledge Base</button>
       <button class="nav-tab" onclick="switchTab('analytics')">Analytics</button>
@@ -117,6 +119,14 @@
         <div id="ticketDashboard"></div>
         <div id="customerContext"></div>
       </div>
+    </div>
+
+    <div id="assignment-tab" class="tab-content">
+      <div id="csrAssignment"></div>
+    </div>
+
+    <div id="followup-tab" class="tab-content">
+      <div id="followUpManager"></div>
     </div>
 
     <div id="templates-tab" class="tab-content">
@@ -140,6 +150,16 @@
     </div>
   </div>
 
+  <div id="ticketDetailModal" class="modal" style="display: none;">
+    <div class="modal-content modal-xlarge">
+      <div id="ticketDetailView"></div>
+    </div>
+  </div>
+
+  <div id="demoDataPanel" style="position: fixed; bottom: 20px; left: 20px; background: white; padding: 16px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999;">
+    <button class="btn-secondary btn-small" onclick="window.seedDemoData().then(() => alert('Demo data seeded! Refresh the page.'))">🔧 Seed Demo Data</button>
+  </div>
+
   <script type="module">
     import { TicketDashboard } from './src/components/TicketDashboard.js';
     import { CustomerContextPanel } from './src/components/CustomerContextPanel.js';
@@ -148,6 +168,12 @@
     import { SentimentAnalyticsDashboard } from './src/components/SentimentAnalyticsDashboard.js';
     import { MultiChannelHub } from './src/components/MultiChannelHub.js';
     import { ForecastDashboard } from './src/components/ForecastDashboard.js';
+    import { TicketDetailView } from './src/components/TicketDetailView.js';
+    import { CSRAssignmentPanel } from './src/components/CSRAssignmentPanel.js';
+    import { FollowUpManager } from './src/components/FollowUpManager.js';
+    import { notificationCenter } from './src/components/NotificationCenter.js';
+    import { ExportUtils } from './src/utils/exportUtils.js';
+    import { seedDemoData } from './src/utils/demoData.js';
 
     window.ticketDashboard = new TicketDashboard('ticketDashboard');
     window.customerContextPanel = new CustomerContextPanel('customerContext');
@@ -156,9 +182,15 @@
     window.sentimentAnalytics = new SentimentAnalyticsDashboard('sentimentAnalytics');
     window.multiChannelHub = new MultiChannelHub('multiChannelHub');
     window.forecastDashboard = new ForecastDashboard('forecastDashboard');
+    window.csrAssignmentPanel = new CSRAssignmentPanel('csrAssignment');
+    window.followUpManager = new FollowUpManager('followUpManager');
+    window.notificationCenter = notificationCenter;
+    window.ExportUtils = ExportUtils;
+    window.seedDemoData = seedDemoData;
 
     async function initializeComponents() {
       await window.ticketDashboard.init();
+      window.notificationCenter.init();
     }
 
     window.switchTab = function(tabName) {
@@ -169,6 +201,8 @@
       document.getElementById(`${tabName}-tab`).classList.add('active');
 
       const initMap = {
+        'assignment': () => window.csrAssignmentPanel.init(),
+        'followup': () => window.followUpManager.init(),
         'templates': () => window.responseTemplates.init(),
         'knowledge': () => window.knowledgeBase.init(),
         'analytics': () => window.sentimentAnalytics.init(),
