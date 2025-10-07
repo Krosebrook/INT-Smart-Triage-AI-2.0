@@ -97,10 +97,37 @@
   </style>
 </head>
 <body>
-  <div class="portal-container">
-    <div class="portal-header">
-      <h1 class="portal-title">INT Client Success Portal</h1>
-      <p class="portal-subtitle">Comprehensive support management platform with AI-powered insights</p>
+  <div id="authScreen" style="display: none;">
+    <div style="max-width: 400px; margin: 100px auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+      <h2 style="margin-bottom: 8px; color: #111827;">Welcome Back</h2>
+      <p style="color: #6b7280; margin-bottom: 24px;">Sign in to access the Client Success Portal</p>
+      <form id="loginForm">
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 4px; color: #374151; font-weight: 500;">Email</label>
+          <input type="email" id="loginEmail" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" placeholder="you@example.com">
+        </div>
+        <div style="margin-bottom: 24px;">
+          <label style="display: block; margin-bottom: 4px; color: #374151; font-weight: 500;">Password</label>
+          <input type="password" id="loginPassword" required style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" placeholder="••••••••">
+        </div>
+        <button type="submit" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 12px;">Sign In</button>
+      </form>
+      <button onclick="skipAuth()" style="width: 100%; padding: 12px; background: transparent; color: #6b7280; border: 1px solid #d1d5db; border-radius: 6px; font-weight: 500; cursor: pointer;">Continue as Guest</button>
+      <p style="text-align: center; margin-top: 16px; color: #9ca3af; font-size: 13px;">Demo: Use any email/password or skip to guest mode</p>
+    </div>
+  </div>
+
+  <div id="portalApp" class="portal-container" style="display: none;">
+    <div class="portal-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 class="portal-title">INT Client Success Portal</h1>
+        <p class="portal-subtitle">Comprehensive support management platform with AI-powered insights</p>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span id="userDisplay" style="color: #6b7280; font-size: 14px;"></span>
+        <button onclick="location.href='/'" style="padding: 8px 16px; background: #f3f4f6; color: #374151; border: none; border-radius: 6px; font-weight: 500; cursor: pointer;">← Home</button>
+        <button id="logoutBtn" onclick="logout()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer;">Logout</button>
+      </div>
     </div>
 
     <div class="nav-tabs">
@@ -161,6 +188,7 @@
   </div>
 
   <script type="module">
+    import { supabase } from './src/services/supabaseClient.js';
     import { TicketDashboard } from './src/components/TicketDashboard.js';
     import { CustomerContextPanel } from './src/components/CustomerContextPanel.js';
     import { ResponseTemplates } from './src/components/ResponseTemplates.js';
@@ -216,6 +244,67 @@
       }
     };
 
+    let currentUser = null;
+
+    async function checkAuth() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        currentUser = session.user;
+        showPortal();
+      } else {
+        showAuthScreen();
+      }
+    }
+
+    function showAuthScreen() {
+      document.getElementById('authScreen').style.display = 'block';
+      document.getElementById('portalApp').style.display = 'none';
+    }
+
+    function showPortal() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('portalApp').style.display = 'block';
+      if (currentUser) {
+        document.getElementById('userDisplay').textContent = currentUser.email;
+      } else {
+        document.getElementById('userDisplay').textContent = 'Guest User';
+      }
+      initializeComponents();
+    }
+
+    window.skipAuth = function() {
+      currentUser = { email: 'guest@example.com', role: 'guest' };
+      showPortal();
+    };
+
+    window.logout = async function() {
+      await supabase.auth.signOut();
+      currentUser = null;
+      showAuthScreen();
+    };
+
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        if (error.message.includes('Invalid')) {
+          const { error: signUpError } = await supabase.auth.signUp({ email, password });
+          if (!signUpError) {
+            alert('Account created! You can now sign in.');
+          }
+        } else {
+          alert('Login error: ' + error.message);
+        }
+      } else {
+        currentUser = data.user;
+        showPortal();
+      }
+    });
+
     window.addEventListener('view-ticket', async (e) => {
       const { ticketId } = e.detail;
       const ticket = window.ticketDashboard.tickets.find(t => t.id === ticketId);
@@ -224,7 +313,7 @@
       }
     });
 
-    initializeComponents();
+    checkAuth();
   </script>
 </body>
 </html>
