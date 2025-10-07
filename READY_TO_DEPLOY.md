@@ -72,16 +72,23 @@ git push -u origin main
 1. Visit [vercel.com](https://vercel.com)
 2. Click "Import Project"
 3. Select your GitHub repository
-4. Set environment variables:
+4. Vercel will auto-detect Vite configuration
+5. Set environment variables in Vercel dashboard:
+   
+   **Client-Side (exposed to browser):**
    ```
-   VITE_SUPABASE_URL=https://0ec90b57d6e95fcbda19832f.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   SUPABASE_URL=https://0ec90b57d6e95fcbda19832f.supabase.co
-   SUPABASE_ANON_KEY=your-anon-key
-   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-   GEMINI_API_KEY=your-api-key (optional)
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key-here
    ```
-5. Click "Deploy"
+   
+   **Server-Side (API endpoints only):**
+   ```
+   SUPABASE_URL=https://your-project-id.supabase.co
+   SUPABASE_ANON_KEY=your-anon-key-here
+   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+   GEMINI_API_KEY=your-gemini-api-key-here (optional, for AI features)
+   ```
+6. Click "Deploy"
 
 ### 3. Test Your Deployment
 
