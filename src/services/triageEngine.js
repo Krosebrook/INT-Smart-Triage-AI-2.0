@@ -11,11 +11,13 @@ export class TriageEngine {
     };
     
     this.categoryKeywords = {
-      authentication: ['login', 'password', 'signin', 'access', 'credentials', 'authentication', '2fa', 'mfa'],
-      performance: ['slow', 'performance', 'loading', 'timeout', 'lag', 'speed'],
-      billing: ['payment', 'billing', 'invoice', 'charge', 'subscription', 'refund', 'credit card'],
-      integration: ['api', 'webhook', 'integration', 'sync', 'connection', 'endpoint'],
-      ui: ['interface', 'button', 'page', 'display', 'layout', 'design', 'mobile', 'responsive']
+      infosec: ['security', 'soc2', 'compliance', 'audit', 'vulnerability', 'cyber insurance', 'breach', 'firewall', 'encryption', 'iso27001', 'hipaa'],
+      technology: ['managed it', 'helpdesk', 'email migration', 'network', 'server', 'cloud', 'hosting', 'saas', 'microsoft365', 'downtime', 'backup'],
+      website_design: ['website', 'web design', 'ecommerce', 'wordpress', 'cms', 'mobile responsive', 'accessibility', 'ada', 'hosting', 'domain', 'ssl'],
+      branding: ['brand', 'logo', 'visual identity', 'rebrand', 'design', 'collateral', 'brand voice', 'messaging', 'style guide'],
+      content: ['content strategy', 'seo', 'blog', 'ebook', 'whitepaper', 'copywriting', 'website content', 'thought leadership'],
+      marketing: ['marketing', 'hubspot', 'crm', 'automation', 'email campaign', 'drip campaign', 'salesforce', 'analytics', 'lead generation', 'inbound'],
+      operations: ['bookkeeping', 'accounting', 'startup', 'ein', 'process management', 'hris', 'payroll', 'benefits', 'ai your bi', 'analytics']
     };
   }
 

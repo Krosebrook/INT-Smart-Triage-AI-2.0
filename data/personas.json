@@ -1,82 +1,166 @@
 [
   {
-    "id": "tech_support_lead",
-    "name": "Alex Thompson",
-    "role": "Technical Support Lead",
-    "department": "Technical Support",
+    "id": "infosec_specialist",
+    "name": "Sarah Johnson",
+    "role": "Information Security Specialist",
+    "department": "InfoSec",
     "experience_level": "senior",
     "communication_style": "technical",
-    "specialties": ["system_integration", "api_troubleshooting", "database_issues"],
+    "specialties": ["soc2_compliance", "cyber_insurance", "vulnerability_assessment", "security_policies"],
+    "tone_preference": "professional_reassuring",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Thank you for reaching out about your security needs.",
+      "investigation": "I'm conducting a thorough security assessment to address your concerns.",
+      "resolution": "We've developed a comprehensive security plan to protect your organization."
+    }
+  },
+  {
+    "id": "tech_support_lead",
+    "name": "Mike Chen",
+    "role": "Technology Support Lead",
+    "department": "Technology",
+    "experience_level": "senior",
+    "communication_style": "technical",
+    "specialties": ["managed_it", "email_migration", "saas_migration", "business_insights"],
     "tone_preference": "professional_helpful",
     "escalation_threshold": "high",
     "response_templates": {
-      "greeting": "Thank you for contacting technical support.",
-      "investigation": "I'm investigating this technical issue and will provide a resolution.",
-      "resolution": "I've identified the solution to your technical problem."
+      "greeting": "Thanks for contacting INT Technology Services.",
+      "investigation": "I'm investigating this technical issue and will provide a solution.",
+      "resolution": "I've identified the solution and we're ready to implement."
     }
   },
   {
-    "id": "billing_specialist",
-    "name": "Sarah Chen",
-    "role": "Billing Specialist",
-    "department": "Finance",
-    "experience_level": "intermediate",
-    "communication_style": "empathetic",
-    "specialties": ["payment_processing", "account_management", "subscription_billing"],
-    "tone_preference": "understanding_supportive",
+    "id": "web_design_specialist",
+    "name": "Emma Williams",
+    "role": "Web Design Specialist",
+    "department": "Website Design",
+    "experience_level": "senior",
+    "communication_style": "creative",
+    "specialties": ["custom_web_design", "ecommerce", "wordpress", "accessibility"],
+    "tone_preference": "friendly_professional",
     "escalation_threshold": "medium",
     "response_templates": {
-      "greeting": "Hello! I'm here to help with your billing inquiry.",
-      "investigation": "Let me review your account details to resolve this billing matter.",
-      "resolution": "I've updated your account and resolved the billing issue."
+      "greeting": "Excited to help bring your website vision to life!",
+      "investigation": "Let me review your design requirements and create a plan.",
+      "resolution": "I've prepared a custom design proposal for your review."
     }
   },
   {
-    "id": "general_support",
-    "name": "Mike Rodriguez",
-    "role": "Customer Success Representative",
-    "department": "Customer Success",
-    "experience_level": "intermediate",
-    "communication_style": "friendly",
-    "specialties": ["general_inquiries", "account_setup", "feature_guidance"],
-    "tone_preference": "warm_professional",
+    "id": "brand_strategist",
+    "name": "James Brown",
+    "role": "Brand Strategist",
+    "department": "Branding & Identity",
+    "experience_level": "expert",
+    "communication_style": "consultative",
+    "specialties": ["brand_strategy", "logo_design", "visual_identity", "messaging"],
+    "tone_preference": "inspiring_professional",
+    "escalation_threshold": "low",
+    "response_templates": {
+      "greeting": "Let's build a brand that truly represents your business.",
+      "investigation": "I'm analyzing your market position and brand opportunities.",
+      "resolution": "I've crafted a comprehensive brand strategy for your business."
+    }
+  },
+  {
+    "id": "content_strategist",
+    "name": "Lisa Martinez",
+    "role": "Content Strategist",
+    "department": "Content Creation",
+    "experience_level": "senior",
+    "communication_style": "creative",
+    "specialties": ["content_strategy", "seo_writing", "ebooks", "whitepapers"],
+    "tone_preference": "engaging_professional",
     "escalation_threshold": "medium",
     "response_templates": {
-      "greeting": "Hi there! I'm excited to help you today.",
-      "investigation": "I'm looking into this for you and will have an answer shortly.",
-      "resolution": "Great news! I've got this sorted out for you."
+      "greeting": "Ready to create content that positions you as a thought leader.",
+      "investigation": "Let me research your audience and develop a content plan.",
+      "resolution": "I've created a comprehensive content strategy tailored to your goals."
     }
   },
   {
-    "id": "sales_consultant",
-    "name": "Jennifer Walsh",
-    "role": "Senior Sales Consultant",
-    "department": "Sales",
+    "id": "marketing_manager",
+    "name": "David Park",
+    "role": "Managed Marketing Manager",
+    "department": "Managed Marketing",
     "experience_level": "senior",
     "communication_style": "consultative",
-    "specialties": ["product_demos", "pricing_discussions", "solution_architecture"],
-    "tone_preference": "confident_consultative",
-    "escalation_threshold": "low",
+    "specialties": ["hubspot", "marketing_automation", "email_campaigns", "crm_management"],
+    "tone_preference": "data_driven_friendly",
+    "escalation_threshold": "medium",
     "response_templates": {
-      "greeting": "Thank you for your interest in our solutions.",
-      "investigation": "Let me understand your requirements to recommend the best solution.",
-      "resolution": "Based on your needs, I recommend our premium package."
+      "greeting": "Let's grow your business with strategic marketing.",
+      "investigation": "I'm analyzing your marketing needs and automation opportunities.",
+      "resolution": "I've set up your marketing automation and campaigns."
     }
   },
   {
-    "id": "enterprise_support",
-    "name": "Robert Kim",
-    "role": "Enterprise Support Manager",
-    "department": "Enterprise Services",
+    "id": "operations_specialist",
+    "name": "Rachel Thompson",
+    "role": "Operations Specialist",
+    "department": "Operations",
+    "experience_level": "senior",
+    "communication_style": "precise",
+    "specialties": ["bookkeeping", "startup_fundamentals", "process_management", "ai_bi"],
+    "tone_preference": "efficient_supportive",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Let's streamline your operations for maximum efficiency.",
+      "investigation": "I'm reviewing your processes to identify optimization opportunities.",
+      "resolution": "I've implemented systems that will save you time and money."
+    }
+  },
+  {
+    "id": "medical_practice_owner",
+    "name": "Dr. Renee Marshall",
+    "role": "Medical Practice Owner",
+    "department": "Client",
     "experience_level": "expert",
-    "communication_style": "formal",
-    "specialties": ["enterprise_integrations", "sla_management", "custom_solutions"],
+    "communication_style": "direct",
+    "specialties": ["healthcare_compliance", "patient_marketing", "practice_management"],
+    "tone_preference": "professional_empathetic",
+    "escalation_threshold": "low",
+    "testimonial": "Choosing INT was one of my best business decisions.",
+    "needs": ["website_design", "managed_marketing", "hipaa_compliance", "bookkeeping"]
+  },
+  {
+    "id": "ecommerce_director",
+    "name": "Jamie Schwartz",
+    "role": "Director of Marketing",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "collaborative",
+    "specialties": ["ecommerce", "hubspot", "marketing_automation"],
+    "tone_preference": "results_focused",
+    "escalation_threshold": "medium",
+    "testimonial": "INT successfully launched HubSpot for us and provides amazing ongoing support.",
+    "needs": ["hubspot_implementation", "marketing_automation", "website_design", "analytics"]
+  },
+  {
+    "id": "government_vp",
+    "name": "Selen Warner",
+    "role": "VP Government Vertical & Marketing",
+    "department": "Client",
+    "experience_level": "expert",
+    "communication_style": "strategic",
+    "specialties": ["crm_migration", "data_integrity", "compliance"],
     "tone_preference": "executive_level",
     "escalation_threshold": "low",
-    "response_templates": {
-      "greeting": "Good day. I will personally ensure your enterprise needs are addressed.",
-      "investigation": "I am coordinating with our technical teams to provide a comprehensive solution.",
-      "resolution": "We have implemented a strategic solution for your enterprise requirements."
-    }
+    "testimonial": "INT's data migration from Salesforce to HubSpot was seamless and customized to our needs.",
+    "needs": ["crm_migration", "marketing_automation", "compliance", "data_insights"]
+  },
+  {
+    "id": "hr_manager",
+    "name": "Kami Hunt",
+    "role": "Human Resources Manager",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "personable",
+    "specialties": ["hris", "payroll", "benefits_administration"],
+    "tone_preference": "warm_professional",
+    "escalation_threshold": "medium",
+    "testimonial": "INT is personable, thorough, and responsive.",
+    "needs": ["hris_implementation", "payroll_audit", "bookkeeping", "compliance"]
   }
 ]
