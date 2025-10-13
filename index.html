@@ -232,7 +232,72 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Client-side triage logic for bolt.new compatibility
+        function processTriageRequest(ticketData) {
+            const { issueDescription, customerTone, ticketSubject, customerName } = ticketData;
+            let priority = 'medium';
+            let confidence = 75;
+            let category = 'general';
+            let department = 'Technology';
+
+            const highPriorityKeywords = ['down', 'outage', 'critical', 'urgent', 'broken', 'not working', 'crashed', 'hack', 'breach', 'security', 'data loss'];
+            const infoSecKeywords = ['security', 'compliance', 'soc2', 'gdpr', 'cyber', 'breach', 'vulnerability', 'insurance', 'audit'];
+            const techKeywords = ['server', 'network', 'email', 'cloud', 'backup', 'it', 'computer', 'software', 'saas', 'migration'];
+            const webKeywords = ['website', 'web design', 'ecommerce', 'shopify', 'wordpress', 'landing page', 'hosting'];
+            const brandKeywords = ['logo', 'brand', 'identity', 'design', 'visual', 'color', 'typography'];
+            const contentKeywords = ['content', 'writing', 'seo', 'blog', 'copy', 'ebook', 'article'];
+            const marketingKeywords = ['marketing', 'hubspot', 'crm', 'automation', 'campaign', 'email marketing'];
+            const operationsKeywords = ['bookkeeping', 'accounting', 'process', 'workflow', 'ai', 'bi', 'analytics'];
+
+            const description = issueDescription.toLowerCase();
+            const subject = ticketSubject.toLowerCase();
+            const fullText = `${description} ${subject}`;
+
+            // Determine priority
+            if (highPriorityKeywords.some(kw => fullText.includes(kw)) || customerTone === 'angry' || customerTone === 'urgent') {
+                priority = 'high';
+                confidence = 90;
+            } else if (customerTone === 'calm' && fullText.includes('question')) {
+                priority = 'low';
+                confidence = 85;
+            }
+
+            // Determine department
+            if (infoSecKeywords.some(kw => fullText.includes(kw))) { department = 'Information Security'; category = 'security'; }
+            else if (techKeywords.some(kw => fullText.includes(kw))) { department = 'Technology'; category = 'technical'; }
+            else if (webKeywords.some(kw => fullText.includes(kw))) { department = 'Website Design'; category = 'web_design'; }
+            else if (brandKeywords.some(kw => fullText.includes(kw))) { department = 'Branding'; category = 'branding'; }
+            else if (contentKeywords.some(kw => fullText.includes(kw))) { department = 'Content'; category = 'content'; }
+            else if (marketingKeywords.some(kw => fullText.includes(kw))) { department = 'Marketing'; category = 'marketing'; }
+            else if (operationsKeywords.some(kw => fullText.includes(kw))) { department = 'Operations'; category = 'operations'; }
+
+            const talkingPoints = [
+                `Thank you for reaching out to INT Inc. We're here to help.`,
+                `This is ${priority} priority and we'll treat it as such.`,
+                `Our ${department} team will assist you.`,
+                customerTone === 'angry' ? 'I sincerely apologize for any inconvenience.' : 'We appreciate your patience.'
+            ];
+
+            const knowledgeBase = category === 'security'
+                ? ['KB-SEC-001: SOC2 Compliance Overview', 'KB-SEC-003: Cyber Insurance', 'KB-SEC-005: Vulnerability Assessment']
+                : category === 'technical'
+                ? ['KB-TECH-001: Managed IT Services', 'KB-TECH-004: Email Migration', 'KB-TECH-008: SaaS Migration']
+                : [`KB-${category.toUpperCase()}-001: Getting Started`, `KB-${category.toUpperCase()}-002: Best Practices`];
+
+            return {
+                success: true,
+                priority,
+                confidence: `${confidence}%`,
+                department,
+                responseApproach: `${department} will address this ${priority} priority issue with ${customerTone} customer approach.`,
+                talkingPoints,
+                knowledgeBase,
+                reportId: `TR-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+                timestamp: new Date().toISOString()
+            };
+        }
+
         // Check system health on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkSystemHealth();
@@ -240,16 +305,11 @@
 
         async function checkSystemHealth() {
             const statusIndicator = document.getElementById('statusIndicator');
-            
+
             try {
-                const response = await fetch('/api/health-check');
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    statusIndicator.innerHTML = '<span class="status-online">● System Online</span>';
-                } else {
-                    throw new Error('Health check failed');
-                }
+                // Client-side check - always shows online on bolt.new
+                // In production, this would call /api/health-check
+                statusIndicator.innerHTML = '<span class="status-online">● System Online (Client Mode)</span>';
             } catch (error) {
                 console.error('Health check failed:', error);
                 statusIndicator.innerHTML = '<span class="status-offline">● System Offline</span>';
@@ -283,20 +343,12 @@
             };
 
             try {
-                const response = await fetch('/api/triage-report', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(triageData)
-                });
+                // Use client-side triage logic (works on bolt.new without API)
+                const result = processTriageRequest(triageData);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                // Simulate processing delay for realistic UX
+                await new Promise(resolve => setTimeout(resolve, 1500));
 
-                const result = await response.json();
-                
                 // Display results
                 displayTriageResults(result);
                 resultsSection.classList.add('show');
