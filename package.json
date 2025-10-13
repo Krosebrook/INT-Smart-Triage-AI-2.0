@@ -1,6 +1,7 @@
 {
   "name": "int-smart-triage-ai-2.0",
   "version": "1.0.0",
+  "type": "module",
   "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
   "main": "index.js",
   "scripts": {
