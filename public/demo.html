@@ -145,7 +145,7 @@
         // Load knowledge base from /data/kb.json
         async function loadKnowledgeBase() {
             try {
-                const response = await fetch('../data/kb.json');
+                const response = await fetch('/data/kb.json');
                 if (!response.ok) throw new Error('Failed to load knowledge base');
                 
                 knowledgeBase = await response.json();
