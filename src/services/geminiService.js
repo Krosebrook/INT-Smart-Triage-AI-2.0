@@ -1,3 +1,10 @@
+import { 
+  getCategoryListForPrompt, 
+  getCategoryRulesForPrompt, 
+  getValidCategoryValues,
+  INT_COMPANY_INFO 
+} from '../config/serviceCategories.js';
+
 export class GeminiService {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY;
@@ -77,16 +84,10 @@ export class GeminiService {
   buildTriagePrompt(customerName, ticketSubject, issueDescription, customerTone) {
     return `You are an expert Customer Success AI assistant for INT Inc. Analyze this customer support ticket and provide a comprehensive triage report.
 
-INT Inc. provides 7 core service categories:
-1. Information Security (InfoSec) - Security assessments, SOC 2 compliance, cyber insurance, managed security
-2. Technology - Managed IT, email migration, SaaS migration, business insights, hosting
-3. Website Design - Custom websites, e-commerce, refreshes, migrations, accessibility
-4. Branding & Identity - Brand strategy, logo design, visual identity, messaging
-5. Content Creation & Strategy - Content strategy, SEO copywriting, e-books, whitepapers
-6. Managed Marketing - Marketing automation, HubSpot, CRM, email campaigns, inbound marketing
-7. Operations - Bookkeeping, startup fundamentals, process management, AI Your BI℠
+INT Inc. provides ${INT_COMPANY_INFO.totalCategories} core service categories:
+${getCategoryListForPrompt()}
 
-INT Tagline: "Our Purpose is Your Business"
+INT Tagline: "${INT_COMPANY_INFO.tagline}"
 
 TICKET INFORMATION:
 - Customer Name: ${customerName}
@@ -98,7 +99,7 @@ TASK: Provide a detailed triage analysis in valid JSON format with the following
 
 {
   "priority": "low|medium|high",
-  "category": "infosec|technology|website_design|branding|content|marketing|operations|general",
+  "category": "${getValidCategoryValues()}",
   "confidence": "85%",
   "responseApproach": "Detailed response strategy based on tone and urgency, aligned with INT's professional partner approach",
   "talkingPoints": [
@@ -126,15 +127,12 @@ PRIORITIZATION RULES:
 - MEDIUM: Website project, migration, marketing campaign setup, frustrated tone, workflow errors
 - LOW: Package information, general inquiry, consultation request, calm tone
 
-CATEGORY RULES:
-- infosec: Security, SOC 2, compliance, audit, vulnerability, cyber insurance, breach, HIPAA, ISO 27001
-- technology: Managed IT, helpdesk, email migration, network, server, cloud, SaaS migration, Microsoft 365, hosting, backup
-- website_design: Website, web design, e-commerce, WordPress, CMS, mobile responsive, accessibility, ADA, WCAG, hosting
-- branding: Brand, logo, visual identity, rebrand, collateral, brand voice, messaging, style guide
-- content: Content strategy, SEO, blog, e-book, whitepaper, copywriting, thought leadership
-- marketing: Marketing, HubSpot, CRM, automation, email campaign, drip campaign, Salesforce, analytics, lead generation, inbound
-- operations: Bookkeeping, accounting, startup, EIN, process management, HRIS, payroll, benefits, AI Your BI, FinCEN
-- general: Everything else or unclear requests
+CATEGORY SELECTION INSTRUCTIONS:
+Analyze the ticket content and match it to ONE of the following categories based on the keywords:
+${getCategoryRulesForPrompt()}
+
+IMPORTANT: The "category" field in your response MUST be exactly one of these values: ${getValidCategoryValues()}
+If the ticket doesn't clearly match any category, use "general".
 
 RESPONSE APPROACH: Consider customer tone and create empathetic, actionable guidance using INT's professional, partner-focused communication style.
 
