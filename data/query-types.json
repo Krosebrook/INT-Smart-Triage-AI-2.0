@@ -1,0 +1,404 @@
+[
+  {
+    "service_category": "infosec",
+    "category_name": "Information Security",
+    "queries": [
+      {
+        "id": "infosec_q1",
+        "title": "InfoSec Program Discovery",
+        "example": "We need to assess our current security posture and identify vulnerabilities before pursuing SOC 2 or ISO 27001; can you conduct a discovery evaluation?",
+        "keywords": ["security posture", "vulnerabilities", "soc2", "iso27001", "discovery", "assessment"],
+        "priority": "high",
+        "typical_response_time": "24-48 hours for initial consultation",
+        "related_kb_articles": ["kb001", "kb002"]
+      },
+      {
+        "id": "infosec_q2",
+        "title": "Compliance Programme Implementation",
+        "example": "Please help us implement the remediation blueprint and develop policies (passwords, data retention, off-boarding) outlined in our compliance plan.",
+        "keywords": ["compliance", "remediation", "policies", "passwords", "data retention", "off-boarding"],
+        "priority": "high",
+        "typical_response_time": "48 hours for project kickoff",
+        "related_kb_articles": ["kb002"]
+      },
+      {
+        "id": "infosec_q3",
+        "title": "Cyber-Insurance Questionnaire Support",
+        "example": "We need assistance filling out a cyber-insurance questionnaire and crafting responses to technical questions.",
+        "keywords": ["cyber insurance", "questionnaire", "technical questions", "coverage"],
+        "priority": "medium",
+        "typical_response_time": "24 hours",
+        "related_kb_articles": ["kb003"]
+      },
+      {
+        "id": "infosec_q4",
+        "title": "Managed InfoSec Services",
+        "example": "Set up ongoing network vulnerability scans, phishing training, threat detection and incident response.",
+        "keywords": ["vulnerability scans", "phishing training", "threat detection", "incident response", "managed security"],
+        "priority": "medium",
+        "typical_response_time": "48-72 hours for setup",
+        "related_kb_articles": ["kb004"]
+      },
+      {
+        "id": "infosec_q5",
+        "title": "Audit Preparation",
+        "example": "Guide us through SOC 2 audit preparation and help gather required documentation.",
+        "keywords": ["audit preparation", "soc2", "documentation", "compliance audit"],
+        "priority": "high",
+        "typical_response_time": "24 hours for initial consultation",
+        "related_kb_articles": ["kb001", "kb002"]
+      }
+    ]
+  },
+  {
+    "service_category": "technology",
+    "category_name": "Technology",
+    "queries": [
+      {
+        "id": "tech_q1",
+        "title": "Managed IT & Support",
+        "example": "Our team has intermittent network outages; can your helpdesk investigate and monitor our systems?",
+        "keywords": ["network outages", "helpdesk", "monitoring", "managed it", "support"],
+        "priority": "high",
+        "typical_response_time": "Immediate for critical issues, 4 hours for standard",
+        "related_kb_articles": ["kb005"]
+      },
+      {
+        "id": "tech_q2",
+        "title": "Email Platform Migration",
+        "example": "We'd like to migrate from on-premises Exchange to a cloud email service; please handle the transition and minimise downtime.",
+        "keywords": ["email migration", "exchange", "cloud", "microsoft365", "downtime"],
+        "priority": "high",
+        "typical_response_time": "48 hours for planning call",
+        "related_kb_articles": ["kb006"]
+      },
+      {
+        "id": "tech_q3",
+        "title": "Email Tenant Administration",
+        "example": "Add new users, manage licenses, and ensure our email security settings are correctly configured.",
+        "keywords": ["email", "users", "licenses", "security settings", "tenant administration"],
+        "priority": "medium",
+        "typical_response_time": "4-8 hours",
+        "related_kb_articles": ["kb006"]
+      },
+      {
+        "id": "tech_q4",
+        "title": "Business Insights & Reporting",
+        "example": "We need a KPI dashboard and predictive analytics to understand sales trends.",
+        "keywords": ["kpi dashboard", "predictive analytics", "sales trends", "business intelligence", "reporting"],
+        "priority": "medium",
+        "typical_response_time": "48 hours for discovery call",
+        "related_kb_articles": ["kb007"]
+      },
+      {
+        "id": "tech_q5",
+        "title": "Business Application Hosting",
+        "example": "Host our CRM on a secure, high-availability environment with regular backups.",
+        "keywords": ["hosting", "crm", "high availability", "backups", "cloud hosting"],
+        "priority": "medium",
+        "typical_response_time": "48-72 hours for assessment",
+        "related_kb_articles": ["kb009"]
+      },
+      {
+        "id": "tech_q6",
+        "title": "SaaS Migration",
+        "example": "Evaluate our software stack and migrate suitable apps to SaaS solutions while integrating them with existing systems.",
+        "keywords": ["saas migration", "software evaluation", "integration", "cloud migration"],
+        "priority": "medium",
+        "typical_response_time": "48 hours for initial consultation",
+        "related_kb_articles": ["kb008"]
+      },
+      {
+        "id": "tech_q7",
+        "title": "Discovery Process & SLAs",
+        "example": "What does your discovery questionnaire look like and how fast can we expect responses?",
+        "keywords": ["discovery", "questionnaire", "sla", "response time"],
+        "priority": "low",
+        "typical_response_time": "4-8 hours",
+        "related_kb_articles": ["kb005"]
+      }
+    ]
+  },
+  {
+    "service_category": "website_design",
+    "category_name": "Website Design",
+    "queries": [
+      {
+        "id": "web_q1",
+        "title": "Custom Website Design",
+        "example": "We want a fully customised website for our e-commerce business; what's included in the package and how long will it take?",
+        "keywords": ["custom website", "ecommerce", "package", "timeline"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours for consultation",
+        "related_kb_articles": ["kb010", "kb011"]
+      },
+      {
+        "id": "web_q2",
+        "title": "Package Selection",
+        "example": "Should we choose a brochure, templated or custom web design package, and what are the pricing tiers?",
+        "keywords": ["package selection", "brochure", "templated", "custom", "pricing"],
+        "priority": "low",
+        "typical_response_time": "4-8 hours",
+        "related_kb_articles": ["kb010"]
+      },
+      {
+        "id": "web_q3",
+        "title": "E-Commerce Development",
+        "example": "Can you build a secure online store with intuitive navigation and premium shopping experience?",
+        "keywords": ["ecommerce", "online store", "secure", "navigation", "shopping cart"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb011"]
+      },
+      {
+        "id": "web_q4",
+        "title": "Website Refresh",
+        "example": "Our site feels outdated; how can you update the design and user experience?",
+        "keywords": ["website refresh", "outdated", "redesign", "user experience", "modernization"],
+        "priority": "medium",
+        "typical_response_time": "24 hours",
+        "related_kb_articles": ["kb012"]
+      },
+      {
+        "id": "web_q5",
+        "title": "Website Migration",
+        "example": "We need help migrating our site to WordPress or HubSpot CMS without downtime.",
+        "keywords": ["migration", "wordpress", "hubspot", "cms", "no downtime"],
+        "priority": "high",
+        "typical_response_time": "24-48 hours for planning",
+        "related_kb_articles": ["kb013"]
+      },
+      {
+        "id": "web_q6",
+        "title": "Hosting & Maintenance",
+        "example": "Please explain the monthly maintenance packages (Lite, Essentials, Ultimate) and what's included.",
+        "keywords": ["hosting", "maintenance", "packages", "lite", "essentials", "ultimate"],
+        "priority": "low",
+        "typical_response_time": "4 hours",
+        "related_kb_articles": ["kb014"]
+      },
+      {
+        "id": "web_q7",
+        "title": "Website Accessibility",
+        "example": "Assess our site for WCAG/ADA compliance and implement accessibility improvements.",
+        "keywords": ["accessibility", "ada compliance", "wcag", "assessment"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb015"]
+      }
+    ]
+  },
+  {
+    "service_category": "branding",
+    "category_name": "Branding & Identity",
+    "queries": [
+      {
+        "id": "brand_q1",
+        "title": "Brand Strategy & Positioning",
+        "example": "We're launching a new product; help us define our positioning and brand promise.",
+        "keywords": ["brand strategy", "positioning", "brand promise", "product launch"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb016"]
+      },
+      {
+        "id": "brand_q2",
+        "title": "Logo and Visual Identity",
+        "example": "Design a memorable logo and cohesive visual identity for our brand.",
+        "keywords": ["logo design", "visual identity", "branding", "memorable"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb017"]
+      },
+      {
+        "id": "brand_q3",
+        "title": "Brand Voice & Messaging",
+        "example": "Craft a brand voice and messaging guide that resonates with our audience.",
+        "keywords": ["brand voice", "messaging", "audience", "communication guide"],
+        "priority": "medium",
+        "typical_response_time": "48 hours",
+        "related_kb_articles": ["kb018"]
+      },
+      {
+        "id": "brand_q4",
+        "title": "Brand Guidelines & Style Guides",
+        "example": "Develop a detailed brand guidelines book covering logo usage, colours, typography and tone.",
+        "keywords": ["brand guidelines", "style guide", "logo usage", "colors", "typography"],
+        "priority": "medium",
+        "typical_response_time": "48 hours",
+        "related_kb_articles": ["kb016"]
+      },
+      {
+        "id": "brand_q5",
+        "title": "Brand Refresh vs. Start",
+        "example": "Should we refresh our brand or start from scratch? What's included in each package and how much does it cost?",
+        "keywords": ["brand refresh", "rebrand", "start", "package comparison", "pricing"],
+        "priority": "low",
+        "typical_response_time": "4-8 hours",
+        "related_kb_articles": ["kb016"]
+      },
+      {
+        "id": "brand_q6",
+        "title": "À-la-Carte Branding Services",
+        "example": "We only need social-media graphics; can we purchase services individually?",
+        "keywords": ["social media graphics", "a la carte", "individual services", "marketing collateral"],
+        "priority": "low",
+        "typical_response_time": "4-8 hours",
+        "related_kb_articles": ["kb019"]
+      }
+    ]
+  },
+  {
+    "service_category": "content",
+    "category_name": "Content Creation & Strategy",
+    "queries": [
+      {
+        "id": "content_q1",
+        "title": "Content Strategy Development",
+        "example": "Conduct audience research and competitor analysis, then create a content calendar.",
+        "keywords": ["content strategy", "audience research", "competitor analysis", "content calendar"],
+        "priority": "medium",
+        "typical_response_time": "48 hours",
+        "related_kb_articles": ["kb020"]
+      },
+      {
+        "id": "content_q2",
+        "title": "Website Copywriting",
+        "example": "Rewrite our website content with SEO optimisation and convert visitors.",
+        "keywords": ["website content", "seo", "copywriting", "optimization", "conversion"],
+        "priority": "medium",
+        "typical_response_time": "48 hours",
+        "related_kb_articles": ["kb021"]
+      },
+      {
+        "id": "content_q3",
+        "title": "E-Book Creation",
+        "example": "Develop an e-book on industry best practices, including research, writing and design.",
+        "keywords": ["ebook", "best practices", "research", "writing", "design", "lead generation"],
+        "priority": "medium",
+        "typical_response_time": "48 hours for project scoping",
+        "related_kb_articles": ["kb022"]
+      },
+      {
+        "id": "content_q4",
+        "title": "Whitepaper Development",
+        "example": "Help us produce a whitepaper that breaks down a complex topic with research and data.",
+        "keywords": ["whitepaper", "research", "data analysis", "complex topic", "thought leadership"],
+        "priority": "medium",
+        "typical_response_time": "48 hours",
+        "related_kb_articles": ["kb023"]
+      },
+      {
+        "id": "content_q5",
+        "title": "Content Mission & Tone",
+        "example": "Define a content mission statement and ensure the content aligns with our brand voice.",
+        "keywords": ["content mission", "brand voice", "tone", "alignment"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb020"]
+      }
+    ]
+  },
+  {
+    "service_category": "marketing",
+    "category_name": "Managed Marketing",
+    "queries": [
+      {
+        "id": "marketing_q1",
+        "title": "Marketing Package Selection",
+        "example": "Which marketing package (Lite, Essentials, Ultimate) fits our needs and budget?",
+        "keywords": ["marketing packages", "lite", "essentials", "ultimate", "budget", "package selection"],
+        "priority": "low",
+        "typical_response_time": "4-8 hours",
+        "related_kb_articles": ["kb024"]
+      },
+      {
+        "id": "marketing_q2",
+        "title": "Email & Blog Content",
+        "example": "Produce monthly marketing emails and blog posts to engage our customers.",
+        "keywords": ["marketing emails", "blog posts", "content generation", "customer engagement"],
+        "priority": "medium",
+        "typical_response_time": "24 hours",
+        "related_kb_articles": ["kb024"]
+      },
+      {
+        "id": "marketing_q3",
+        "title": "Drip Campaign Setup",
+        "example": "Set up automated drip campaigns and segmentation in HubSpot.",
+        "keywords": ["drip campaigns", "automation", "segmentation", "hubspot"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb027"]
+      },
+      {
+        "id": "marketing_q4",
+        "title": "Inbound Marketing Administration",
+        "example": "Run A/B tests, create CTAs and track website analytics.",
+        "keywords": ["inbound marketing", "a/b testing", "ctas", "analytics", "website tracking"],
+        "priority": "medium",
+        "typical_response_time": "24 hours",
+        "related_kb_articles": ["kb028"]
+      },
+      {
+        "id": "marketing_q5",
+        "title": "Sales Enablement & CRM Administration",
+        "example": "Automate marketing-to-sales handoff and de-duplicate records in our CRM.",
+        "keywords": ["sales enablement", "crm", "automation", "deduplicate", "handoff"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb025", "kb026"]
+      },
+      {
+        "id": "marketing_q6",
+        "title": "HubSpot vs. Existing Tools",
+        "example": "Do we need HubSpot for your marketing services? Can you work with our current tools?",
+        "keywords": ["hubspot", "marketing tools", "requirements", "compatibility"],
+        "priority": "low",
+        "typical_response_time": "4-8 hours",
+        "related_kb_articles": ["kb025"]
+      }
+    ]
+  },
+  {
+    "service_category": "operations",
+    "category_name": "Operations",
+    "queries": [
+      {
+        "id": "ops_q1",
+        "title": "Bookkeeping & Accounting",
+        "example": "Manage our routine expenses, tax forms and develop a long-term financial strategy.",
+        "keywords": ["bookkeeping", "accounting", "expenses", "tax forms", "financial strategy"],
+        "priority": "medium",
+        "typical_response_time": "24-48 hours",
+        "related_kb_articles": ["kb029"]
+      },
+      {
+        "id": "ops_q2",
+        "title": "Startup Fundamentals",
+        "example": "File for state registrations, EIN, FinCEN BOI report and S-Corp election; help us incorporate.",
+        "keywords": ["startup", "incorporation", "ein", "state registration", "s-corp", "fincen"],
+        "priority": "high",
+        "typical_response_time": "24 hours",
+        "related_kb_articles": ["kb030"]
+      },
+      {
+        "id": "ops_q3",
+        "title": "Process Management",
+        "example": "Streamline our operations, set clear goals and implement effective process management.",
+        "keywords": ["process management", "streamline", "operations", "goals", "efficiency"],
+        "priority": "medium",
+        "typical_response_time": "48 hours",
+        "related_kb_articles": ["kb031"]
+      },
+      {
+        "id": "ops_q4",
+        "title": "AI Your BI℠",
+        "example": "Use your AI tools to analyse our data and provide actionable insights.",
+        "keywords": ["ai your bi", "ai analytics", "data analysis", "insights", "predictions"],
+        "priority": "medium",
+        "typical_response_time": "48 hours for discovery",
+        "related_kb_articles": ["kb032"]
+      }
+    ]
+  }
+]

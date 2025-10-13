@@ -77,6 +77,17 @@ export class GeminiService {
   buildTriagePrompt(customerName, ticketSubject, issueDescription, customerTone) {
     return `You are an expert Customer Success AI assistant for INT Inc. Analyze this customer support ticket and provide a comprehensive triage report.
 
+INT Inc. provides 7 core service categories:
+1. Information Security (InfoSec) - Security assessments, SOC 2 compliance, cyber insurance, managed security
+2. Technology - Managed IT, email migration, SaaS migration, business insights, hosting
+3. Website Design - Custom websites, e-commerce, refreshes, migrations, accessibility
+4. Branding & Identity - Brand strategy, logo design, visual identity, messaging
+5. Content Creation & Strategy - Content strategy, SEO copywriting, e-books, whitepapers
+6. Managed Marketing - Marketing automation, HubSpot, CRM, email campaigns, inbound marketing
+7. Operations - Bookkeeping, startup fundamentals, process management, AI Your BI℠
+
+INT Tagline: "Our Purpose is Your Business"
+
 TICKET INFORMATION:
 - Customer Name: ${customerName}
 - Subject: ${ticketSubject}
@@ -87,16 +98,16 @@ TASK: Provide a detailed triage analysis in valid JSON format with the following
 
 {
   "priority": "low|medium|high",
-  "category": "authentication|performance|billing|integration|ui|general",
+  "category": "infosec|technology|website_design|branding|content|marketing|operations|general",
   "confidence": "85%",
-  "responseApproach": "Detailed response strategy based on tone and urgency",
+  "responseApproach": "Detailed response strategy based on tone and urgency, aligned with INT's professional partner approach",
   "talkingPoints": [
-    "Key point 1 for CSR to emphasize",
-    "Key point 2 for CSR to emphasize",
-    "Key point 3 for CSR to emphasize"
+    "Key point 1 for CSR to emphasize (solution-focused)",
+    "Key point 2 for CSR to emphasize (knowledgeable but approachable)",
+    "Key point 3 for CSR to emphasize (partner mentality)"
   ],
   "knowledgeBase": [
-    "KB-XXX: Relevant article title",
+    "KB-XXX: Relevant INT service article title",
     "KB-YYY: Another relevant article"
   ],
   "kbArticleDraft": "# Knowledge Base Article Draft\\n\\n## Issue Summary\\n[Comprehensive article content based on the ticket]\\n\\n## Resolution Steps\\n1. Step 1\\n2. Step 2\\n\\n## Prevention\\nHow to avoid this issue in the future",
@@ -111,19 +122,21 @@ TASK: Provide a detailed triage analysis in valid JSON format with the following
 }
 
 PRIORITIZATION RULES:
-- HIGH: System down, data loss, security breach, angry tone, revenue impact
-- MEDIUM: Degraded performance, errors affecting workflows, frustrated tone
-- LOW: Questions, feature requests, general inquiries, calm tone
+- HIGH: Security breach, system down, audit deadline, startup registration urgent, angry tone, revenue impact
+- MEDIUM: Website project, migration, marketing campaign setup, frustrated tone, workflow errors
+- LOW: Package information, general inquiry, consultation request, calm tone
 
 CATEGORY RULES:
-- authentication: Login, password, access, credentials, 2FA
-- performance: Slow, loading, timeout, lag, speed
-- billing: Payment, invoice, subscription, charges, refund
-- integration: API, webhook, sync, connection, third-party
-- ui: Interface, button, display, mobile, responsive
-- general: Everything else
+- infosec: Security, SOC 2, compliance, audit, vulnerability, cyber insurance, breach, HIPAA, ISO 27001
+- technology: Managed IT, helpdesk, email migration, network, server, cloud, SaaS migration, Microsoft 365, hosting, backup
+- website_design: Website, web design, e-commerce, WordPress, CMS, mobile responsive, accessibility, ADA, WCAG, hosting
+- branding: Brand, logo, visual identity, rebrand, collateral, brand voice, messaging, style guide
+- content: Content strategy, SEO, blog, e-book, whitepaper, copywriting, thought leadership
+- marketing: Marketing, HubSpot, CRM, automation, email campaign, drip campaign, Salesforce, analytics, lead generation, inbound
+- operations: Bookkeeping, accounting, startup, EIN, process management, HRIS, payroll, benefits, AI Your BI, FinCEN
+- general: Everything else or unclear requests
 
-RESPONSE APPROACH: Consider customer tone and create empathetic, actionable guidance.
+RESPONSE APPROACH: Consider customer tone and create empathetic, actionable guidance using INT's professional, partner-focused communication style.
 
 TALKING POINTS: Provide 3-5 key points the CSR should emphasize in their response.
 
