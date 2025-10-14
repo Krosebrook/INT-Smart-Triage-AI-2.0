@@ -39,7 +39,8 @@ export async function saveTriageReport(reportData) {
                     analysis: reportData.analysis
                 },
                 csr_agent: reportData.csrAgent || 'Unknown',
-                processed_at: new Date().toISOString()
+                processed_at: new Date().toISOString(),
+                status: 'new'
             }])
             .select();
 
@@ -181,6 +182,101 @@ export async function getReportStats() {
         return { success: true, data: stats };
     } catch (error) {
         console.error('Error fetching stats:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function updateReportStatus(reportId, status) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
+        const updateData = {
+            status,
+            updated_at: new Date().toISOString()
+        };
+
+        if (status === 'resolved') {
+            updateData.resolved_at = new Date().toISOString();
+        }
+
+        const { data, error } = await supabase
+            .from('reports')
+            .update(updateData)
+            .eq('report_id', reportId)
+            .select();
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error updating report status:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function getNotes(reportId) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('report_notes')
+            .select('*')
+            .eq('report_id', reportId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error fetching notes:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function addNote(reportId, noteText, csrAgent) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('report_notes')
+            .insert([{
+                report_id: reportId,
+                note_text: noteText,
+                csr_agent: csrAgent
+            }])
+            .select();
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error adding note:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function deleteNote(noteId) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
+        const { error } = await supabase
+            .from('report_notes')
+            .delete()
+            .eq('id', noteId);
+
+        if (error) throw error;
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting note:', error);
         return { success: false, error: error.message };
     }
 }

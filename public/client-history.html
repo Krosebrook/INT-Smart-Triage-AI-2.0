@@ -140,6 +140,20 @@
             margin-bottom: 15px;
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+        }
+
+        .report-checkbox {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .report-card.has-checkbox {
+            padding-left: 55px;
         }
 
         .report-card:hover {
@@ -225,6 +239,30 @@
         .category-badge {
             background: #e0e7ff;
             color: #667eea;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-new {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-in_progress {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-resolved {
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .report-description {
@@ -319,8 +357,34 @@
         <div class="header">
             <h1>📊 Client History</h1>
             <div class="header-actions">
+                <button id="exportSelectedBtn" class="btn btn-primary" style="display: none;">Export Selected</button>
                 <a href="/" class="btn btn-secondary">← New Triage</a>
                 <a href="/demo.html" class="btn btn-secondary">Demo</a>
+            </div>
+        </div>
+
+        <div id="quickStats" class="search-section" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                <div>
+                    <div style="font-size: 32px; font-weight: 700;" id="statTotal">-</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Total Reports</div>
+                </div>
+                <div>
+                    <div style="font-size: 32px; font-weight: 700;" id="statNew">-</div>
+                    <div style="font-size: 14px; opacity: 0.9;">New</div>
+                </div>
+                <div>
+                    <div style="font-size: 32px; font-weight: 700;" id="statProgress">-</div>
+                    <div style="font-size: 14px; opacity: 0.9;">In Progress</div>
+                </div>
+                <div>
+                    <div style="font-size: 32px; font-weight: 700;" id="statResolved">-</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Resolved</div>
+                </div>
+                <div>
+                    <div style="font-size: 32px; font-weight: 700;" id="statHigh">-</div>
+                    <div style="font-size: 14px; opacity: 0.9;">High Priority</div>
+                </div>
             </div>
         </div>
 
@@ -461,9 +525,12 @@
             }
 
             exportBtn.style.display = 'block';
+            updateQuickStats(reports);
 
             container.innerHTML = reports.map(report => `
-                <div class="report-card" onclick="viewReport('${report.report_id}')">
+                <div class="report-card has-checkbox">
+                    <input type="checkbox" class="report-checkbox" value="${report.report_id}" onclick="event.stopPropagation(); toggleSelection();">
+                    <div onclick="viewReport('${report.report_id}')">
                     <div class="report-header">
                         <div class="report-title">
                             <h3>${escapeHtml(report.ticket_subject)}</h3>
@@ -474,6 +541,7 @@
                             </div>
                         </div>
                         <div class="report-badges">
+                            <span class="status-badge status-${report.status}">${formatStatus(report.status)}</span>
                             <span class="badge priority-${report.priority}">${report.priority.toUpperCase()}</span>
                             <span class="badge tone-${report.customer_tone}">${report.customer_tone}</span>
                             <span class="badge category-badge">${report.category}</span>
@@ -492,6 +560,7 @@
                             <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); viewReport('${report.report_id}')">View Details</button>
                             <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); viewCustomerHistory('${escapeHtml(report.customer_name)}')">Customer History</button>
                         </div>
+                    </div>
                     </div>
                 </div>
             `).join('');
@@ -555,9 +624,76 @@
             return div.innerHTML;
         }
 
-        function exportToCSV() {
-            // TODO: Implement CSV export
-            alert('CSV export functionality coming soon!');
+        function formatStatus(status) {
+            const statusMap = {
+                'new': 'New',
+                'in_progress': 'In Progress',
+                'resolved': 'Resolved'
+            };
+            return statusMap[status] || status;
+        }
+
+        function updateQuickStats(reports) {
+            document.getElementById('quickStats').style.display = 'block';
+            document.getElementById('statTotal').textContent = reports.length;
+            document.getElementById('statNew').textContent = reports.filter(r => r.status === 'new').length;
+            document.getElementById('statProgress').textContent = reports.filter(r => r.status === 'in_progress').length;
+            document.getElementById('statResolved').textContent = reports.filter(r => r.status === 'resolved').length;
+            document.getElementById('statHigh').textContent = reports.filter(r => r.priority === 'high').length;
+        }
+
+        function toggleSelection() {
+            const checkboxes = document.querySelectorAll('.report-checkbox:checked');
+            const exportBtn = document.getElementById('exportSelectedBtn');
+            exportBtn.style.display = checkboxes.length > 0 ? 'block' : 'none';
+        }
+
+        document.getElementById('exportSelectedBtn').onclick = async () => {
+            const selected = Array.from(document.querySelectorAll('.report-checkbox:checked')).map(cb => cb.value);
+
+            if (selected.length === 0) {
+                alert('No reports selected');
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('reports')
+                .select('*')
+                .in('report_id', selected);
+
+            if (error) {
+                alert(`Error fetching reports: ${error.message}`);
+                return;
+            }
+
+            exportToCSV(data);
+        };
+
+        function exportToCSV(reports) {
+            const headers = ['Report ID', 'Customer', 'Subject', 'Status', 'Priority', 'Tone', 'Category', 'Created Date'];
+            const rows = reports.map(r => [
+                r.report_id,
+                r.customer_name,
+                r.ticket_subject,
+                r.status || 'new',
+                r.priority,
+                r.customer_tone,
+                r.category,
+                new Date(r.created_at).toLocaleString()
+            ]);
+
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `reports-export-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         // Make functions global for onclick handlers
