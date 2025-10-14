@@ -233,9 +233,9 @@
 
 ### Documentation
 - **[INT_PERSONAS_QUERIES_RESOURCES.md](./INT_PERSONAS_QUERIES_RESOURCES.md)** - Complete reference
-- **[data/query-types.json](./data/query-types.json)** - Query templates
-- **[data/personas.json](./data/personas.json)** - All personas
-- **[data/kb.json](./data/kb.json)** - Knowledge base articles
+- **[data/query-types.json](./public/data/query-types.json)** - Query templates
+- **[data/personas.json](./public/data/personas.json)** - All personas
+- **[data/kb.json](./public/data/kb.json)** - Knowledge base articles
 
 ### Tools
 - **Demo Interface**: `/demo.html` - Test triage with different personas
