@@ -52,7 +52,8 @@ describe('Triage Engine', () => {
 
     const result = engine.processTriageRequest(input);
     
-    assert.strictEqual(result.category, 'authentication');
+    // Authentication issues should be categorized under 'infosec' (information security)
+    assert.strictEqual(result.category, 'infosec');
   });
 });
 
