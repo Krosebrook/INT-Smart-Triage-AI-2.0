@@ -44,7 +44,7 @@ export function sanitizeInput(input) {
   return input
     .trim()
     .replace(/[<>]/g, '') // Remove potential HTML tags
-    .replace(/[\x00-\x1F\x7F]/g, ''); // Remove control characters
+    .replace(/[\x00-\x1F\x7F]/g, ''); // eslint-disable-line no-control-regex -- Remove control characters
 }
 
 export function sanitizeTriageData(data) {

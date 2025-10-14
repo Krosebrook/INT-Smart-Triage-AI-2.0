@@ -32,20 +32,12 @@ export default async function handler(req, res) {
 
     try {
         // Create promise with 3s timeout as required
-        const healthCheck = new Promise(async (resolve, reject) => {
-            const timeout = setTimeout(() => {
-                reject(new Error('Health check timeout after 3 seconds'));
-            }, 3000);
-
-            try {
-                const result = await performHealthCheck();
-                clearTimeout(timeout);
-                resolve(result);
-            } catch (error) {
-                clearTimeout(timeout);
-                reject(error);
-            }
-        });
+        const healthCheck = Promise.race([
+            performHealthCheck(),
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Health check timeout after 3 seconds')), 3000)
+            )
+        ]);
 
         const healthData = await healthCheck;
         
