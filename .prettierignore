@@ -1,0 +1,29 @@
+# Prettier ignore patterns
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+.c8/
+
+# Vercel
+.vercel/
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary
+tmp/
+temp/
