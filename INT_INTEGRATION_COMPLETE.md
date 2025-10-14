@@ -263,9 +263,9 @@ The INT Client Success Platform is now a **fully functional, production-ready sy
 
 ### Comprehensive Documentation
 - **[INT_PERSONAS_QUERIES_RESOURCES.md](./INT_PERSONAS_QUERIES_RESOURCES.md)** - Complete personas, query types, case studies, and implementation guidance
-- **[data/query-types.json](./data/query-types.json)** - Structured query templates for each service category with examples and keywords
-- **[data/personas.json](./data/personas.json)** - Extended personas including actual clients and fictional best-practice examples
-- **[data/kb.json](./data/kb.json)** - Knowledge base articles aligned with all INT services
+- **[data/query-types.json](./public/data/query-types.json)** - Structured query templates for each service category with examples and keywords
+- **[data/personas.json](./public/data/personas.json)** - Extended personas including actual clients and fictional best-practice examples
+- **[data/kb.json](./public/data/kb.json)** - Knowledge base articles aligned with all INT services
 
 ---
 

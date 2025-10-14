@@ -6,7 +6,7 @@ This document summarizes the implementation of comprehensive personas, query typ
 
 ## What Was Added
 
-### 1. Enhanced Personas (data/personas.json)
+### 1. Enhanced Personas (public/data/personas.json)
 
 **Before**: 11 personas (7 team + 4 clients)  
 **After**: 21 personas (7 team + 14 clients)
@@ -51,7 +51,7 @@ This document summarizes the implementation of comprehensive personas, query typ
 10. **Retail Marketing Coordinator** - Retail sector
     - Needs: Managed marketing, e-commerce site, content creation
 
-### 2. Query Types Templates (data/query-types.json)
+### 2. Query Types Templates (public/data/query-types.json)
 
 Created comprehensive query type templates across all 7 INT service categories:
 
@@ -234,12 +234,12 @@ Demo interface confirmed to:
 
 ### New Files
 1. `INT_PERSONAS_QUERIES_RESOURCES.md` - Comprehensive documentation (20KB+)
-2. `data/query-types.json` - 40 query templates (17KB)
-3. `data/README.md` - Data directory documentation (5KB)
+2. `public/data/query-types.json` - 40 query templates (17KB)
+3. `public/data/README.md` - Data directory documentation (5KB)
 4. `PERSONAS_QUERIES_IMPLEMENTATION.md` - This summary document
 
 ### Modified Files
-1. `data/personas.json` - Added 10 new client personas
+1. `public/data/personas.json` - Added 10 new client personas
 2. `src/services/geminiService.js` - Enhanced AI prompts with INT categories
 3. `INT_INTEGRATION_COMPLETE.md` - Updated statistics and references
 
