@@ -1,171 +1,161 @@
 # INT Inc. Triage App – Personas, Query Types & Resources
 
-## Overview
-
-This document provides comprehensive information about INT Inc.'s services, client personas, query types, and case studies to support the AI-powered triage system. This information helps the triage engine understand client needs, route requests appropriately, and provide contextual responses.
-
----
-
 ## Services Overview
 
 ### Information Security (InfoSec)
 
-INT helps organisations build rock-solid security programmes through:
-
-- **Discovery Phase**: Evaluate existing security posture and identify vulnerabilities through interviews and analyses to produce a remediation blueprint
-- **Implementation**: Help implement policies and procedures (password policies, data retention, off-boarding processes) and stay involved during remediation
-- **Cyber-Insurance Support**: Assist with cyber-insurance questionnaires by gathering accurate information and crafting precise responses to secure coverage
-- **Managed InfoSec Services**: Ongoing support including vulnerability scans, tabletop exercises, threat detection and incident response
+INT helps organisations build rock‑solid security programmes. They begin with a discovery phase to evaluate the client's existing security posture and identify vulnerabilities; this includes interviews and analyses to produce a remediation blueprint[^1]. Next, they help implement policies and procedures (e.g., password policies, data retention, off‑boarding processes) and stay involved during remediation[^1]. INT also assists with cyber‑insurance questionnaires by gathering accurate information and crafting precise responses to secure coverage[^1]. For clients needing ongoing help, INT offers managed InfoSec services such as vulnerability scans, tabletop exercises, threat detection and incident response[^1].
 
 ### Technology
 
-INT's tech division keeps businesses' systems running smoothly with:
+INT's tech division keeps businesses' systems running smoothly. They stress that technology should empower teams and improve efficiency[^1]. Core offerings include:
 
-- **Managed IT & Support**: 24/7 helpdesk, network security, hardware/software maintenance, proactive monitoring and compliance
-- **Email Platform Migration**: Seamless transition to cloud platforms with minimal downtime
-- **Email Tenant Administration**: User license management, security settings, updates and troubleshooting
-- **Business Insights & Reporting**: Analytics, custom reports, KPI dashboards and predictive analytics
-- **Business Application Hosting**: Secure cloud hosting with high availability and backups
-- **SaaS Migration**: Assessing current software, identifying SaaS alternatives, planning and executing migration, integrating with existing systems and training users
+- **Managed IT & Support**: 24/7 helpdesk, network security, hardware/software maintenance, proactive monitoring and compliance[^1]
+- **Email Platform Migration**: Seamless transition with minimal downtime[^1]
+- **Email Tenant Administration**: User license management, security settings, updates and troubleshooting[^1]
+- **Business Insights & Reporting**: Analytics, custom reports, KPI dashboards and predictive analytics[^1]
+- **Business Application Hosting**: Secure cloud hosting, high availability, backups[^1]
+- **SaaS Migration**: Assessing current software, identifying SaaS alternatives, planning and executing migration, integrating with existing systems and training users[^1]
 
 ### Website Design
 
-INT creates websites that are visually appealing, user-friendly and mobile responsive:
+INT creates websites that are visually appealing, user‑friendly and mobile responsive[^1]. They offer:
 
-- **Custom Web Design Packages**: Brochure, templated or fully customised options
-- **E-Commerce Development**: Secure check-out and tailored navigation
-- **Website Refreshes**: Modernise tired sites
-- **Platform Migration**: WordPress or HubSpot CMS transitions
-- **Hosting & Maintenance Packages**: Updates, security monitoring and optimisation (Lite, Essentials, Ultimate tiers)
-- **Digital Accessibility Services**: One-time tune-ups to AI-driven tools for ADA/WCAG compliance
+- **Custom Web Design Packages**: Brochure, templated or fully customised[^1]
+- **E‑Commerce Development**: Secure check‑out and tailored navigation[^1]
+- **Website Refreshes**: Modernise a tired site[^1]
+- **Platform Migration**: WordPress or HubSpot[^1]
+- **Hosting & Maintenance Packages**: Updates, security monitoring and optimisation[^1]
+- **WordPress Maintenance Tiers**: Lite, Essentials, Ultimate with different levels of monthly updates and support[^1]
+- **Digital‑Accessibility Services**: Ranging from one‑time tune‑ups to AI‑driven tools to make sites ADA‑compliant[^1]
 
 ### Branding & Identity
 
-Helps businesses build or refresh their brand:
-
-- **Brand Identity Development**: Strategy & positioning statement, logo/visual identity, brand voice/messaging and guidelines
-- **Visual Services**: Website design & development, marketing collateral, social-media graphics and packaging design
-- **Packages**: Start, Spin-Off, Establish or Refresh - tailored to different business stages
-- **À-la-Carte Services**: Additional content creation and design services available
+This service helps businesses build or refresh their brand. INT emphasises that a strong brand goes beyond a logo; it includes tone, messaging and visual identity[^1]. Their brand‑identity development dives deep into what makes a business unique and delivers a strategy & positioning statement, logo/visual identity, brand voice/messaging and guidelines[^1]. Visual services include website design & development, marketing collateral, social‑media graphics and packaging design[^1]. Packages are tailored to different stages: Start, Spin‑Off, Establish or Refresh, with increasing levels of deliverables and cost[^1]. Additional à‑la‑carte services (e.g., content creation) are available[^1].
 
 ### Content Creation & Strategy
 
-Crafts content strategies that position clients as thought leaders:
+INT crafts content strategies and deliverables that position clients as thought leaders. Services include:
 
-- **Content Strategy**: Audience research, competitor analysis, content mission, calendar
-- **Website Content**: SEO optimisation and content audits
-- **E-Books**: Showcase expertise and generate leads
-- **Whitepapers**: Distil complex topics into data-backed insights
-- **Essentials Included**: Competitor analysis, audience research, content assessments and brand-voice reviews
+- **Content Strategy**: Audience research, competitor analysis, content mission, calendar[^1]
+- **Website Content**: SEO optimisation and content audits[^1]
+- **E‑Books**: Showcase expertise and generate leads[^1]
+- **Whitepapers**: Distil complex topics into data‑backed insights[^1]
+
+Each offering includes essentials such as competitor analysis, audience research, content assessments and brand‑voice reviews[^1].
 
 ### Managed Marketing
 
-INT acts as a marketing coach for clients who lack time or expertise:
+INT acts as a marketing coach for clients who lack time or expertise. They provide:
 
-- **Content Generation**: Marketing emails, blog posts, one-to-one emails, website copy
-- **Marketing Automation Management**: Drip campaigns, segmentation, automation workflows, blog management
-- **Inbound Marketing Administration**: A/B testing, reporting, dashboards, social media posts, forms, CTAs, basic SEO, website analytics
-- **Sales Enablement Support**: CRM management and sales-marketing alignment
-- **Packages**: Lite, Essentials and Ultimate with increasing volumes of output and analytics
+- **Content Generation**: Marketing emails, blog posts, one‑to‑one emails, website copy[^1]
+- **Marketing Automation Management**: Drip campaigns, segmentation, automation workflows, blog management[^1]
+- **Inbound‑Marketing Administration**: A/B testing, reporting, dashboards, social media posts, forms, CTAs, basic SEO, website analytics[^1]
+- **Sales‑Enablement Support and CRM Management**[^1]
+
+Packages (Lite, Essentials and Ultimate) offer increasing volumes of marketing output and analytics[^1].
 
 ### Operations
 
-Streamlines business administration:
+INT streamlines business administration. Core offerings include:
 
-- **Bookkeeping and Accounting**: Handle routine expenses, tax forms and financial strategy
-- **Startup Fundamentals**: State registrations, EIN applications, S-Corp elections and regulatory filings
-- **Process Management**: Remove inefficiencies and improve consistency and scalability
-- **AI Your BI℠**: AI-powered solution that analyses company data for patterns and insights
-
----
-
-## Client Personas (Actual Clients)
-
-### Medical Practice Owner/Physician
-- **Example**: Renee L. Marshall, MD, GLOW Surgical Arts
-- **Role**: Runs a healthcare practice; focuses on patient care and compliance
-- **Primary Needs**: Website design & refresh, managed marketing to attract patients, content creation (patient education), operations support (bookkeeping), InfoSec for HIPAA compliance
-- **Testimonial**: _"Choosing INT was one of my best business decisions."_
-
-### Fuel/Energy Operations Manager
-- **Example**: Montanari Fuel
-- **Role**: Oversees fuel distribution business; deals with logistics and customer communications
-- **Primary Needs**: Technology support (email/texting integration, network security), operations assistance (bookkeeping), process management
-- **Testimonial**: INT resolved texting and emailing issues by collaborating with their IT technician
-
-### E-Commerce Marketing Director
-- **Example**: Jamie Schwartz, Director of Marketing, Quivers
-- **Role**: Leads marketing for an e-commerce platform; aims to boost sales and manage customer engagement
-- **Primary Needs**: HubSpot implementation, marketing automation, website design, analytics
-- **Testimonial**: _"INT successfully launched HubSpot for us and provides amazing ongoing support."_
-
-### Government Vertical/Marketing VP
-- **Example**: Selen Warner, VP Government Vertical & Marketing, Stage 4 Solutions
-- **Role**: Oversees marketing and operations for government-focused solution provider
-- **Primary Needs**: CRM migration from Salesforce to HubSpot, marketing automation, compliance and InfoSec, data insights
-- **Testimonial**: _"INT's data migration from Salesforce to HubSpot was seamless and customized to our needs."_
-
-### HR Manager / Operations Manager
-- **Example**: Kami Hunt, Human Resources Manager, Edlong
-- **Role**: Manages human resources and business operations in a mid-sized firm
-- **Primary Needs**: HRIS implementation, payroll/benefits audit, operations services (bookkeeping), compliance support
-- **Testimonial**: _"INT is personable, thorough, and responsive."_
-
-### Client Success Manager (Tech Company)
-- **Example**: Katya Yushanova, Client Success Manager, US Computer Connection
-- **Role**: Works at a technology service provider, responsible for client onboarding and support
-- **Primary Needs**: CRM setup, marketing automation, training and ongoing support; emphasises responsiveness
-- **Testimonial**: _"INT provided above-and-beyond HubSpot setup and support - 1000 out of 10."_
-
-### Marketing & Business Development Manager (Media)
-- **Example**: Gregory J. Benson, Marketing & Business Development Manager, MSM
-- **Role**: Runs marketing for a media or entertainment company
-- **Primary Needs**: Website design, hosting & maintenance, content strategy, branding/identity
-- **Testimonial**: _"INT built a new website that elevated our online radio station."_
-
-### VP of Product & Operations (E-Commerce)
-- **Example**: Marissa Luedy, VP of Product & Ops, Quivers
-- **Role**: Manages product and operational excellence in an e-commerce company
-- **Primary Needs**: CRM integration, data-driven insights, process automation
-- **Testimonial**: _"INT's seamless HubSpot integration revolutionized our data-driven processes."_
-
-### Chief People Officer
-- **Example**: Susan Pils, Chief People Officer, Edlong
-- **Role**: Oversees HR and benefits strategy at a food-industry company
-- **Primary Needs**: Benefits audit, HRIS implementation, payroll alignment
-- **Testimonial**: _"INT efficiently audited benefits and aligned records."_
-
-### Non-Profit/Community Service Manager
-- **Example**: Send a Care Package Today (SACPT)
-- **Role**: Leads a mission-driven organisation providing services or charitable products
-- **Primary Needs**: Custom website design, brand identity, e-commerce functionality, ongoing hosting/support
-- **Case Study**: INT built a custom WordPress site with new logo and integrated third-party links to help users send military care packages
+- **Bookkeeping and Accounting**: Handle routine expenses, tax forms and financial strategy[^1]
+- **Startup Fundamentals**: State registrations, EIN applications, S‑Corp elections and regulatory filings[^1]
+- **Process Management**: Removes inefficiencies and improves consistency and scalability[^1]
+- **AI Your BI℠**: An AI‑powered solution that analyses company data for patterns and insights[^1]
 
 ---
 
-## Fictional Personas (Best-Practice)
+## Personae (Actual Clients)
 
-These personas cover scenarios not present in actual testimonials but represent common client types:
+| Persona | Description (role & industry) | Primary needs / services | Example client |
+|---------|------------------------------|-------------------------|----------------|
+| **Medical Practice Owner/Physician** | Runs a healthcare practice; focuses on patient care and compliance. | Needs website design & refresh, managed marketing to attract patients, content creation (e.g., patient education), and operations support (bookkeeping). May also require InfoSec for HIPAA compliance. | Renee L. Marshall, MD, GLOW Surgical Arts – praised INT as one of her best business decisions[^1]. |
+| **Fuel/Energy Operations Manager** | Oversees fuel distribution business; deals with logistics and customer communications. | Requires technology support (email/texting integration, network security), operations assistance (bookkeeping), and process management. | Montanari Fuel – testimonial notes that INT resolved a texting and emailing issue by collaborating with their IT technician[^1]. |
+| **E‑commerce Marketing Director** | Leads marketing for an e‑commerce platform; aims to boost sales and manage customer engagement. | Needs HubSpot implementation, marketing automation, website design, and analytics. | Jamie Schwartz, Director of Marketing, Quivers – credits INT for successfully launching HubSpot and troubleshooting issues[^1]. |
+| **Government Vertical/Marketing VP** | Oversees marketing and operations for government‑focused solution provider. | Requires CRM migration from Salesforce to HubSpot, marketing automation, compliance and InfoSec, plus data insights. | Selen Warner, VP Government Vertical & Marketing, Stage 4 Solutions – praised INT's data migration and tailored HubSpot implementation[^1]. |
+| **HR Manager / Operations Manager** | Manages human resources and business operations in a mid‑sized firm. | Needs HRIS implementation, payroll/benefits audit, and operations services such as bookkeeping and compliance support. | Kami Hunt, Human Resources Manager, Edlong – lauds INT for being personable, thorough and responsive[^1]. |
+| **Client Success Manager (Tech Company)** | Works at a technology service provider, responsible for client onboarding and support. | Needs CRM setup, marketing automation, training and ongoing support; emphasises responsiveness. | Katya Yushanova, Client Success Manager, US Computer Connection – says INT provided above‑and‑beyond HubSpot setup and support[^1]. |
+| **Marketing & Business Development Manager (Media)** | Runs marketing for a media or entertainment company. | Requires website design, hosting & maintenance, content strategy and branding/identity. | Gregory J. Benson, Marketing & Business Development Manager, MSM – says INT built a new website that elevated their online radio station[^1]. |
+| **VP of Product & Operations (E‑Commerce)** | Manages product and operational excellence in an e‑commerce company. | Needs CRM integration, data‑driven insights and process automation. | Marissa Luedy, VP of Product & Ops, Quivers – credits INT for a seamless HubSpot integration and improved data‑driven processes[^1]. |
+| **Chief People Officer** | Oversees HR and benefits strategy at a food‑industry company. | Requires operations services such as benefits audit, HRIS implementation and payroll alignment. | Susan Pils, Chief People Officer, Edlong – notes that INT efficiently audited benefits and aligned records[^1]. |
+| **Non‑profit/Community Service Manager** | Leads a mission‑driven organisation providing services or charitable products. | Needs custom website design, brand identity, e‑commerce functionality and ongoing hosting/support. | Send a Care Package Today (SACPT) – case study describes how INT built a custom WordPress site with new logo and integrated third‑party links to help users send military care packages[^1]. |
 
-### Manufacturing CFO
-- **Industry**: Manufacturing
-- **Primary Needs**: SaaS migration, business insights & reporting, InfoSec compliance
-- **Use Case**: Mid-size manufacturing company upgrading legacy systems
+### Fictional Personas (Best‑Practice)
 
-### Startup Founder
-- **Industry**: Technology Startup
-- **Primary Needs**: Branding & identity, website launch, startup fundamentals
-- **Use Case**: Early-stage company building brand and online presence
+To cover scenarios not present in testimonials, consider adding personas such as:
 
-### Biotech Compliance Officer
-- **Industry**: Biotechnology/Healthcare
-- **Primary Needs**: InfoSec compliance, cyber-insurance assistance, operations support
-- **Use Case**: Heavily regulated industry requiring strict compliance
+- **Manufacturing CFO**: Needs SaaS migration, business insights & reporting, InfoSec compliance
+- **Startup Founder**: Requires branding & identity, website launch and startup fundamentals
+- **Biotech Compliance Officer**: Needs InfoSec compliance, cyber‑insurance assistance, and operations support
+- **Retail Marketing Coordinator**: Needs managed marketing, e‑commerce site and content creation
 
-### Retail Marketing Coordinator
-- **Industry**: Retail
-- **Primary Needs**: Managed marketing, e-commerce site, content creation
-- **Use Case**: Boutique retailer growing online presence
+---
+
+## Query Types by Service Category
+
+These queries represent typical requests that a client success representative at INT might triage. Each category includes examples of tasks or questions a client may have.
+
+### Information Security (InfoSec)
+
+1. **InfoSec Program discovery** – "We need to assess our current security posture and identify vulnerabilities before pursuing SOC 2 or ISO 27001; can you conduct a discovery evaluation?"[^1]
+2. **Compliance programme implementation** – "Please help us implement the remediation blueprint and develop policies (passwords, data retention, off‑boarding) outlined in our compliance plan"[^1]
+3. **Cyber‑insurance questionnaire support** – "We need assistance filling out a cyber‑insurance questionnaire and crafting responses to technical questions"[^1]
+4. **Managed InfoSec services** – "Set up ongoing network vulnerability scans, phishing training, threat detection and incident response"[^1]
+5. **Audit preparation** – "Guide us through SOC 2 audit preparation and help gather required documentation."
+
+### Technology
+
+1. **Managed IT & support** – "Our team has intermittent network outages; can your helpdesk investigate and monitor our systems?"[^1]
+2. **Email platform migration** – "We'd like to migrate from on‑premises Exchange to a cloud email service; please handle the transition and minimise downtime"[^1]
+3. **Email tenant administration** – "Add new users, manage licenses, and ensure our email security settings are correctly configured"[^1]
+4. **Business insights & reporting** – "We need a KPI dashboard and predictive analytics to understand sales trends"[^1]
+5. **Business application hosting** – "Host our CRM on a secure, high‑availability environment with regular backups"[^1]
+6. **SaaS migration** – "Evaluate our software stack and migrate suitable apps to SaaS solutions while integrating them with existing systems"[^1]
+7. **Discovery process & SLAs** – "What does your discovery questionnaire look like and how fast can we expect responses?"[^1]
+
+### Website Design
+
+1. **Custom website design** – "We want a fully customised website for our e‑commerce business; what's included in the package and how long will it take?"[^1]
+2. **Package selection** – "Should we choose a brochure, templated or custom web design package, and what are the pricing tiers?"[^1]
+3. **E‑commerce development** – "Can you build a secure online store with intuitive navigation and premium shopping experience?"[^1]
+4. **Website refresh** – "Our site feels outdated; how can you update the design and user experience?"[^1]
+5. **Website migration** – "We need help migrating our site to WordPress or HubSpot CMS without downtime"[^1]
+6. **Hosting & maintenance** – "Please explain the monthly maintenance packages (Lite, Essentials, Ultimate) and what's included"[^1]
+7. **Website accessibility** – "Assess our site for WCAG/ADA compliance and implement accessibility improvements"[^1]
+
+### Branding & Identity
+
+1. **Brand strategy & positioning** – "We're launching a new product; help us define our positioning and brand promise"[^1]
+2. **Logo and visual identity** – "Design a memorable logo and cohesive visual identity for our brand"[^1]
+3. **Brand voice & messaging** – "Craft a brand voice and messaging guide that resonates with our audience"[^1]
+4. **Brand guidelines & style guides** – "Develop a detailed brand guidelines book covering logo usage, colours, typography and tone"[^1]
+5. **Brand refresh vs. start** – "Should we refresh our brand or start from scratch? What's included in each package and how much does it cost?"[^1]
+6. **À‑la‑carte branding services** – "We only need social‑media graphics; can we purchase services individually?"[^1]
+
+### Content Creation & Strategy
+
+1. **Content strategy development** – "Conduct audience research and competitor analysis, then create a content calendar"[^1]
+2. **Website copywriting** – "Rewrite our website content with SEO optimisation and convert visitors"[^1]
+3. **e‑Book creation** – "Develop an e‑book on industry best practices, including research, writing and design"[^1]
+4. **Whitepaper development** – "Help us produce a whitepaper that breaks down a complex topic with research and data"[^1]
+5. **Content mission & tone** – "Define a content mission statement and ensure the content aligns with our brand voice"[^1]
+
+### Managed Marketing
+
+1. **Marketing package selection** – "Which marketing package (Lite, Essentials, Ultimate) fits our needs and budget?"[^1]
+2. **Email & blog content** – "Produce monthly marketing emails and blog posts to engage our customers"[^1]
+3. **Drip campaign setup** – "Set up automated drip campaigns and segmentation in HubSpot"[^1]
+4. **Inbound marketing administration** – "Run A/B tests, create CTAs and track website analytics"[^1]
+5. **Sales enablement & CRM administration** – "Automate marketing‑to‑sales handoff and de‑duplicate records in our CRM"[^1]
+6. **HubSpot vs. existing tools** – "Do we need HubSpot for your marketing services? Can you work with our current tools?"[^1]
+
+### Operations
+
+1. **Bookkeeping & accounting** – "Manage our routine expenses, tax forms and develop a long‑term financial strategy"[^1]
+2. **Startup fundamentals** – "File for state registrations, EIN, FinCEN BOI report and S‑Corp election; help us incorporate"[^1]
+3. **Process management** – "Streamline our operations, set clear goals and implement effective process management"[^1]
+4. **AI Your BI℠** – "Use your AI tools to analyse our data and provide actionable insights"[^1]
 
 ---
 
@@ -173,261 +163,87 @@ These personas cover scenarios not present in actual testimonials but represent 
 
 ### INT Rebrand
 
-**Challenge**: INT needed to modernise its own brand while maintaining objectivity, gaining leadership buy-in, and preserving brand equity.
+When INT decided to modernise its own brand, they approached the project as they would a client engagement. The case study explains that a strong brand involves both "voice" and "face"; developing a cohesive identity required deep understanding of the company's history, values and target audience[^1]. Key challenges included maintaining objectivity, gaining leadership buy‑in and preserving brand equity[^1]. The solution involved defining a tone of voice, new tagline and positioning statement ("Our Purpose is Your Business"), designing a new logo that symbolises support and connectivity[^1], and redesigning the website with improved navigation and consistent visuals[^1]. The rebrand strengthened INT's market position and prepared the company for growth[^1].
 
-**Solution**:
-- Defined tone of voice and new tagline: "Our Purpose is Your Business"
-- Created new positioning statement
-- Designed new logo symbolising support and connectivity
-- Redesigned website with improved navigation and consistent visuals
+### Send a Care Package Today (Website design for SACPT)
 
-**Result**: Strengthened INT's market position and prepared the company for growth.
-
-**Key Learning**: A strong brand involves both "voice" and "face" - developing a cohesive identity requires deep understanding of company history, values and target audience.
-
----
-
-### Send a Care Package Today (SACPT)
-
-**Challenge**: Chicago-based organisation wanted a resource hub to simplify sending military care packages. Needed brand identity from scratch, intuitive interface, and third-party integrations.
-
-**Solution**:
-- Performed research and logo design
-- Built custom WordPress website with custom theming
-- Integrated third-party resources seamlessly
-- Conducted thorough QA testing
-
-**Result**: User-friendly site that smoothly directs visitors to relevant services, includes ongoing hosting and updates.
-
-**Key Learning**: Custom solutions for mission-driven organisations require understanding of unique workflows and user needs.
-
----
+A Chicago‑based organisation wanted a resource hub to simplify sending military care packages. INT designed a custom WordPress website complete with a new logo and visual identity[^1]. Challenges included creating a brand identity from scratch, building an intuitive interface and integrating third‑party links[^1]. INT performed research, logo design and custom theming, integrated third‑party resources and conducted QA testing[^1]. The result was a user‑friendly site that smoothly directs visitors to relevant services and includes ongoing hosting and updates[^1].
 
 ### INT SOC 2 Compliance
 
-**Challenge**: INT pursued SOC 2 attestation to demonstrate commitment to security and reinforce client trust. Required meeting stringent standards, integrating cross-functional processes, and building robust documentation.
+To demonstrate its commitment to security, INT pursued SOC 2 attestation. The case study notes that clients rely on INT for secure managed services and that obtaining SOC 2 reinforces trust[^1]. Challenges included meeting stringent security standards, integrating cross‑functional processes and building robust documentation[^1]. INT conducted a risk assessment, strengthened security controls, instilled a culture of security, and built monitoring systems[^1]. Achieving SOC 2 improved client confidence, strengthened market position and enhanced internal processes[^1].
 
-**Solution**:
-- Conducted comprehensive risk assessment
-- Strengthened security controls across all systems
-- Instilled a culture of security throughout organization
-- Built monitoring and reporting systems
+### Testimonials Highlights
 
-**Result**: Achieved SOC 2 compliance, improving client confidence, strengthening market position, and enhancing internal processes.
+Customers praise INT for being knowledgeable, efficient and reliable partners:
 
-**Key Learning**: Compliance is not just technical - it requires organizational commitment and cultural change.
+- **GLOW Surgical Arts** – Renee L. Marshall (MD) says choosing INT was one of her best business decisions[^1]
+- **Montanari Fuel** – appreciates that INT's staff resolved a texting/email issue in collaboration with their IT team[^1]
+- **Quivers** – Jamie Schwartz commends INT for HubSpot setup and ongoing support[^1]; VP Marissa Luedy notes that INT's thorough CRM migration revolutionised their marketing and sales processes[^1]
+- **Stage 4 Solutions** – Selen Warner highlights INT's seamless Salesforce‑to‑HubSpot migration and customisation[^1]
+- **Edlong** – Kami Hunt praises INT's personable and knowledgeable service[^1]; Susan Pils notes that INT efficiently audited benefits and aligned records[^1]
+- **US Computer Connection** – Katya Yushanova calls INT a partner who made their HubSpot setup "1000 out of 10"[^1]
+- **MSM** – Gregory J. Benson says INT delivered a website that elevated their online radio station[^1]
+- **Destwin** – Robert Kulawiec states that INT behaves more like a partner than a vendor[^1]
 
----
+### Fictional Case Studies (Best Practices)
 
-## Fictional Case Studies (Best Practices)
+To cover additional scenarios and inspire training for the triage app, here are fictional case studies based on common client needs.
 
-### Manufacturing SaaS Migration & BI
+#### Manufacturing SaaS Migration & BI
 
-**Client**: Acme Tools Inc. (mid-size manufacturing)
+**Acme Tools Inc.** is a mid‑size manufacturing company with outdated on‑premise software. INT conducts a discovery assessment and recommends migrating to a suite of SaaS applications (ERP, CRM and support desk). The team handles data migration, integrates the new SaaS tools with existing systems and trains staff. INT then deploys AI Your BI℠ to analyse production data, revealing bottlenecks and predicting inventory needs. As a result, Acme reduces downtime, improves forecasting and gains real‑time dashboards.
 
-**Challenge**: Outdated on-premise software limiting efficiency and visibility
+#### Startup Brand & Website Launch
 
-**Solution**:
-- Discovery assessment and SaaS recommendations (ERP, CRM, support desk)
-- Data migration and system integration
-- Staff training on new platforms
-- Deployed AI Your BI℠ for production data analysis
+**GreenStride** is a sustainable footwear startup. INT develops the brand strategy (mission, positioning and voice), designs a memorable logo and creates a fully customised e‑commerce website with integrated content strategy. The site launches with SEO‑optimised copy, product videos and an accessible design. GreenStride secures strong initial brand recognition and achieves a 30% conversion rate within three months.
 
-**Result**: Reduced downtime, improved forecasting, gained real-time dashboards
+#### Healthcare Compliance & Marketing
 
-**Key Takeaway**: Modern SaaS tools combined with AI analytics transform manufacturing operations
+**Heartland Cardiology** wants to attract new patients while ensuring HIPAA compliance. INT performs an InfoSec discovery to assess security, implements controls and assists with a cyber‑insurance questionnaire. Simultaneously, INT's marketing team develops a content plan with educational blog posts and sends targeted email campaigns. The result is a compliant, secure practice with a growing patient base.
 
----
+#### Retail Process Management & Marketing Automation
 
-### Startup Brand & Website Launch
-
-**Client**: GreenStride (sustainable footwear startup)
-
-**Challenge**: New company needing complete brand identity and online presence
-
-**Solution**:
-- Developed brand strategy (mission, positioning, voice)
-- Designed memorable logo and visual identity
-- Created fully customised e-commerce website
-- Launched with SEO-optimised copy, product videos, accessible design
-
-**Result**: Strong initial brand recognition, 30% conversion rate within three months
-
-**Key Takeaway**: Comprehensive brand foundation enables startup success
-
----
-
-### Healthcare Compliance & Marketing
-
-**Client**: Heartland Cardiology
-
-**Challenge**: Attract new patients while ensuring HIPAA compliance
-
-**Solution**:
-- InfoSec discovery and security assessment
-- Implemented controls and assisted with cyber-insurance
-- Developed content plan with educational blog posts
-- Created targeted email campaigns
-
-**Result**: Compliant, secure practice with growing patient base
-
-**Key Takeaway**: Security and growth can be achieved simultaneously with proper planning
-
----
-
-### Retail Process Management & Marketing Automation
-
-**Client**: Urban Threads (boutique clothing retailer)
-
-**Challenge**: Manual processes and inconsistent marketing limiting growth
-
-**Solution**:
-- Mapped existing workflows and identified inefficiencies
-- Implemented inventory management system
-- Trained staff on new processes
-- Set up automation workflows for abandoned-cart emails and loyalty campaigns
-
-**Result**: Increased sales while staff reclaimed time from manual tasks
-
-**Key Takeaway**: Process optimization and marketing automation create scalability
-
----
-
-## Query Types by Service Category
-
-### Information Security (InfoSec)
-
-1. **InfoSec Program Discovery**: "We need to assess our current security posture and identify vulnerabilities before pursuing SOC 2 or ISO 27001"
-2. **Compliance Programme Implementation**: "Please help us implement the remediation blueprint and develop policies outlined in our compliance plan"
-3. **Cyber-Insurance Questionnaire Support**: "We need assistance filling out a cyber-insurance questionnaire"
-4. **Managed InfoSec Services**: "Set up ongoing network vulnerability scans, phishing training, threat detection"
-5. **Audit Preparation**: "Guide us through SOC 2 audit preparation and help gather required documentation"
-
-### Technology
-
-1. **Managed IT & Support**: "Our team has intermittent network outages; can your helpdesk investigate?"
-2. **Email Platform Migration**: "We'd like to migrate from on-premises Exchange to cloud email service"
-3. **Email Tenant Administration**: "Add new users, manage licenses, and ensure email security settings are configured"
-4. **Business Insights & Reporting**: "We need a KPI dashboard and predictive analytics"
-5. **Business Application Hosting**: "Host our CRM on a secure, high-availability environment"
-6. **SaaS Migration**: "Evaluate our software stack and migrate suitable apps to SaaS solutions"
-7. **Discovery Process & SLAs**: "What does your discovery questionnaire look like and response times?"
-
-### Website Design
-
-1. **Custom Website Design**: "We want a fully customised website for our e-commerce business"
-2. **Package Selection**: "Should we choose brochure, templated or custom web design package?"
-3. **E-Commerce Development**: "Can you build a secure online store with intuitive navigation?"
-4. **Website Refresh**: "Our site feels outdated; how can you update the design?"
-5. **Website Migration**: "We need help migrating our site to WordPress or HubSpot CMS"
-6. **Hosting & Maintenance**: "Explain the monthly maintenance packages and what's included"
-7. **Website Accessibility**: "Assess our site for WCAG/ADA compliance and implement improvements"
-
-### Branding & Identity
-
-1. **Brand Strategy & Positioning**: "We're launching a new product; help us define our positioning"
-2. **Logo and Visual Identity**: "Design a memorable logo and cohesive visual identity"
-3. **Brand Voice & Messaging**: "Craft a brand voice and messaging guide for our audience"
-4. **Brand Guidelines & Style Guides**: "Develop detailed brand guidelines covering logo usage, colours, typography"
-5. **Brand Refresh vs. Start**: "Should we refresh our brand or start from scratch?"
-6. **À-la-Carte Branding Services**: "We only need social-media graphics; can we purchase individually?"
-
-### Content Creation & Strategy
-
-1. **Content Strategy Development**: "Conduct audience research and competitor analysis, then create content calendar"
-2. **Website Copywriting**: "Rewrite our website content with SEO optimisation"
-3. **E-Book Creation**: "Develop an e-book on industry best practices"
-4. **Whitepaper Development**: "Help us produce a whitepaper that breaks down a complex topic"
-5. **Content Mission & Tone**: "Define a content mission statement aligned with our brand voice"
-
-### Managed Marketing
-
-1. **Marketing Package Selection**: "Which marketing package (Lite, Essentials, Ultimate) fits our needs?"
-2. **Email & Blog Content**: "Produce monthly marketing emails and blog posts"
-3. **Drip Campaign Setup**: "Set up automated drip campaigns and segmentation in HubSpot"
-4. **Inbound Marketing Administration**: "Run A/B tests, create CTAs and track website analytics"
-5. **Sales Enablement & CRM Administration**: "Automate marketing-to-sales handoff and de-duplicate CRM records"
-6. **HubSpot vs. Existing Tools**: "Do we need HubSpot for your marketing services?"
-
-### Operations
-
-1. **Bookkeeping & Accounting**: "Manage our routine expenses, tax forms and develop financial strategy"
-2. **Startup Fundamentals**: "File for state registrations, EIN, FinCEN BOI report and S-Corp election"
-3. **Process Management**: "Streamline our operations, set clear goals and implement process management"
-4. **AI Your BI℠**: "Use your AI tools to analyse our data and provide actionable insights"
+**Urban Threads**, a boutique clothing retailer, struggles with manual processes and inconsistent marketing. INT streamlines operations by mapping existing workflows, implementing an inventory management system and training staff. The marketing team sets up automation workflows for abandoned‑cart emails and loyalty campaigns. Sales increase while staff reclaim time previously spent on manual tasks.
 
 ---
 
 ## How to Use This Information in the Triage App
 
-### 1. Seed Personas
-Create persona entries based on real clients and fictional best-practice examples. Each entry includes:
-- Job role and industry
-- Key pain points
-- Applicable services
-- Quotes or paraphrased testimonials
+### Seed Personas
 
-### 2. Define Query Templates
-Build templates for common client inquiries for each service category. These help the AI understand and route tickets to the right team.
+Create persona entries based on the real clients and fictional best‑practice examples above. Each entry should include the persona's job role, industry, key pain points, applicable services and a quote or paraphrased testimonial when available.
 
-### 3. Reference Case Studies & Testimonials
-Incorporate summaries of actual and fictional case studies to provide context. When a client asks about similar projects, the AI can draw on relevant case studies.
+### Define Query Templates
 
-### 4. Keep Services Current
-As INT adds new services (e.g., AI-powered solutions), update query types and personas accordingly.
+For each service category, build templates for common client inquiries (e.g., "Help us prepare for SOC 2 compliance", "We'd like to migrate our email platform", "We need a new website and brand identity"). These will help the AI understand and route tickets to the right team.
 
-### 5. Enhance Categorization
-Use query examples to improve keyword matching and categorization accuracy in the triage engine.
+### Reference Case Studies & Testimonials
+
+Incorporate summaries of actual and fictional case studies to provide the AI with context. When a client asks about a similar project (e.g., website redesign for a non‑profit), the AI can draw on the relevant case study to answer questions or reassure the client.
+
+### Keep Services Current
+
+As INT adds new services (e.g., AI‑powered solutions), update the query types and personas accordingly.
 
 ---
 
-## INT Branding & Voice
+## References
 
-### Tagline
-**"Our Purpose is Your Business"**
-
-### Communication Style
-- Knowledgeable but approachable
-- Solution-focused
-- Partner mentality (not vendor)
-- Emphasis on efficiency and results
-
-### Response Approach
-- Professional and reassuring for security matters
-- Technical and helpful for technology issues
-- Creative and friendly for website/design projects
-- Consultative and strategic for branding/marketing
-- Efficient and supportive for operations
+[^1]: All service information, personas, query types, and case studies are based on INT Inc.'s comprehensive service documentation available at intinc.com
 
 ---
 
-## Implementation Notes
+**This Markdown report includes:**
 
-### Priority Routing
-- **High Priority**: Security breaches, system outages, audit deadlines, startup registrations
-- **Medium Priority**: Website projects, marketing campaigns, content creation, migrations
-- **Low Priority**: Package information requests, general inquiries, consultations
+- **Detailed service descriptions** covering all INT services: Information Security, Technology, Website Design, Branding & Identity, Content Creation & Strategy, Managed Marketing, and Operations[^1]. Each service section explains the scope, key offerings, and highlights from the company's own materials.
 
-### Typical Response Times
-- **InfoSec**: 24-48 hours for consultations, immediate for security incidents
-- **Technology**: 4 hours standard, immediate for critical issues
-- **Website Design**: 24-48 hours for project discussions
-- **Branding**: 24-48 hours for strategy sessions
-- **Content**: 48 hours for project scoping
-- **Marketing**: 24 hours for ongoing clients, 48 hours for new projects
-- **Operations**: 24-48 hours standard, 24 hours for startup filings
+- **Actual client personas** based on published testimonials and case studies. These personas include typical roles (e.g., medical practice owner, fuel manager, marketing director, government marketing VP, HR manager) and outline the problems they solved with INT services[^1]. Fictional personas were added to fill service gaps and follow industry best practices.
 
-### Team Routing
-- InfoSec queries → Sarah Johnson
-- Technology queries → Mike Chen
-- Website queries → Emma Williams
-- Branding queries → James Brown
-- Content queries → Lisa Martinez
-- Marketing queries → David Park
-- Operations queries → Rachel Thompson
+- **Query types** arranged by service, representing the kinds of issues a client success team would triage—such as cybersecurity compliance questions, IT support requests, website redesign requirements, brand strategy needs, content marketing planning, marketing automation inquiries, and operational support.
+
+- **Summaries of real case studies and testimonials**, including the INT rebrand project, Send A Care Package Today, and a SOC 2 compliance engagement. Each summary covers the client's challenge, the solution provided by INT, and the resulting outcomes[^1]. Additional fictional case studies illustrate best practices in manufacturing SaaS migration, startup brand launch, healthcare compliance & marketing, and retail marketing automation.
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: Based on INT Inc. comprehensive service documentation  
-**Purpose**: Support AI-powered triage system with accurate, contextual information for client success
+_Feel free to let me know if you need the content organized differently or updated with additional research!_
