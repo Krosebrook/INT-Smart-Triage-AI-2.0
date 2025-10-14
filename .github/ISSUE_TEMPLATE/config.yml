@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0/blob/main/README.md
+    about: Please check the documentation first
+  - name: Developer Guide
+    url: https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0/blob/main/DEVELOPER_GUIDE.md
+    about: Developer best practices and guidelines
+  - name: Troubleshooting
+    url: https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0/blob/main/TROUBLESHOOTING.md
+    about: Common issues and solutions
