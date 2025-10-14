@@ -335,6 +335,70 @@
             100% { transform: rotate(360deg); }
         }
 
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 70%;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-text {
+            height: 16px;
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-badge {
+            height: 20px;
+            width: 80px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            input, select, button {
+                font-size: 16px;
+                min-height: 44px;
+            }
+        }
+
         @media (max-width: 768px) {
             .search-form {
                 grid-template-columns: 1fr;
@@ -393,6 +457,10 @@
                 <div class="form-group">
                     <label for="searchQuery">Search Customer / Subject / Description</label>
                     <input type="text" id="searchQuery" placeholder="Enter customer name, ticket subject, or keywords...">
+                </div>
+                <div class="form-group">
+                    <label for="assignedFilter">Assigned To</label>
+                    <input type="text" id="assignedFilter" placeholder="Filter by CSR name...">
                 </div>
                 <div class="form-group">
                     <label for="priorityFilter">Priority</label>
@@ -496,12 +564,14 @@
             const query = document.getElementById('searchQuery').value;
             const priority = document.getElementById('priorityFilter').value;
             const tone = document.getElementById('toneFilter').value;
+            const assigned = document.getElementById('assignedFilter').value;
 
             showLoading();
 
             const result = await searchReports(query, {
                 priority: priority || undefined,
-                customerTone: tone || undefined
+                customerTone: tone || undefined,
+                assignedTo: assigned || undefined
             });
 
             if (result.success) {
@@ -568,12 +638,18 @@
 
         function showLoading() {
             const container = document.getElementById('resultsContainer');
-            container.innerHTML = `
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading reports...</p>
+            container.innerHTML = Array(3).fill(0).map(() => `
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 60%;"></div>
+                    <div style="margin-top: 15px;">
+                        <div class="skeleton skeleton-badge"></div>
+                        <div class="skeleton skeleton-badge"></div>
+                        <div class="skeleton skeleton-badge"></div>
+                    </div>
                 </div>
-            `;
+            `).join('');
         }
 
         function showEmpty(message) {

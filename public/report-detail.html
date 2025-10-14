@@ -452,6 +452,16 @@
                         </div>
                     </div>
 
+                    <div class="status-selector" style="margin-top: 15px;">
+                        <label>Assigned To</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" id="assignInput" placeholder="Enter CSR name..." style="flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
+                            <button class="btn btn-primary" id="assignBtn" style="padding: 10px 20px;">Assign</button>
+                            <button class="btn btn-secondary" id="unassignBtn" style="padding: 10px 20px; display: none;">Unassign</button>
+                        </div>
+                        <div id="currentAssignment" style="margin-top: 10px; color: #666; font-size: 14px;"></div>
+                    </div>
+
                     <div class="action-buttons">
                         <button class="btn btn-primary" onclick="window.print()">📄 Export to PDF</button>
                         <button class="btn btn-success" id="viewCustomerBtn">👤 View Customer History</button>
@@ -517,7 +527,7 @@
     </div>
 
     <script type="module">
-        import { supabase, updateReportStatus, getNotes, addNote, deleteNote } from '/src/supabaseClient.js';
+        import { supabase, updateReportStatus, getNotes, addNote, deleteNote, assignReport } from '/src/supabaseClient.js';
 
         const urlParams = new URLSearchParams(window.location.search);
         const reportId = urlParams.get('id');
@@ -601,6 +611,87 @@
 
             updateStatusButtons(report.status || 'new');
             loadNotes();
+            updateAssignmentUI(report);
+        }
+
+        function updateAssignmentUI(report) {
+            const assignInput = document.getElementById('assignInput');
+            const assignBtn = document.getElementById('assignBtn');
+            const unassignBtn = document.getElementById('unassignBtn');
+            const currentAssignment = document.getElementById('currentAssignment');
+
+            if (report.assigned_to) {
+                assignInput.value = report.assigned_to;
+                unassignBtn.style.display = 'block';
+                currentAssignment.textContent = `Currently assigned to: ${report.assigned_to} (${new Date(report.assigned_at).toLocaleString()})`;
+            } else {
+                assignInput.value = '';
+                unassignBtn.style.display = 'none';
+                currentAssignment.textContent = 'Not assigned';
+            }
+        }
+
+        document.getElementById('assignBtn').onclick = async () => {
+            const assignTo = document.getElementById('assignInput').value.trim();
+            if (!assignTo) {
+                alert('Please enter a CSR name');
+                return;
+            }
+
+            const btn = document.getElementById('assignBtn');
+            btn.disabled = true;
+            btn.textContent = 'Assigning...';
+
+            const result = await assignReport(reportId, assignTo);
+
+            if (result.success) {
+                currentReport.assigned_to = assignTo;
+                currentReport.assigned_at = new Date().toISOString();
+                updateAssignmentUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = `✓ Assigned to ${assignTo}`;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to assign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Assign';
+        };
+
+        document.getElementById('unassignBtn').onclick = async () => {
+            if (!confirm('Remove assignment?')) return;
+
+            const btn = document.getElementById('unassignBtn');
+            btn.disabled = true;
+
+            const result = await assignReport(reportId, null);
+
+            if (result.success) {
+                currentReport.assigned_to = null;
+                currentReport.assigned_at = null;
+                updateAssignmentUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ Assignment removed';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to unassign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+        };
         }
 
         async function loadNotes() {

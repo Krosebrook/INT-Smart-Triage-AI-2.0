@@ -129,6 +129,9 @@ export async function searchReports(query, filters = {}) {
         if (filters.dateTo) {
             queryBuilder = queryBuilder.lte('created_at', filters.dateTo);
         }
+        if (filters.assignedTo) {
+            queryBuilder = queryBuilder.ilike('assigned_to', `%${filters.assignedTo}%`);
+        }
 
         queryBuilder = queryBuilder.order('created_at', { ascending: false }).limit(100);
 
@@ -277,6 +280,31 @@ export async function deleteNote(noteId) {
         return { success: true };
     } catch (error) {
         console.error('Error deleting note:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function assignReport(reportId, assignedTo) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('reports')
+            .update({
+                assigned_to: assignedTo,
+                assigned_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            })
+            .eq('report_id', reportId)
+            .select();
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error assigning report:', error);
         return { success: false, error: error.message };
     }
 }
