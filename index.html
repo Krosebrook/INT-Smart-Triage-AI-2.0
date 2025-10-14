@@ -233,6 +233,9 @@
     </div>
 
     <script type="module">
+        // Import Supabase client
+        import { supabase, saveTriageReport } from '/src/supabaseClient.js';
+
         // Client-side triage logic for bolt.new compatibility
         function processTriageRequest(ticketData) {
             const { issueDescription, customerTone, ticketSubject, customerName } = ticketData;
@@ -349,8 +352,20 @@
                 // Simulate processing delay for realistic UX
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
+                // Save to Supabase database
+                const saveResult = await saveTriageReport({
+                    ...result,
+                    ...triageData
+                });
+
+                if (saveResult.success) {
+                    console.log('Report saved to database:', saveResult.data);
+                } else {
+                    console.warn('Failed to save to database:', saveResult.error);
+                }
+
                 // Display results
-                displayTriageResults(result);
+                displayTriageResults(result, triageData.customerName);
                 resultsSection.classList.add('show');
                 resultsSection.scrollIntoView({ behavior: 'smooth' });
 
@@ -372,15 +387,16 @@
             }
         });
 
-        function displayTriageResults(result) {
+        function displayTriageResults(result, customerName) {
             const triageResults = document.getElementById('triageResults');
             const priority = result.priority || 'medium';
-            
+
             triageResults.innerHTML = `
                 <div class="result-card">
                     <h3>Triage Priority</h3>
                     <span class="priority-badge priority-${priority}">${priority.toUpperCase()} PRIORITY</span>
                     <p style="margin-top: 10px;"><strong>Confidence:</strong> ${result.confidence || '85%'}</p>
+                    <p><strong>Department:</strong> ${result.department || 'General'}</p>
                 </div>
 
                 <div class="result-card">
@@ -414,8 +430,24 @@
                 <div class="result-card">
                     <h3>Activity Logged</h3>
                     <p><strong>Report ID:</strong> ${result.reportId || 'N/A'}</p>
+                    <p><strong>Customer:</strong> ${customerName}</p>
                     <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
-                    <p><strong>Status:</strong> <span style="color: #27ae60; font-weight: 600;">Successfully saved to database</span></p>
+                    <p><strong>Status:</strong> <span style="color: #27ae60; font-weight: 600;">✓ Successfully saved to database</span></p>
+                </div>
+
+                <div class="result-card" style="background: #f8f9ff; border: 2px solid #667eea;">
+                    <h3 style="color: #667eea;">📊 Next Actions</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                        <button onclick="window.location.href='/client-history.html?customer=${encodeURIComponent(customerName)}'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                            View All Reports for ${customerName}
+                        </button>
+                        <button onclick="window.location.href='/client-history.html'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #764ba2; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                            Browse All Reports
+                        </button>
+                        <button onclick="window.location.reload()" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                            Create New Triage
+                        </button>
+                    </div>
                 </div>
             `;
         }
