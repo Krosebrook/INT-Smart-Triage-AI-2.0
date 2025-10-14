@@ -101,7 +101,7 @@ export class TriageEngine {
     return topCategory && topCategory[1] > 0 ? topCategory[0] : 'general';
   }
 
-  calculateConfidence(text, priority, category) {
+  calculateConfidence(text, _priority, _category) {
     let confidence = 70; // Base confidence
     
     // Increase confidence based on keyword matches
@@ -150,7 +150,7 @@ export class TriageEngine {
     return approaches[tone]?.[priority] || approaches.calm[priority];
   }
 
-  generateTalkingPoints(tone, priority, category) {
+  generateTalkingPoints(tone, priority, _category) {
     const baseTalkingPoints = [
       'Acknowledge the customer\'s concern with appropriate empathy',
       'Provide clear next steps and timeline expectations',

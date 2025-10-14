@@ -43,7 +43,7 @@ export class DatabaseService {
     }
 
     try {
-      const { data, error } = await this.supabase
+      const { error } = await this.supabase
         .from('reports')
         .select('count', { count: 'exact', head: true });
 

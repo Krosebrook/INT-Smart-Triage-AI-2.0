@@ -29,7 +29,7 @@ export class QualityAssuranceService {
     };
   }
 
-  async reviewResponse(ticketId, responseText, csrId) {
+  async reviewResponse(ticketId, responseText, _csrId) {
     const { data: ticket, error } = await supabase
       .from('tickets')
       .select(`
