@@ -1,3 +1,5 @@
+import { getCategoryKeywords } from '../config/serviceCategories.js';
+
 /**
  * AI Triage Engine - Improved logic with better categorization
  */
@@ -10,15 +12,8 @@ export class TriageEngine {
       low: ['question', 'help', 'how to', 'feature', 'enhancement', 'request', 'information']
     };
     
-    this.categoryKeywords = {
-      infosec: ['security', 'soc2', 'compliance', 'audit', 'vulnerability', 'cyber insurance', 'breach', 'firewall', 'encryption', 'iso27001', 'hipaa'],
-      technology: ['managed it', 'helpdesk', 'email migration', 'network', 'server', 'cloud', 'hosting', 'saas', 'microsoft365', 'downtime', 'backup'],
-      website_design: ['website', 'web design', 'ecommerce', 'wordpress', 'cms', 'mobile responsive', 'accessibility', 'ada', 'hosting', 'domain', 'ssl'],
-      branding: ['brand', 'logo', 'visual identity', 'rebrand', 'design', 'collateral', 'brand voice', 'messaging', 'style guide'],
-      content: ['content strategy', 'seo', 'blog', 'ebook', 'whitepaper', 'copywriting', 'website content', 'thought leadership'],
-      marketing: ['marketing', 'hubspot', 'crm', 'automation', 'email campaign', 'drip campaign', 'salesforce', 'analytics', 'lead generation', 'inbound'],
-      operations: ['bookkeeping', 'accounting', 'startup', 'ein', 'process management', 'hris', 'payroll', 'benefits', 'ai your bi', 'analytics']
-    };
+    // Use centralized category keywords configuration
+    this.categoryKeywords = getCategoryKeywords();
   }
 
   processTriageRequest(ticketData) {

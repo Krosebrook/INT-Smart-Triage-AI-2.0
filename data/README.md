@@ -17,25 +17,23 @@ This directory contains structured data files that support the INT Smart Triage 
   - David Park (Managed Marketing)
   - Rachel Thompson (Operations)
 
-- **10 Actual Client Personas**: Based on real INT Inc. clients with testimonials
+- **14 Client Personas**: Based on actual INT Inc. clients with testimonials and best-practice scenarios
   - Medical Practice Owner (Dr. Renee Marshall)
   - E-Commerce Marketing Director (Jamie Schwartz)
   - Government VP (Selen Warner)
   - HR Manager (Kami Hunt)
-  - Fuel Operations Manager
+  - Fuel Operations Manager (Montanari Fuel)
   - Client Success Manager (Katya Yushanova)
   - Marketing & Business Dev Manager (Gregory J. Benson)
   - VP Product & Operations (Marissa Luedy)
   - Chief People Officer (Susan Pils)
   - Non-profit Service Manager (SACPT)
+  - Manufacturing CFO (Fictional)
+  - Startup Founder (Fictional)
+  - Biotech Compliance Officer (Fictional)
+  - Retail Marketing Coordinator (Fictional)
 
-- **4 Fictional Best-Practice Personas**: Cover common scenarios not in testimonials
-  - Manufacturing CFO
-  - Startup Founder
-  - Biotech Compliance Officer
-  - Retail Marketing Coordinator
-
-**Total Personas**: 21
+**Total Personas**: 21 (7 team members + 14 client personas)
 
 **Structure**:
 ```json
@@ -134,7 +132,11 @@ This directory contains structured data files that support the INT Smart Triage 
 
 When updating these files:
 
-1. **Validate JSON Syntax**: Always validate JSON before committing
+1. **Validate JSON Syntax**: Always validate all JSON files before committing
+   ```bash
+   for file in data/*.json; do python3 -m json.tool "$file" > /dev/null && echo "✓ $file is valid" || echo "✗ $file is invalid"; done
+   ```
+   Or validate a specific file:
    ```bash
    python3 -m json.tool data/personas.json > /dev/null
    ```
