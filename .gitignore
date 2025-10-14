@@ -45,6 +45,9 @@ pids
 
 # Coverage directory used by tools like istanbul
 coverage/
+.nyc_output/
+.c8/
+*.lcov
 
 # Build outputs
 dist/

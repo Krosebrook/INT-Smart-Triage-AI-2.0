@@ -11,6 +11,7 @@ export class TriageEngine {
     };
     
     this.categoryKeywords = {
+      authentication: ['password', 'login', 'authentication', 'sign in', 'sign-in', 'signin', 'access denied', 'credentials', 'username', 'reset password', 'forgot password', 'locked out', 'mfa', '2fa', 'two-factor'],
       infosec: ['security', 'soc2', 'compliance', 'audit', 'vulnerability', 'cyber insurance', 'breach', 'firewall', 'encryption', 'iso27001', 'hipaa'],
       technology: ['managed it', 'helpdesk', 'email migration', 'network', 'server', 'cloud', 'hosting', 'saas', 'microsoft365', 'downtime', 'backup'],
       website_design: ['website', 'web design', 'ecommerce', 'wordpress', 'cms', 'mobile responsive', 'accessibility', 'ada', 'hosting', 'domain', 'ssl'],
