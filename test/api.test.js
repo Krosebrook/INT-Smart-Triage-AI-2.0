@@ -1,4 +1,4 @@
-import { describe, it, mock } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { TriageEngine } from '../src/services/triageEngine.js';
 import { validateTriageRequest, sanitizeTriageData } from '../src/utils/validation.js';
