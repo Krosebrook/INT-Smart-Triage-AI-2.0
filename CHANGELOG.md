@@ -1,5 +1,81 @@
 # Changelog
 
+## Quality & Security Improvements - v1.1.0 (October 2025)
+
+### Critical Fixes
+
+#### Fixed: Authentication Categorization Test Failure
+- **File**: `src/services/triageEngine.js`
+- **Issue**: Test was failing because triage engine lacked 'authentication' category
+- **Impact**: 15/16 tests passing (93.75% pass rate)
+- **Resolution**: Added authentication category with comprehensive keywords (password, login, mfa, 2fa, etc.)
+- **Result**: All 16 tests now pass (100% pass rate) ✅
+
+### Security Enhancements
+
+#### Added Dependabot Configuration
+- **File**: `.github/dependabot.yml`
+- **Purpose**: Automated dependency updates and security patching
+- **Features**:
+  - Weekly npm dependency checks
+  - Monthly GitHub Actions updates
+  - Grouped minor/patch updates
+  - Automatic security vulnerability alerts
+  - Pull request limit (5 concurrent)
+
+### Testing Improvements
+
+#### Implemented Test Coverage Reporting
+- **Tool**: c8 (V8's native coverage tool)
+- **Scripts Added**:
+  - `npm run test:coverage` - Generate coverage reports
+  - `npm run test:coverage-check` - Enforce 70% minimum coverage
+- **Coverage Tracking**: src/ and api/ directories
+- **CI Integration**: Coverage reports uploaded as artifacts
+- **Baseline Coverage**: 5.43% overall, 99.19% for triageEngine.js
+
+### Dependency Updates
+
+#### Updated Supabase SDK
+- **Package**: `@supabase/supabase-js`
+- **Change**: 2.38.0 → 2.75.0
+- **Benefits**: Latest security patches, performance improvements, new features
+- **Impact**: 37 minor versions ahead, no breaking changes
+
+### Developer Experience
+
+#### Added Node.js Version File
+- **File**: `.nvmrc`
+- **Version**: 18.20.0 (LTS)
+- **Purpose**: Ensure consistent Node.js version across environments
+- **Usage**: `nvm use` automatically switches to correct version
+
+#### Enhanced CI/CD Pipeline
+- **Changes**:
+  - Coverage reporting in all CI builds
+  - Coverage artifacts retained for 30 days
+  - Removed continue-on-error from tests (stricter quality gate)
+  - Separate coverage reports for Node 18 and 20
+
+### Files Modified
+- `src/services/triageEngine.js` - Added authentication category
+- `package.json` - Updated dependencies, added coverage scripts
+- `.github/workflows/ci.yml` - Added coverage reporting
+- `.gitignore` - Exclude coverage reports
+
+### Files Created
+- `.github/dependabot.yml` - Automated dependency updates
+- `.nvmrc` - Node.js version specification
+- `IMPROVEMENTS_IMPLEMENTED.md` - Comprehensive improvement documentation
+
+### Metrics
+- **Tests**: 15/16 → 16/16 (100% pass rate) ✅
+- **Coverage**: Not measured → 5.43% (baseline established)
+- **Supabase SDK**: 2.38.0 → 2.75.0 ✅
+- **Security Automation**: None → Dependabot enabled ✅
+
+---
+
 ## Production Scaffold - v1.0.0 (2024)
 
 ### Critical Bug Fixes

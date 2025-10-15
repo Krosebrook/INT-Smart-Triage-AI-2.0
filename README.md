@@ -1,5 +1,10 @@
 # INT Smart Triage AI 2.0 🎯
 
+[![Tests](https://img.shields.io/badge/tests-16%2F16%20passing-brightgreen)]()
+[![Coverage](https://img.shields.io/badge/coverage-5.43%25-yellow)]()
+[![Node](https://img.shields.io/badge/node-18.20.0%2B-brightgreen)]()
+[![License](https://img.shields.io/badge/license-MIT-blue)]()
+
 **Secure, production-ready AI Triage Tool for INT Inc. Client Success**
 
 Instantly triages client tickets, provides CSRs with empathetic talking points, suggests Knowledge Base articles, and securely logs all activity to Supabase using Vercel Serverless Functions. This system ensures low response times, data persistence, and full security compliance.
@@ -85,6 +90,17 @@ Secure triage processing with database logging
 ✅ **Input Validation** - Comprehensive sanitization  
 ✅ **Audit Logging** - Complete request tracking  
 ✅ **Security Headers** - XSS, CSRF, and clickjacking protection  
+
+## ✨ Recent Improvements (v1.1.0)
+
+- ✅ **100% Test Pass Rate**: All 16 tests passing (was 15/16)
+- 📊 **Test Coverage**: Implemented c8 coverage tracking (baseline: 5.43%)
+- 🔒 **Automated Security**: Dependabot for dependency updates
+- 📦 **Updated Dependencies**: Supabase SDK 2.38.0 → 2.75.0
+- 🛠️ **Developer Tools**: Added .nvmrc, prettier, enhanced ESLint
+- 📝 **Documentation**: Comprehensive guides for developers and contributors
+
+See [IMPROVEMENTS_IMPLEMENTED.md](./IMPROVEMENTS_IMPLEMENTED.md) for details.
 
 ## 📖 Documentation
 
