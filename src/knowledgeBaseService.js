@@ -74,7 +74,7 @@ class KnowledgeBaseService {
             articleScores.set(index, (articleScores.get(index) || 0) + score);
         });
 
-        let results = Array.from(articleScores.entries())
+        const results = Array.from(articleScores.entries())
             .map(([index, score]) => ({
                 article: this.articles[index],
                 relevance: score / queryWords.length
