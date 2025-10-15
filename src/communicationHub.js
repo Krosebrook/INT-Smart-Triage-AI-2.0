@@ -238,7 +238,6 @@ Immediate action required!
                     status,
                     sent_at: new Date().toISOString()
                 }]);
-                }]);
         } catch (error) {
             console.error('Failed to log communication:', error);
         }
