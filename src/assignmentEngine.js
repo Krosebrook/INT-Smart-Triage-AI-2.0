@@ -76,7 +76,7 @@ export class AssignmentEngine {
         return bestMatch;
     }
 
-    async getAvailableCSRs(department = null, priority = 'medium') {
+    async getAvailableCSRs(department = null, _priority = 'medium') {
         if (!supabase) {
             return this.getMockCSRs(department);
         }
