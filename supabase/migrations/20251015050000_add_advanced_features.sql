@@ -275,6 +275,12 @@ DECLARE
     selected_csr TEXT;
     csr_id UUID;
     current_load INTEGER;
+CREATE OR REPLACE FUNCTION auto_assign_report(report_id TEXT)
+RETURNS TEXT AS $$
+DECLARE
+    selected_csr TEXT;
+    csr_id UUID;
+    current_load INTEGER;
     max_load INTEGER;
 BEGIN
     SELECT id, name, current_workload, max_workload
