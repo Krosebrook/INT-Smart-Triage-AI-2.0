@@ -104,21 +104,24 @@ See [IMPROVEMENTS_IMPLEMENTED.md](./IMPROVEMENTS_IMPLEMENTED.md) for details.
 
 ## 📖 Documentation
 
-### For Users
-- **[README.md](./README.md)** - This file, project overview
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment guide
-- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Common issues and solutions
-- **[SECURITY.md](./SECURITY.md)** - Security policy and best practices
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
+- **[BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md)** - Safe branch merging procedures
+- **[MERGE_QUICK_START.md](./MERGE_QUICK_START.md)** - Quick reference for branch merges
+- **[supabase-setup.sql](./supabase-setup.sql)** - Database schema and RLS configuration
 
-### For Developers
-- **[DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md)** - Development best practices
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
-- **[CHANGELOG.md](./CHANGELOG.md)** - Version history
-- **[IMPROVEMENTS_IMPLEMENTED.md](./IMPROVEMENTS_IMPLEMENTED.md)** - Recent improvements
+## 🔀 Branch Management
 
-### Technical Documentation
-- **[CI_CD_IMPROVEMENTS.md](./CI_CD_IMPROVEMENTS.md)** - CI/CD details
-- **[supabase-setup.sql](./supabase-setup.sql)** - Database schema and RLS
+Need to merge branches? We've got you covered:
+
+```bash
+# Quick validation before merge
+./scripts/validate-merge.sh
+
+# See full guide for step-by-step instructions
+cat MERGE_QUICK_START.md
+```
+
+See [BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md) for comprehensive instructions on safely merging branches without breaking the application.
 
 ## 🎯 For CSR Teams
 
