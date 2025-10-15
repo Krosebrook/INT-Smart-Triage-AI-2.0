@@ -1,3 +1,4 @@
+/* eslint-env serviceworker */
 // Service Worker for INT Smart Triage AI 2.0 PWA
 const CACHE_NAME = 'int-triage-v1.0.0';
 const RUNTIME_CACHE = 'int-triage-runtime';
