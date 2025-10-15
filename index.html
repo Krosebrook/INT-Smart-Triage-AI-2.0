@@ -191,6 +191,12 @@
         <div class="header">
             <h1>INT Smart Triage AI 2.0</h1>
             <p>Secure CSR Dashboard - Intelligent Ticket Triage & Knowledge Base Integration</p>
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <a href="/public/advanced-analytics.html" style="padding: 8px 16px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">📊 Advanced Analytics</a>
+                <a href="/public/client-history.html" style="padding: 8px 16px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">📜 Client History</a>
+                <a href="/public/kb-search.html" style="padding: 8px 16px; background: #f39c12; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">🔍 Knowledge Base</a>
+                <a href="/public/analytics.html" style="padding: 8px 16px; background: #9b59b6; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">📈 Reports</a>
+            </div>
         </div>
 
         <div class="main-content">
@@ -238,8 +244,13 @@
     </div>
 
     <script type="module">
-        // Import Supabase client
+        // Import all services
         import { supabase, saveTriageReport } from '/src/supabaseClient.js';
+        import { realtimeService } from '/src/realtimeService.js';
+        import { sentimentAnalyzer } from '/src/sentimentAnalysis.js';
+        import { assignmentEngine } from '/src/assignmentEngine.js';
+        import { emailService } from '/src/emailService.js';
+        import { communicationHub } from '/src/communicationHub.js';
 
         // Client-side triage logic for bolt.new compatibility
         function processTriageRequest(ticketData) {
@@ -309,7 +320,33 @@
         // Check system health on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkSystemHealth();
+            initializeAdvancedFeatures();
         });
+
+        function initializeAdvancedFeatures() {
+            // Initialize real-time presence tracking
+            const csrName = 'CSR_USER'; // In production, get from auth
+            realtimeService.trackPresence(csrName, 'online');
+
+            // Subscribe to real-time ticket updates
+            realtimeService.subscribeToReports((change) => {
+                console.log('Real-time ticket update:', change);
+                showNotification('Ticket updated in real-time!');
+            });
+
+            // Register service worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/public/sw.js')
+                    .then(reg => console.log('Service Worker registered:', reg))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            }
+        }
+
+        function showNotification(message) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('INT Smart Triage AI', { body: message });
+            }
+        }
 
         async function checkSystemHealth() {
             const statusIndicator = document.getElementById('statusIndicator');
@@ -354,6 +391,26 @@
                 // Use client-side triage logic (works on bolt.new without API)
                 const result = processTriageRequest(triageData);
 
+                // Perform sentiment analysis
+                const sentimentResult = sentimentAnalyzer.analyze(
+                    triageData.issueDescription,
+                    triageData.customerTone
+                );
+                result.sentiment = sentimentResult;
+                result.escalationRisk = sentimentResult.escalationProbability;
+
+                // Auto-assign ticket
+                const assignment = await assignmentEngine.autoAssign({
+                    reportId: result.reportId,
+                    priority: result.priority,
+                    issueDescription: triageData.issueDescription,
+                    department: result.department
+                });
+                if (assignment.success) {
+                    result.assignedTo = assignment.assignedTo;
+                    result.estimatedResponseTime = assignment.estimatedResponseTime;
+                }
+
                 // Simulate processing delay for realistic UX
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -365,6 +422,35 @@
 
                 if (saveResult.success) {
                     console.log('Report saved to database:', saveResult.data);
+
+                    // Send confirmation email
+                    const emailResult = await emailService.sendTicketConfirmation({
+                        customerName: triageData.customerName,
+                        customerEmail: triageData.customerEmail || 'customer@example.com',
+                        reportId: result.reportId,
+                        priority: result.priority,
+                        department: result.department,
+                        ticketSubject: triageData.ticketSubject,
+                        csrAgent: triageData.csrAgent
+                    });
+                    console.log('Email confirmation sent:', emailResult);
+
+                    // Notify via communication hub for high priority
+                    if (result.priority === 'high') {
+                        await communicationHub.notifyHighPriorityTicket({
+                            reportId: result.reportId,
+                            customerName: triageData.customerName,
+                            ticketSubject: triageData.ticketSubject,
+                            department: result.department
+                        });
+                    }
+
+                    // Broadcast to team via real-time
+                    realtimeService.broadcastTicketActivity(result.reportId, {
+                        action: 'created',
+                        priority: result.priority,
+                        assignedTo: result.assignedTo
+                    });
                 } else {
                     console.warn('Failed to save to database:', saveResult.error);
                 }
