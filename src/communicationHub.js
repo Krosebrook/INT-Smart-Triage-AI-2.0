@@ -224,12 +224,6 @@ Immediate action required!
             ticketId: ticketData.reportId
         };
     }
-
-    async logCommunication(channel, recipient, message, status) {
-        if (!supabase) return;
-
-        try {
-            await supabase
     async logCommunication(channel, recipient, message, status, reportId = null) {
         if (!supabase) return;
 
