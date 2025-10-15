@@ -53,9 +53,17 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    vercel --prod
    ```
 
-2. **Configure Environment Variables**:
+2. **Configure Environment Variables** in Vercel Dashboard:
+   
+   **Client-Side (exposed to browser):**
+   - `VITE_SUPABASE_URL`: Your Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
+   
+   **Server-Side (API endpoints only):**
    - `SUPABASE_URL`: Your Supabase project URL
-   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (NOT anon key)
+   - `SUPABASE_ANON_KEY`: Your Supabase anon key
+   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (for privileged operations)
+   - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
 
 3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor
 

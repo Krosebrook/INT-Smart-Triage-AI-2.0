@@ -1,0 +1,233 @@
+[
+  {
+    "id": "kb001",
+    "title": "Information Security Discovery & Assessment",
+    "category": "infosec",
+    "content": "INT's InfoSec discovery service evaluates your current security posture and identifies vulnerabilities. We conduct interviews and analyses to produce a remediation blueprint, helping you prepare for SOC 2, ISO 27001, or other compliance frameworks.",
+    "tags": ["security", "compliance", "soc2", "assessment"]
+  },
+  {
+    "id": "kb002",
+    "title": "SOC 2 Compliance Implementation",
+    "category": "infosec",
+    "content": "We help implement policies and procedures required for SOC 2 compliance, including password policies, data retention, off-boarding processes. INT achieved SOC 2 for our own organization.",
+    "tags": ["soc2", "compliance", "security_policies", "audit"]
+  },
+  {
+    "id": "kb003",
+    "title": "Cyber Insurance Support",
+    "category": "infosec",
+    "content": "INT assists with cyber-insurance questionnaires by gathering accurate information and crafting precise responses to secure coverage.",
+    "tags": ["cyber_insurance", "risk_management"]
+  },
+  {
+    "id": "kb004",
+    "title": "Managed InfoSec Services",
+    "category": "infosec",
+    "content": "Ongoing managed InfoSec services include vulnerability scans, tabletop exercises, threat detection, incident response, and continuous monitoring.",
+    "tags": ["managed_security", "vulnerability_scanning", "incident_response"]
+  },
+  {
+    "id": "kb005",
+    "title": "Managed IT & 24/7 Support",
+    "category": "technology",
+    "content": "24/7 helpdesk support, network security, hardware/software maintenance, proactive monitoring, and compliance assistance.",
+    "tags": ["managed_it", "helpdesk", "network_security"]
+  },
+  {
+    "id": "kb006",
+    "title": "Email Platform Migration",
+    "category": "technology",
+    "content": "Seamless email migration to cloud platforms (Microsoft 365, Google Workspace) with minimal downtime.",
+    "tags": ["email_migration", "microsoft365", "cloud_migration"]
+  },
+  {
+    "id": "kb007",
+    "title": "Business Insights & Reporting",
+    "category": "technology",
+    "content": "Custom analytics, KPI dashboards, predictive analytics, and comprehensive reporting for data-driven decisions.",
+    "tags": ["business_intelligence", "analytics", "dashboards"]
+  },
+  {
+    "id": "kb008",
+    "title": "SaaS Migration Services",
+    "category": "technology",
+    "content": "Comprehensive SaaS migration including assessment, planning, execution, integration, and training.",
+    "tags": ["saas_migration", "cloud_migration", "integration"]
+  },
+  {
+    "id": "kb009",
+    "title": "Business Application Hosting",
+    "category": "technology",
+    "content": "Secure, high-availability cloud hosting with automatic backups, disaster recovery, and 99.9% uptime SLA.",
+    "tags": ["application_hosting", "cloud_hosting", "high_availability"]
+  },
+  {
+    "id": "kb010",
+    "title": "Custom Website Design",
+    "category": "website_design",
+    "content": "Fully customized, mobile-responsive websites. Choose from brochure sites, templated designs, or completely custom builds.",
+    "tags": ["web_design", "custom_website", "mobile_responsive"]
+  },
+  {
+    "id": "kb011",
+    "title": "E-Commerce Development",
+    "category": "website_design",
+    "content": "Secure online stores with intuitive navigation, seamless checkout, payment integration, and premium shopping experience.",
+    "tags": ["ecommerce", "online_store", "payment_integration"]
+  },
+  {
+    "id": "kb012",
+    "title": "Website Refresh & Modernization",
+    "category": "website_design",
+    "content": "Modernize outdated websites with updated design, improved UX, mobile responsiveness, and SEO optimization.",
+    "tags": ["website_refresh", "modernization", "redesign"]
+  },
+  {
+    "id": "kb013",
+    "title": "Website Platform Migration",
+    "category": "website_design",
+    "content": "Migrate to WordPress, HubSpot CMS, or other platforms with zero downtime and SEO preservation.",
+    "tags": ["website_migration", "wordpress", "hubspot"]
+  },
+  {
+    "id": "kb014",
+    "title": "Website Hosting & Maintenance",
+    "category": "website_design",
+    "content": "Packages (Lite, Essentials, Ultimate) with updates, security monitoring, performance optimization, and support.",
+    "tags": ["hosting", "maintenance", "security", "updates"]
+  },
+  {
+    "id": "kb015",
+    "title": "Website Accessibility (ADA)",
+    "category": "website_design",
+    "content": "ADA/WCAG compliance with audits, remediation, and AI-driven tools. Reduce legal risk and expand audience reach.",
+    "tags": ["accessibility", "ada_compliance", "wcag"]
+  },
+  {
+    "id": "kb016",
+    "title": "Brand Identity Development",
+    "category": "branding",
+    "content": "Strategy & positioning, logo design, visual identity, brand voice & messaging. Packages: Start, Spin-Off, Establish, Refresh.",
+    "tags": ["branding", "brand_strategy", "logo_design"]
+  },
+  {
+    "id": "kb017",
+    "title": "Logo Design & Visual Identity",
+    "category": "branding",
+    "content": "Memorable logos and cohesive visual identity systems with color palettes, typography, and design elements.",
+    "tags": ["logo_design", "visual_identity", "graphics"]
+  },
+  {
+    "id": "kb018",
+    "title": "Brand Voice & Messaging",
+    "category": "branding",
+    "content": "Distinctive brand voice, key messaging, taglines, and communication guidelines.",
+    "tags": ["brand_voice", "messaging", "copywriting"]
+  },
+  {
+    "id": "kb019",
+    "title": "Marketing Collateral Design",
+    "category": "branding",
+    "content": "Brochures, business cards, presentations, social media graphics, email templates, and packaging.",
+    "tags": ["marketing_collateral", "graphic_design", "social_graphics"]
+  },
+  {
+    "id": "kb020",
+    "title": "Content Strategy Development",
+    "category": "content",
+    "content": "Audience research, competitor analysis, content mission, editorial calendar, and distribution plan.",
+    "tags": ["content_strategy", "audience_research", "planning"]
+  },
+  {
+    "id": "kb021",
+    "title": "Website Content & SEO",
+    "category": "content",
+    "content": "SEO-optimized website content with content audits, keyword research, and persuasive copywriting.",
+    "tags": ["website_content", "seo_copywriting", "optimization"]
+  },
+  {
+    "id": "kb022",
+    "title": "E-Book Creation",
+    "category": "content",
+    "content": "Professional e-books with research, writing, design for lead generation and thought leadership.",
+    "tags": ["ebook", "lead_generation", "thought_leadership"]
+  },
+  {
+    "id": "kb023",
+    "title": "Whitepaper Development",
+    "category": "content",
+    "content": "Data-backed whitepapers with industry research, data analysis, expert writing, and professional design.",
+    "tags": ["whitepaper", "research", "b2b_marketing"]
+  },
+  {
+    "id": "kb024",
+    "title": "Managed Marketing Packages",
+    "category": "marketing",
+    "content": "Packages (Lite, Essentials, Ultimate) with content generation, automation, inbound marketing, CRM management.",
+    "tags": ["managed_marketing", "marketing_automation", "inbound"]
+  },
+  {
+    "id": "kb025",
+    "title": "HubSpot Implementation",
+    "category": "marketing",
+    "content": "Complete HubSpot setup, customization, automation workflows, sales enablement, and training. Testimonial: 'Jamie Schwartz praised INT for amazing HubSpot support'",
+    "tags": ["hubspot", "crm_implementation", "automation"]
+  },
+  {
+    "id": "kb026",
+    "title": "CRM Migration (Salesforce to HubSpot)",
+    "category": "marketing",
+    "content": "Expert CRM migration with zero data loss. Data mapping, execution, customization, integration. Testimonial: 'Selen Warner: seamless migration'",
+    "tags": ["crm_migration", "salesforce", "hubspot"]
+  },
+  {
+    "id": "kb027",
+    "title": "Marketing Automation & Drip Campaigns",
+    "category": "marketing",
+    "content": "Automated workflows including drip campaigns, lead nurturing, segmentation, trigger-based emails.",
+    "tags": ["marketing_automation", "drip_campaigns", "lead_nurturing"]
+  },
+  {
+    "id": "kb028",
+    "title": "Inbound Marketing Administration",
+    "category": "marketing",
+    "content": "A/B testing, analytics reporting, social media posting, form/CTA creation, basic SEO, website analytics.",
+    "tags": ["inbound_marketing", "ab_testing", "social_media"]
+  },
+  {
+    "id": "kb029",
+    "title": "Bookkeeping & Accounting",
+    "category": "operations",
+    "content": "Professional bookkeeping including expense management, financial reporting, tax prep support, financial strategy.",
+    "tags": ["bookkeeping", "accounting", "financial_reporting"]
+  },
+  {
+    "id": "kb030",
+    "title": "Startup Fundamentals",
+    "category": "operations",
+    "content": "State registration, EIN application, FinCEN BOI reporting, S-Corp election, regulatory filings.",
+    "tags": ["startup", "business_formation", "registration"]
+  },
+  {
+    "id": "kb031",
+    "title": "Process Management & Optimization",
+    "category": "operations",
+    "content": "Streamline operations by removing inefficiencies, documenting processes, setting goals, improving scalability.",
+    "tags": ["process_management", "workflow_optimization", "efficiency"]
+  },
+  {
+    "id": "kb032",
+    "title": "AI Your BI (AI-Powered Analytics)",
+    "category": "operations",
+    "content": "Revolutionary AI solution analyzing company data for patterns, predictions, and actionable insights.",
+    "tags": ["artificial_intelligence", "business_intelligence", "predictive_analytics"]
+  },
+  {
+    "id": "kb033",
+    "title": "HRIS Implementation & Benefits Audit",
+    "category": "operations",
+    "content": "HR system implementation, payroll integration, benefits audit, records alignment. Testimonials: 'Kami Hunt & Susan Pils praised efficiency'",
+    "tags": ["hris", "hr_systems", "payroll", "benefits"]
+  }
+]
