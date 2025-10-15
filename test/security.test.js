@@ -166,7 +166,6 @@ describe('Database Security Validation', () => {
 describe('Code Security Validation', () => {
   it('should not have hardcoded credentials in codebase', async () => {
     const fs = await import('fs/promises');
-    const path = await import('path');
     
     // Check main API files for hardcoded credentials
     const filesToCheck = [
