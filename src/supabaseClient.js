@@ -104,13 +104,20 @@ export async function searchReports(query, filters = {}) {
     }
 
     try {
+        // Sanitize query input to prevent SQL injection
+        const sanitizedQuery = query?.trim().replace(/[%_]/g, '\\$&') || '';
+
         let queryBuilder = supabase
             .from('reports')
             .select('*');
 
         // Apply search query
-        if (query) {
-            queryBuilder = queryBuilder.or(`customer_name.ilike.%${query}%,ticket_subject.ilike.%${query}%,issue_description.ilike.%${query}%`);
+        if (sanitizedQuery) {
+            queryBuilder = queryBuilder.or(
+                `customer_name.ilike.%${sanitizedQuery}%,` +
+                `ticket_subject.ilike.%${sanitizedQuery}%,` +
+                `issue_description.ilike.%${sanitizedQuery}%`
+            );
         }
 
         // Apply filters
@@ -133,7 +140,9 @@ export async function searchReports(query, filters = {}) {
             queryBuilder = queryBuilder.ilike('assigned_to', `%${filters.assignedTo}%`);
         }
 
-        queryBuilder = queryBuilder.order('created_at', { ascending: false }).limit(100);
+        queryBuilder = queryBuilder
+            .order('created_at', { ascending: false })
+            .limit(100);
 
         const { data, error } = await queryBuilder;
 
