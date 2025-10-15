@@ -89,7 +89,23 @@ Secure triage processing with database logging
 ## 📖 Documentation
 
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
+- **[BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md)** - Safe branch merging procedures
+- **[MERGE_QUICK_START.md](./MERGE_QUICK_START.md)** - Quick reference for branch merges
 - **[supabase-setup.sql](./supabase-setup.sql)** - Database schema and RLS configuration
+
+## 🔀 Branch Management
+
+Need to merge branches? We've got you covered:
+
+```bash
+# Quick validation before merge
+./scripts/validate-merge.sh
+
+# See full guide for step-by-step instructions
+cat MERGE_QUICK_START.md
+```
+
+See [BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md) for comprehensive instructions on safely merging branches without breaking the application.
 
 ## 🎯 For CSR Teams
 
