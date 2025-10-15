@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INT Smart Triage AI 2.0 - CSR Dashboard</title>
+    <link rel="stylesheet" href="/public/theme.css">
     <style>
         * {
             margin: 0;
@@ -178,6 +179,10 @@
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+    </button>
+
     <div class="status-indicator" id="statusIndicator">
         <span class="status-offline">● Checking System Status...</span>
     </div>
@@ -451,6 +456,16 @@
                 </div>
             `;
         }
+    </script>
+
+    <script type="module">
+        import { initTheme, toggleTheme } from '/public/theme.js';
+        import { initKeyboardShortcuts } from '/public/shortcuts.js';
+        import { initOnboarding } from '/public/onboarding.js';
+        window.toggleTheme = toggleTheme;
+        initTheme();
+        initKeyboardShortcuts();
+        initOnboarding();
     </script>
 </body>
 </html>

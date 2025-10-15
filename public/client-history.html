@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client History - INT Smart Triage AI 2.0</title>
+    <link rel="stylesheet" href="/public/theme.css">
     <style>
         * {
             margin: 0;
@@ -417,6 +418,10 @@
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+    </button>
+
     <div class="container">
         <div class="header">
             <h1>📊 Client History</h1>
@@ -506,6 +511,14 @@
             </div>
         </div>
     </div>
+
+    <script type="module">
+        import { initTheme, toggleTheme } from '/public/theme.js';
+        import { initKeyboardShortcuts } from '/public/shortcuts.js';
+        window.toggleTheme = toggleTheme;
+        initTheme();
+        initKeyboardShortcuts();
+    </script>
 
     <script type="module">
         import { supabase, getCustomerReports, searchReports, getReportById } from '../src/supabaseClient.js';
