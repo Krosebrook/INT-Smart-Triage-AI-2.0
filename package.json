@@ -1,11 +1,37 @@
 {
   "name": "int-smart-triage-ai-2.0",
-  "version": "2.0.0",
-  "description": "Secure, resilient triage system.",
+  "version": "1.0.0",
+  "description": "Secure, production-ready AI Triage Tool for INT Inc. Client Success",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "vercel --prod",
+    "lint": "eslint . --ext .js,.cjs --ignore-path .gitignore",
+    "lint:fix": "eslint . --ext .js,.cjs --ignore-path .gitignore --fix",
+    "test": "node --test test/*.test.js"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",
     "undici": "^6.3.0"
   },
-  "scripts": {
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "vite": "^5.0.0",
+    "vercel": "^32.4.1"
+  },
+  "keywords": [
+    "triage",
+    "ai",
+    "customer-support",
+    "vercel",
+    "supabase"
+  ],
+  "author": "INT Inc.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -37,20 +37,35 @@ vercel --prod
 
 ### 2. Environment Variables Configuration
 
-#### Required Vercel Secrets
-Configure these as **Vercel Environment Variables** (NOT in code):
+#### Required Vercel Environment Variables
+Configure these in your **Vercel Dashboard** under Project Settings → Environment Variables:
 
+**Client-Side Variables (exposed to browser):**
+- `VITE_SUPABASE_URL`: Your Supabase project URL (e.g., `https://xxxxx.supabase.co`)
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key (safe for public exposure)
+
+**Server-Side Variables (API endpoints only - NOT exposed to browser):**
+- `SUPABASE_URL`: Your Supabase project URL (e.g., `https://xxxxx.supabase.co`)
+- `SUPABASE_ANON_KEY`: Your Supabase anon key
+- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase service role key (for privileged operations)
+- `GEMINI_API_KEY`: Google Gemini API key (optional - for AI-powered triage features)
+
+#### Using Vercel CLI:
 ```bash
-# Add environment variables via Vercel Dashboard or CLI
-vercel env add SUPABASE_URL
-vercel env add SUPABASE_SERVICE_ROLE_KEY
+# Add environment variables via Vercel CLI
+vercel env add VITE_SUPABASE_URL production
+vercel env add VITE_SUPABASE_ANON_KEY production
+vercel env add SUPABASE_URL production
+vercel env add SUPABASE_ANON_KEY production
+vercel env add SUPABASE_SERVICE_ROLE_KEY production
+vercel env add GEMINI_API_KEY production
 ```
 
-**Values to configure:**
-- `SUPABASE_URL`: Your Supabase project URL (e.g., `https://xxxxx.supabase.co`)
-- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase service role key (NOT the anon key!)
-
-⚠️ **Critical Security Note**: Never use the `anon` key in production. Always use the `service_role` key for server-side operations with RLS bypass capabilities.
+⚠️ **Critical Security Notes**: 
+- Client-side (`VITE_` prefixed) variables are exposed to the browser - only use anon key
+- Server-side variables are secure and never exposed to the client
+- The `service_role` key bypasses RLS and should only be used in API endpoints
+- GEMINI_API_KEY is only used server-side for AI features
 
 ### 3. Supabase Database Setup
 
