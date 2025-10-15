@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",
-    "undici": "^6.3.0"
+    "undici": "^7.16.0"
   },
   "devDependencies": {
     "c8": "^10.1.3",
