@@ -308,3 +308,127 @@ export async function assignReport(reportId, assignedTo) {
         return { success: false, error: error.message };
     }
 }
+
+export async function getAvailableCSRs() {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('csr_profiles')
+            .select('*')
+            .eq('is_available', true)
+            .order('current_workload', { ascending: true });
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error fetching CSRs:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function autoAssignReport(reportId) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
+        const { data, error } = await supabase
+            .rpc('auto_assign_report', { report_id: reportId });
+
+        if (error) throw error;
+
+        return { success: true, assignedTo: data };
+    } catch (error) {
+        console.error('Error auto-assigning report:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function getSuggestedResponses(issueDescription, category) {
+    const keywords = issueDescription.toLowerCase();
+    const suggestions = [];
+
+    if (keywords.includes('password') || keywords.includes('login')) {
+        suggestions.push({
+            title: 'Password Reset',
+            template: 'I understand you\'re having trouble accessing your account. I\'ll help you reset your password right away. Please check your email for a password reset link.',
+            confidence: 95
+        });
+    }
+
+    if (keywords.includes('slow') || keywords.includes('performance')) {
+        suggestions.push({
+            title: 'Performance Issue',
+            template: 'Thank you for reporting this performance issue. Let me help optimize your experience. Can you tell me which specific features are running slowly?',
+            confidence: 88
+        });
+    }
+
+    if (keywords.includes('billing') || keywords.includes('charge')) {
+        suggestions.push({
+            title: 'Billing Inquiry',
+            template: 'I\'ll be happy to help you with your billing question. Let me review your account details and provide you with a clear explanation.',
+            confidence: 92
+        });
+    }
+
+    if (suggestions.length === 0) {
+        suggestions.push({
+            title: 'General Support',
+            template: 'Thank you for contacting us. I\'m here to help resolve your issue. Let me review the details and get back to you with a solution.',
+            confidence: 75
+        });
+    }
+
+    return { success: true, suggestions };
+}
+
+export async function searchKnowledgeBase(query, category) {
+    if (!supabase) {
+        return { success: false, articles: [] };
+    }
+
+    const keywords = query.toLowerCase();
+    const mockArticles = [
+        {
+            id: '1',
+            title: 'How to Reset Your Password',
+            category: 'Account Access',
+            relevance: keywords.includes('password') || keywords.includes('login') ? 95 : 20,
+            url: '/kb/password-reset'
+        },
+        {
+            id: '2',
+            title: 'Understanding Billing and Subscriptions',
+            category: 'Billing Question',
+            relevance: keywords.includes('billing') || keywords.includes('charge') ? 90 : 15,
+            url: '/kb/billing-guide'
+        },
+        {
+            id: '3',
+            title: 'Troubleshooting Performance Issues',
+            category: 'Technical Issue',
+            relevance: keywords.includes('slow') || keywords.includes('performance') ? 88 : 25,
+            url: '/kb/performance'
+        },
+        {
+            id: '4',
+            title: 'API Integration Guide',
+            category: 'Technical Issue',
+            relevance: keywords.includes('api') || keywords.includes('integration') ? 92 : 10,
+            url: '/kb/api-guide'
+        }
+    ];
+
+    const filtered = mockArticles
+        .filter(a => !category || a.category === category)
+        .filter(a => a.relevance > 30)
+        .sort((a, b) => b.relevance - a.relevance)
+        .slice(0, 5);
+
+    return { success: true, articles: filtered };
+}
