@@ -130,11 +130,13 @@ The `reports` table has the following structure:
 
 Test endpoints using curl:
 ```bash
+# Replace <YOUR_DEPLOYMENT_URL> with your actual deployed app domain (e.g., https://myproject.vercel.app)
+
 # Health check
-curl https://your-app.vercel.app/api/health-check
+curl https://<YOUR_DEPLOYMENT_URL>/api/health-check
 
 # Triage report
-curl -X POST https://your-app.vercel.app/api/triage-report \
+curl -X POST https://<YOUR_DEPLOYMENT_URL>/api/triage-report \
   -H "Content-Type: application/json" \
   -d '{"customerName":"Test","ticketSubject":"Issue","issueDescription":"Problem","customerTone":"calm","csrAgent":"TEST"}'
 ```
