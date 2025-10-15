@@ -28,5 +28,11 @@ module.exports = {
         'no-console': 'off', // Allow console in test files
       },
     },
+    {
+      files: ['api/**/*.js'],
+      rules: {
+        'no-console': 'off', // Allow console in API endpoints for logging
+      },
+    },
   ],
 };
