@@ -272,12 +272,18 @@ CREATE OR REPLACE FUNCTION auto_assign_report(report_id TEXT)
 RETURNS TEXT AS $$
 DECLARE
     selected_csr TEXT;
+    csr_id UUID;
+    current_load INTEGER;
+    max_load INTEGER;
 BEGIN
-    SELECT name INTO selected_csr
+    SELECT id, name, current_workload, max_workload
+    INTO csr_id, selected_csr, current_load, max_load
     FROM csr_profiles
     WHERE is_available = true
+      AND current_workload < max_workload
     ORDER BY current_workload ASC, satisfaction_rating DESC
-    LIMIT 1;
+    LIMIT 1
+    FOR UPDATE;  -- Lock the row
 
     IF selected_csr IS NOT NULL THEN
         UPDATE reports
@@ -288,7 +294,7 @@ BEGIN
 
         UPDATE csr_profiles
         SET current_workload = current_workload + 1
-        WHERE name = selected_csr;
+        WHERE id = csr_id;
 
         RETURN selected_csr;
     END IF;
