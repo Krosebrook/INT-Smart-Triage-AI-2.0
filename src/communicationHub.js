@@ -230,13 +230,20 @@ Immediate action required!
 
         try {
             await supabase
+    async logCommunication(channel, recipient, message, status, reportId = null) {
+        if (!supabase) return;
+
+        try {
+            await supabase
                 .from('communication_log')
                 .insert([{
                     channel,
                     recipient,
+                    report_id: reportId,
                     message: message.substring(0, 500),
                     status,
                     sent_at: new Date().toISOString()
+                }]);
                 }]);
         } catch (error) {
             console.error('Failed to log communication:', error);
