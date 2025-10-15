@@ -319,6 +319,29 @@ export class AssignmentEngine {
         }
 
         try {
+            // Validate ticket exists and current state
+            const { data: existingReport, error: fetchError } = await supabase
+                .from('reports')
+                .select('status, priority, escalated_at')
+                .eq('report_id', reportId)
+                .single();
+
+            if (fetchError) throw fetchError;
+
+            if (existingReport.status === 'resolved') {
+                return {
+                    success: false,
+                    error: 'Cannot escalate a resolved ticket'
+                };
+            }
+
+            if (existingReport.escalated_at) {
+                return {
+                    success: false,
+                    error: 'Ticket has already been escalated'
+                };
+            }
+
             const { data, error } = await supabase
                 .from('reports')
                 .update({
