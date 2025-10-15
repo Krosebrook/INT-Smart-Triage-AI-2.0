@@ -12,11 +12,12 @@ export class DatabaseService {
   }
 
   initializeClient() {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Missing Supabase configuration');
+      console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('SUPABASE')));
       return;
     }
 
@@ -42,7 +43,7 @@ export class DatabaseService {
     }
 
     try {
-      const { data, error } = await this.supabase
+      const { error } = await this.supabase
         .from('reports')
         .select('count', { count: 'exact', head: true });
 

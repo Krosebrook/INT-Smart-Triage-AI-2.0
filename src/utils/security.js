@@ -40,7 +40,7 @@ export function validateHttpMethod(req, res, allowedMethods) {
 export function createRateLimiter(windowMs = 60000, maxRequests = 100) {
   const requests = new Map();
   
-  return (req, res, next) => {
+  return (req, res, _next) => {
     const clientId = req.headers['x-forwarded-for'] || req.connection?.remoteAddress || 'unknown';
     const now = Date.now();
     const windowStart = now - windowMs;

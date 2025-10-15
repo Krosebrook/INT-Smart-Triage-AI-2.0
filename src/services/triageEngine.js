@@ -19,11 +19,13 @@ export class TriageEngine {
     };
     
     this.categoryKeywords = {
-      authentication: ['login', 'password', 'signin', 'access', 'credentials', 'authentication', '2fa', 'mfa'],
-      performance: ['slow', 'performance', 'loading', 'timeout', 'lag', 'speed'],
-      billing: ['payment', 'billing', 'invoice', 'charge', 'subscription', 'refund', 'credit card'],
-      integration: ['api', 'webhook', 'integration', 'sync', 'connection', 'endpoint'],
-      ui: ['interface', 'button', 'page', 'display', 'layout', 'design', 'mobile', 'responsive']
+      infosec: ['security', 'soc2', 'compliance', 'audit', 'vulnerability', 'cyber insurance', 'breach', 'firewall', 'encryption', 'iso27001', 'hipaa', 'authentication', 'password', 'login', 'access control', '2fa', 'mfa', 'password reset'],
+      technology: ['managed it', 'helpdesk', 'email migration', 'network', 'server', 'cloud', 'hosting', 'saas', 'microsoft365', 'downtime', 'backup'],
+      website_design: ['website', 'web design', 'ecommerce', 'wordpress', 'cms', 'mobile responsive', 'accessibility', 'ada', 'hosting', 'domain', 'ssl'],
+      branding: ['brand', 'logo', 'visual identity', 'rebrand', 'design', 'collateral', 'brand voice', 'messaging', 'style guide'],
+      content: ['content strategy', 'seo', 'blog', 'ebook', 'whitepaper', 'copywriting', 'website content', 'thought leadership'],
+      marketing: ['marketing', 'hubspot', 'crm', 'automation', 'email campaign', 'drip campaign', 'salesforce', 'analytics', 'lead generation', 'inbound'],
+      operations: ['bookkeeping', 'accounting', 'startup', 'ein', 'process management', 'hris', 'payroll', 'benefits', 'ai your bi', 'analytics']
     };
   }
 
@@ -107,7 +109,7 @@ export class TriageEngine {
     return topCategory && topCategory[1] > 0 ? topCategory[0] : 'general';
   }
 
-  calculateConfidence(text, priority, category) {
+  calculateConfidence(text, _priority, _category) {
     let confidence = 70; // Base confidence
     
     // Increase confidence based on keyword matches
@@ -156,7 +158,7 @@ export class TriageEngine {
     return approaches[tone]?.[priority] || approaches.calm[priority];
   }
 
-  generateTalkingPoints(tone, priority, category) {
+  generateTalkingPoints(tone, priority, _category) {
     const baseTalkingPoints = [
       'Acknowledge the customer\'s concern with appropriate empathy',
       'Provide clear next steps and timeline expectations',
