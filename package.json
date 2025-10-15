@@ -8,7 +8,9 @@
     "dev": "vercel dev",
     "build": "vercel build",
     "deploy": "vercel --prod",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "test:unit": "node --test test/unit/*.test.js",
+    "test:security": "node --test test/security/*.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.0"
