@@ -1,339 +1,117 @@
-# INT Smart Triage AI 2.0 - Claude Code Context
-
-## Project Overview
-
-This is a secure, production-ready AI-powered ticket triage system designed for INT Inc.'s Customer Success Representatives (CSRs). The system analyzes customer tickets, assigns priority levels, provides empathetic response guidelines, and suggests relevant Knowledge Base articles—all while maintaining enterprise-grade security and complete audit trails.
-
-**Key Features:**
-
-- Intelligent ticket triage with confidence scoring
-- Tone-aware empathetic response generation
-- Knowledge Base article recommendations
-- Comprehensive audit logging with RLS enforcement
-- Real-time analytics and reporting
-- Customer profile management with sentiment tracking
-
-## Tech Stack
-
-- **Frontend**: Vanilla JavaScript (ES modules), modern CSS Grid/Flexbox
-- **Backend**: Vercel Serverless Functions (Node.js 18+)
-- **Database**: Supabase (PostgreSQL) with Row Level Security (RLS)
-- **Deployment**: Vercel with CI/CD integration via GitHub Actions
-- **Build Tools**: Vite for bundling, ESLint for linting, Prettier for formatting
-- **Testing**: Node.js native test runner with c8 for coverage
-
-## Project Structure
-
-```
-├── api/                          # Vercel serverless functions
-│   ├── health-check.js          # System health and RLS verification endpoint
-│   └── triage-report.js         # Main triage processing and logging endpoint
-├── src/                          # Core business logic modules
-│   ├── analyticsService.js      # Analytics and metrics tracking
-│   ├── assignmentEngine.js      # Intelligent ticket assignment logic
-│   ├── communicationHub.js      # Multi-channel communication handling
-│   ├── customerProfileService.js # Customer data and history management
-│   ├── emailService.js          # Email notification handling
-│   ├── knowledgeBaseService.js  # KB article search and retrieval
-│   ├── realtimeService.js       # Real-time updates via Supabase
-│   ├── reportingService.js      # Report generation and export
-│   ├── sentimentAnalysis.js     # Customer sentiment detection
-│   └── supabaseClient.js        # Supabase client initialization
-├── data/                         # Static data files
-│   ├── kb.json                  # Knowledge Base articles
-│   └── personas.json            # Customer persona definitions
-├── supabase/                     # Database migrations and configs
-│   └── migrations/              # SQL migration files
-├── test/                         # Test files (*.test.js)
-├── public/                       # Static assets
-├── index.html                    # Main CSR dashboard interface
-├── index.js                      # Application entry point
-└── vercel.json                   # Vercel deployment configuration
-```
-
-## Coding Standards and Conventions
-
-### JavaScript Style
-
-- **ES Modules**: Use `import/export` syntax (not CommonJS)
-- **Modern JavaScript**: Target ES2022+ features
-- **Const by default**: Use `const` unless reassignment is needed, then `let` (never `var`)
-- **Arrow functions**: Prefer arrow functions for callbacks and short functions
-- **Async/await**: Use async/await over raw Promises for better readability
-- **Naming conventions**:
-  - `camelCase` for variables and functions
-  - `PascalCase` for classes
-  - `UPPER_SNAKE_CASE` for constants
-  - Prefix unused parameters with underscore: `_unusedParam`
-
-### ESLint Configuration
-
-- Extends `eslint:recommended`
-- No unused variables (except those prefixed with `_`)
-- `no-console` warnings in development, errors in production
-- Exceptions: console allowed in `index.js` and test files
-
-### Code Organization
-
-- **Modular architecture**: Each service in `src/` should have a single responsibility
-- **API endpoints**: Keep thin—delegate business logic to `src/` modules
-- **Error handling**: Always use try-catch blocks in async functions
-- **Input validation**: Validate and sanitize all user inputs in API endpoints
-- **Comments**: Use JSDoc-style comments for functions, especially in API endpoints
-
-### Security Best Practices
-
-**CRITICAL**: This project enforces strict security standards:
-
-1. **Row Level Security (RLS)**:
-   - ALL database operations MUST go through API endpoints
-   - NEVER expose Supabase anon key to frontend
-   - Use `SUPABASE_SERVICE_ROLE_KEY` only in serverless functions
-   - Verify RLS policies are active before deployment
-
-2. **Environment Variables**:
-   - Store ALL secrets in Vercel environment variables
-   - Never commit `.env` files
-   - Use `.env.example` as a template
-   - Required vars: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
-
-3. **Input Sanitization**:
-   - Validate all request payloads
-   - Sanitize strings before database insertion
-   - Use parameterized queries (Supabase does this by default)
+# AI Agent Best Practices (2025)
 
-4. **Security Headers**:
-   - Already configured in API responses
-   - XSS protection, CSRF protection, clickjacking prevention
-
-5. **Audit Logging**:
-   - Log ALL triage requests with IP addresses
-   - Include session IDs and timestamps
-   - Never log sensitive customer data in plaintext
+Modern agentic systems combine reasoning-capable models, dynamic tool chains, and robust control loops. The practices below consolidate guidance from current platform docs and production case studies to help teams ship reliable agents quickly while leaving room for domain-specific tailoring.[1][2][3][4][5]
 
-## Database Schema
+## Design the Agent Stack
 
-Key tables:
+- Start with a modular workflow that explicitly chooses the model, tools, guardrails, knowledge, and logic layers so each component can evolve independently.[1]
+- Treat the agent loop as a controllable runtime; design for state inspection, overrides, and pluggable middleware before adding domain logic.[3]
+- Plan for long-horizon work by budgeting space for planner nodes, sub-agents, and shared workspaces from the outset.[2]
 
-- `triage_logs`: Stores all triage requests and results
-- `kb_articles`: Knowledge Base article metadata
-- `customer_profiles`: Customer history and preferences
-- `analytics_events`: System analytics and metrics
-- `email_notifications`: Email delivery tracking
+## Planning & Task Decomposition
 
-All tables have RLS policies that restrict public access. Only service role can perform CRUD operations.
+- Reinforce deliberate reasoning with detailed system prompts, worked examples, and explicit instructions for how tools should be invoked.[2]
+- Add lightweight planning tools (even no-op planners) to keep the model oriented on the current goal and subgoals.[2]
+- Use chains-of-thought, tree search, or external planners when tasks branch or require deep exploration.[4]
 
-## Development Workflow
+## Memory & Knowledge Management
 
-### Setup
+- Pair short-term conversational context with persistent memory such as vector stores or file-backed scratch space to prevent context loss.[1][2][4]
+- Define clear retention policies for memory writes so the agent does not accumulate stale or redundant state.[2]
+- Prefer retrieval systems that support approximate nearest neighbor search for scale while keeping recall high.[4]
 
-```bash
-npm install
-cp .env.example .env  # Then fill in your values
-```
+## Tooling & Execution Control
 
-### Development
+- Curate a minimal, well-documented tool catalog and instruct the model on when each tool should be used.[2][5]
+- Enforce guardrails (validation, moderation, policy checks) at the tool boundary to catch misuse before execution.[1][3]
+- Allow the agent to adjust tool parameters dynamically (e.g., RAG filters, batch sizes) instead of hard-coding them.[5]
 
-```bash
-npm run dev          # Start Vite dev server
-npm run lint         # Check for linting errors
-npm run lint:fix     # Auto-fix linting errors
-npm run format       # Format code with Prettier
-npm run format:check # Check formatting without changes
-```
+## Orchestration & Middleware
 
-### Testing
+- Insert pre- and post-model middleware to summarize context, route control flow, or request human feedback without forking the core loop.[3]
+- Capture model requests in middleware so you can swap models, tweak prompts, or change tool availability at runtime.[3]
+- Keep middleware small and composable; layer multiple behaviors (summarization, human-in-the-loop, prompt caching) rather than building monoliths.[3]
 
-```bash
-npm test                  # Run all tests
-npm run test:coverage     # Run tests with coverage report
-npm run test:coverage-check # Enforce minimum coverage thresholds (70%)
-```
+## Evaluation & Observability
 
-### Build and Deploy
+- Instrument traces for every agent run so you can replay decision paths, grade outcomes, and spot regressions.[1]
+- Combine automated evals (unit tests, dataset runs, leaderboard tasks) with human spot checks to cover both quantitative and qualitative quality.[1][5]
+- Track metrics per agent, per tool, and per scenario to surface drift in resolution time, success rate, or hallucination frequency.[1]
 
-```bash
-npm run build    # Build for production
-npm run preview  # Preview production build locally
-npm run deploy   # Deploy to Vercel production
-npm run validate # Run format check + lint + test + build
-```
+## Safety, Guardrails & Human Oversight
 
-## Testing Guidelines
+- Layer guardrails in the loop: validate inputs before planning, interrupt risky actions after model calls, and require approvals for sensitive operations.[1][3]
+- Provide optional human-in-the-loop middleware so operators can review tool calls that exceed risk thresholds.[3]
+- Encourage reflective critiques after significant actions so the agent can self-correct before finalizing output.[4]
 
-- **Location**: All test files in `test/` directory with `.test.js` extension
-- **Framework**: Node.js native test runner (no Jest/Mocha needed)
-- **Coverage tool**: c8 (nyc/istanbul compatible)
-- **Coverage requirements**: Minimum 70% for lines, functions, and branches
-- **Covered paths**: `src/**/*.js` and `api/**/*.js`
-- **Test structure**: Use `describe` blocks for grouping, `it` for individual tests
-- **Assertions**: Use Node's built-in `assert` module
+## Multi-Agent Collaboration
 
-## Common Development Tasks
+- Spawn specialized sub-agents for complex projects, giving each focused prompts and scoped tools.[2]
+- Use a shared workspace (files, memory slots, task boards) so collaborating agents can exchange artifacts asynchronously.[2][5]
+- Establish hand-off conventions (status notes, success criteria) to prevent infinite loops or duplicated work between agents.[2]
 
-### Adding a New API Endpoint
+## Deployment, Sharing & UX
 
-1. Create new file in `api/` directory (e.g., `api/new-endpoint.js`)
-2. Export default async function: `export default async function handler(req, res) { }`
-3. Add appropriate security headers and CORS configuration
-4. Validate request method and payload
-5. Use try-catch for error handling
-6. Import and use services from `src/` as needed
-7. Log significant actions to Supabase
-8. Test endpoint manually and add automated tests
+- Embed production agents behind tested chat surfaces or APIs (e.g., ChatKit or equivalent) to control launch velocity and rollback safety.[1]
+- Keep prompts, tool configs, and environment variables transparent so teammates can audit and extend the agent easily.[5]
+- Offer shareable templates or starter workflows to accelerate onboarding and community feedback.[5]
 
-### Adding a New Service Module
+## Implementation Checklist
 
-1. Create new file in `src/` directory (e.g., `src/newService.js`)
-2. Import `supabaseClient.js` if database access is needed
-3. Export functions with clear JSDoc comments
-4. Keep functions pure and testable when possible
-5. Add corresponding test file in `test/`
-6. Update this claude.md if the module introduces new concepts
+### Architecture & Prompts
 
-### Database Migrations
+- [ ] Document the agent’s model, tools, guardrails, and memory stores in the repo, along with owners for each component.[1]
+- [ ] Capture every system prompt and few-shot example in version control with change history and rollout notes.[2]
+- [ ] Define fallback behaviors when the primary model or toolset is unavailable (e.g., degraded prompt or backup model selection).[1][3]
 
-1. Create new SQL file in `supabase/migrations/` with timestamp prefix
-2. Include both schema changes and RLS policies
-3. Test migration in Supabase SQL editor
-4. Document any breaking changes in migration file comments
-5. Update `.env.example` if new config is required
+### Planning & Control Flow
 
-### Updating Frontend
+- [ ] Provide a system prompt with clear objectives, tool usage guidance, and safety constraints.[2]
+- [ ] Register planning middleware, sub-agents, or explicit planner nodes before adding new features so long-horizon work stays organized.[2][3]
+- [ ] Script smoke tests that assert the planner produces bounded task lists and avoids infinite loops on representative prompts.[2]
+- [ ] Publish operator procedures for pausing, resuming, or force-completing agent runs during incidents.[3]
 
-1. Modify `index.html` directly (single-page application)
-2. Follow existing CSS structure (uses CSS variables for theming)
-3. Use vanilla JavaScript with event delegation where possible
-4. Ensure all API calls go through Vercel functions (never direct to Supabase)
-5. Test in multiple browsers (Chrome, Firefox, Safari, Edge)
+### Memory & Knowledge
 
-## Key Architectural Decisions
+- [ ] Configure persistent memory (vector store, file workspace) with retention and cleanup routines keyed to task lifecycle.[1][2]
+- [ ] Gate memory writes behind validation so agents do not store sensitive or redundant records.[2][4]
+- [ ] Monitor embedding drift and re-index vector stores on a fixed cadence or when models change.[4]
 
-### Why Serverless?
+### Tooling & Guardrails
 
-- **Scalability**: Automatic scaling with zero configuration
-- **Security**: Secrets stored server-side, never exposed to frontend
-- **Cost**: Pay only for actual usage
-- **Simplicity**: No server management or DevOps overhead
+- [ ] Maintain a catalog describing tool purpose, required inputs, expected outputs, and failure modes.[2][5]
+- [ ] Add automated validation or sandbox execution for tool calls before they hit production systems.[1][3]
+- [ ] Configure circuit breakers, rate limits, or budget caps for costly or risky tools.[1]
+- [ ] Include human approval steps for privileged operations (finance, PII access, deployments).[3]
 
-### Why RLS Instead of API Keys?
+### Evaluation & Observability
 
-- **Defense in depth**: Even if API keys leak, database is protected
-- **Compliance**: Meets enterprise security requirements
-- **Auditability**: Database-level access control is easier to audit
+- [ ] Add automated eval runs plus trace grading or leaderboard-style benchmarks where available.[1][5]
+- [ ] Stream traces, metrics, and tool call logs to a centralized dashboard for real-time monitoring.[1]
+- [ ] Schedule recurring spot checks of decision traces and hallucination reviews with domain experts.[4][5]
 
-### Why Vanilla JavaScript?
+### Deployment & UX
 
-- **Performance**: No framework overhead
-- **Simplicity**: Easier onboarding for team members
-- **Control**: Full control over bundle size and behavior
-- **Future-proof**: No framework lock-in or upgrade cycles
+- [ ] Embed the agent behind a hardened chat surface or API with authentication, rate limits, and audit logging.[1]
+- [ ] Publish a runbook covering launch criteria, rollback steps, and customer comms expectations.[1][3]
+- [ ] Package starter workflows or templates so other teams can reuse the agent safely without duplicating prompts.[5]
 
-## Debugging Tips
+## Lifecycle Governance & Owners
 
-### API Endpoint Not Working
-
-1. Check Vercel logs: `vercel logs --follow`
-2. Verify environment variables are set in Vercel dashboard
-3. Test health-check endpoint: `GET /api/health-check`
-4. Check Supabase logs for database errors
-5. Verify RLS policies haven't been accidentally disabled
-
-### Frontend Issues
-
-1. Open browser DevTools console for JavaScript errors
-2. Check Network tab for failed API requests
-3. Verify API endpoints return expected JSON structure
-4. Clear browser cache if seeing stale data
-
-### Database Issues
-
-1. Verify RLS is enabled: Query should fail from SQL editor without service role
-2. Check Supabase logs for permission errors
-3. Verify service role key (not anon key) is configured
-4. Test queries directly in Supabase SQL editor with RLS disabled temporarily
-
-## Dependencies and Package Management
-
-### Production Dependencies
-
-- `@supabase/supabase-js`: Supabase client library
-- `undici`: Fast HTTP client (used by Vercel functions)
-
-### Dev Dependencies
-
-- `vite`: Build tool and dev server
-- `eslint`: JavaScript linting
-- `prettier`: Code formatting
-- `c8`: Test coverage reporting
-- `vercel`: CLI for deployment
-
-**Dependency Philosophy**: Keep dependencies minimal. Only add new packages if they provide significant value and are actively maintained.
-
-## Helpful Context for AI Assistants
-
-### When Modifying Code
-
-- Always prioritize security over convenience
-- Maintain backward compatibility with existing database schema
-- Keep API responses consistent in structure
-- Add appropriate error messages for debugging
-- Consider impact on CSR workflow (this is a production tool)
-
-### When Adding Features
-
-- Check if feature requires database migration
-- Update relevant documentation files (README.md, DEPLOYMENT.md, etc.)
-- Add tests before implementation (TDD approach encouraged)
-- Consider mobile responsiveness for frontend changes
-- Ensure accessibility (ARIA labels, keyboard navigation)
-
-### Common Pitfalls to Avoid
-
-- DON'T expose Supabase anon key to frontend
-- DON'T bypass RLS policies
-- DON'T log sensitive customer information
-- DON'T use synchronous blocking operations in API endpoints
-- DON'T commit environment variables or secrets
-- DON'T break existing API contracts without versioning
-
-### Project-Specific Terminology
-
-- **CSR**: Customer Success Representative
-- **Triage**: Process of analyzing and prioritizing customer tickets
-- **Talking Points**: Empathetic response guidelines generated for CSRs
-- **KB**: Knowledge Base (collection of help articles)
-- **RLS**: Row Level Security (Supabase security feature)
-- **Service Role**: Supabase admin-level access key (used server-side only)
-
-## Related Documentation
-
-- `README.md`: User-facing project overview and setup instructions
-- `DEPLOYMENT.md`: Production deployment guide
-- `COMPLETE_WORKFLOW.md`: Detailed workflow documentation
-- `IMPLEMENTATION_SUMMARY.md`: Technical implementation details
-- `.env.example`: Required environment variables template
-- `supabase-setup.sql`: Database schema and RLS policies
-
-## Continuous Integration
-
-GitHub Actions workflow (`.github/workflows/`) runs on every push:
-
-1. Install dependencies
-2. Run linting checks
-3. Run format checks
-4. Execute test suite
-5. Build production bundle
-6. Run security audit
-
-All checks must pass before merging to main branch.
-
-## Contact and Support
-
-For questions about architecture decisions or security concerns, refer to commit history and related documentation files. The project follows a security-first approach, so when in doubt, choose the more secure option.
-
----
-
-**Last Updated**: 2025-10-16
-**Project Version**: 2.0
-**Node Version**: >=18.0.0
+- G0 Concept Intake — Product Lead, AI Program Manager (`docs/agent-change-management-playbook.md`, tracker: `docs/agent-governance-owner-acknowledgements.md`).
+- G1 Architecture & Policy Review — AI Architect, Security Architect, Privacy Counsel.
+- G2 Planning & Control Design — AI Architect, Senior SWE.
+- G3 Tooling & Memory Readiness — MLOps Lead, Platform/SRE Lead.
+- G4 Build & Integration — Feature Squad Engineering Manager.
+- G5 Evaluation & Observability — AI Quality Lead, Observability Engineer.
+- G6 Governance & Risk Approval — Safety Review Board Chair (Legal, Compliance).
+- G7 Launch Readiness — DevOps Lead, Support Operations Manager.
+- G8 Monitoring & Improvement — AI Operations Manager, Compliance Officer.
+
+## References
+
+1. [OpenAI Platform: Agents Guide](https://platform.openai.com/docs/guides/agents)
+2. [LangChain Blog: “Deep Agents”](https://blog.langchain.dev/deep-agents/)
+3. [LangChain Blog: “Agent Middleware”](https://blog.langchain.dev/agent-middleware/)
+4. [Lilian Weng: “LLM Powered Autonomous Agents”](https://lilianweng.github.io/posts/2023-06-23-agent/)
+5. [Hugging Face Blog: “License to Call: Introducing Transformers Agents 2.0”](https://huggingface.co/blog/agents)
