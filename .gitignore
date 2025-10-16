@@ -57,6 +57,10 @@ build/Release
 
 # Yarn
 .yarn-integrity
+yarn.lock
+
+# pnpm
+pnpm-lock.yaml
 
 # Alternative package manager lockfiles (project uses npm)
 pnpm-lock.yaml
