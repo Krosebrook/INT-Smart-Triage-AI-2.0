@@ -105,5 +105,7 @@ tmp
 Thumbs.db
 
 
-#Ignore cursor AI rules
-.cursor\rules\codacy.mdc
+# Cursor AI directories and files
+.cursor/
+.cursorrules
+.cursorignore
