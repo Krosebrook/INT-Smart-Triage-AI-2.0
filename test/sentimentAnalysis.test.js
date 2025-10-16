@@ -109,8 +109,6 @@ describe('SentimentAnalyzer', () => {
         'This is terrible! I want a refund! Speaking to my lawyer!'
       );
 
-      console.log('High Escalation Result:', JSON.stringify(highEscalation, null, 2));
-      
       assert.strictEqual(lowEscalation.recommendedAction, 'standard_response');
       assert.ok(highEscalation.recommendedAction.includes('supervisor'));
     });

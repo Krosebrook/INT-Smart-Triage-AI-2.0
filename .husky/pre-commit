@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Run lint-staged for code quality checks
 npx --no-install lint-staged || echo "Lint-staged failed, please fix linting errors"
 
