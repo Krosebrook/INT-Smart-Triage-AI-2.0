@@ -217,6 +217,99 @@
         display: block;
       }
 
+      /* Recent Reports Widget */
+      .recent-reports-widget {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .widget-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f3f4f6;
+      }
+
+      .recent-report-item {
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #f9fafb;
+      }
+
+      .recent-report-item:hover {
+        background: #f3f4f6;
+        border-color: #667eea;
+        transform: translateX(5px);
+      }
+
+      .recent-report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+
+      .recent-report-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        flex: 1;
+      }
+
+      .recent-report-meta {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .recent-report-badges {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      .recent-badge {
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .recent-badge.priority-high {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .recent-badge.priority-medium {
+        background: #fef3c7;
+        color: #d97706;
+      }
+
+      .recent-badge.priority-low {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+
+      .no-recent-reports {
+        text-align: center;
+        padding: 30px;
+        color: #6b7280;
+      }
+
+      .recent-reports-loading {
+        text-align: center;
+        padding: 20px;
+        color: #6b7280;
+      }
+
       .result-card {
         background: white;
         padding: 20px;
@@ -432,6 +525,15 @@
           <h2 style="margin-bottom: 20px; color: #2c3e50">Triage Results</h2>
           <div id="triageResults"></div>
         </div>
+
+        <!-- Recent Reports Widget -->
+        <div class="recent-reports-widget" id="recentReportsWidget" style="margin-top: 20px;">
+          <div class="widget-header">
+            <h2 style="margin: 0; color: #2c3e50; font-size: 20px;">📋 Recent Reports</h2>
+            <a href="/public/client-history.html" style="color: #667eea; text-decoration: none; font-weight: 600;">View All →</a>
+          </div>
+          <div id="recentReportsList"></div>
+        </div>
       </div>
     </div>
 
@@ -632,10 +734,17 @@
         const csrName = 'CSR_USER'; // In production, get from auth
         realtimeService.trackPresence(csrName, 'online');
 
+        // Load recent reports
+        loadRecentReports();
+
         // Subscribe to real-time ticket updates
         realtimeService.subscribeToReports((change) => {
           console.log('Real-time ticket update:', change);
           showNotification('Ticket updated in real-time!');
+          // Reload recent reports when a new ticket is created
+          if (change.eventType === 'INSERT') {
+            loadRecentReports();
+          }
         });
 
         // Register service worker for PWA
@@ -647,6 +756,86 @@
               console.log('Service Worker registration failed:', err)
             );
         }
+      }
+
+      // Load recent reports widget
+      async function loadRecentReports() {
+        const recentReportsList = document.getElementById('recentReportsList');
+        
+        if (!recentReportsList) return;
+
+        // Show loading
+        recentReportsList.innerHTML = '<div class="recent-reports-loading">Loading recent reports...</div>';
+
+        try {
+          // Get today's date at midnight
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const { data: reports, error } = await supabase
+            .from('reports')
+            .select('*')
+            .gte('created_at', today.toISOString())
+            .order('created_at', { ascending: false })
+            .limit(5);
+
+          if (error) throw error;
+
+          if (!reports || reports.length === 0) {
+            recentReportsList.innerHTML = `
+              <div class="no-recent-reports">
+                <p>No reports created today yet.</p>
+                <p style="font-size: 12px; margin-top: 5px;">Reports will appear here as they are created.</p>
+              </div>
+            `;
+            return;
+          }
+
+          recentReportsList.innerHTML = reports
+            .map(
+              (report) => `
+                <div class="recent-report-item" onclick="window.location.href='/public/report-detail.html?id=${report.report_id}'">
+                  <div class="recent-report-header">
+                    <div style="flex: 1;">
+                      <div class="recent-report-title">${escapeHtml(report.ticket_subject || 'No Subject')}</div>
+                      <div class="recent-report-meta">
+                        ${escapeHtml(report.customer_name || 'Unknown Customer')} • 
+                        ${formatRecentDate(report.created_at)} •
+                        ${report.report_id}
+                      </div>
+                    </div>
+                    <div class="recent-report-badges">
+                      <span class="recent-badge priority-${report.priority || 'medium'}">${(report.priority || 'medium').toUpperCase()}</span>
+                    </div>
+                  </div>
+                </div>
+              `
+            )
+            .join('');
+        } catch (error) {
+          console.error('Error loading recent reports:', error);
+          recentReportsList.innerHTML = `
+            <div class="no-recent-reports">
+              <p>Unable to load recent reports.</p>
+            </div>
+          `;
+        }
+      }
+
+      // Format date for recent reports (relative time)
+      function formatRecentDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInMs = now - date;
+        const diffInMins = Math.floor(diffInMs / 60000);
+        
+        if (diffInMins < 1) return 'Just now';
+        if (diffInMins < 60) return `${diffInMins} min ago`;
+        
+        const diffInHours = Math.floor(diffInMins / 60);
+        if (diffInHours < 24) return `${diffInHours}h ago`;
+        
+        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       }
 
       function showNotification(message) {
