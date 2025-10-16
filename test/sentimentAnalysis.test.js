@@ -65,9 +65,7 @@ describe('SentimentAnalyzer', () => {
     });
 
     it('should detect frustration indicators', () => {
-      const result = analyzer.analyze(
-        'This keeps happening again and again'
-      );
+      const result = analyzer.analyze('This keeps happening again and again');
       assert.ok(result.scores.frustration > 0);
     });
 
@@ -96,7 +94,7 @@ describe('SentimentAnalyzer', () => {
     it('should enhance score based on customer tone', () => {
       const result1 = analyzer.analyze('message', 'calm');
       const result2 = analyzer.analyze('message', 'angry');
-      
+
       assert.ok(result2.scores.negative > result1.scores.negative);
     });
 
@@ -110,7 +108,7 @@ describe('SentimentAnalyzer', () => {
       const highEscalation = analyzer.analyze(
         'This is terrible! I want a refund! Speaking to my lawyer!'
       );
-      
+
       assert.strictEqual(lowEscalation.recommendedAction, 'standard_response');
       assert.ok(highEscalation.recommendedAction.includes('supervisor'));
     });
@@ -138,7 +136,7 @@ describe('SentimentAnalyzer', () => {
     it('should sort tactics by priority', () => {
       const tactics = analyzer.getDeEscalationTactics('negative', 50, 2);
       const priorities = tactics.map((t) => t.priority);
-      
+
       // High should come before low
       const highIndex = priorities.indexOf('high');
       const lowIndex = priorities.indexOf('low');
@@ -185,7 +183,7 @@ describe('SentimentAnalyzer', () => {
         escalationProbability: '40',
         sentiment: 'negative',
       };
-      
+
       const prediction = analyzer.predictEscalation(currentAnalysis, []);
       assert.ok(prediction.probability);
       assert.ok(prediction.risk);
@@ -198,7 +196,7 @@ describe('SentimentAnalyzer', () => {
         { sentiment: 'negative', status: 'new', created_at: new Date() },
         { sentiment: 'negative', status: 'new', created_at: new Date() },
       ];
-      
+
       const prediction = analyzer.predictEscalation(
         currentAnalysis,
         historicalData
@@ -231,7 +229,7 @@ describe('SentimentAnalyzer', () => {
         { sentiment: 'neutral' },
         { sentiment: 'positive' },
       ];
-      
+
       const trend = analyzer.analyzeTrend(analyses);
       assert.strictEqual(trend.trend, 'improving');
       assert.ok(trend.direction > 0);
@@ -243,7 +241,7 @@ describe('SentimentAnalyzer', () => {
         { sentiment: 'neutral' },
         { sentiment: 'negative' },
       ];
-      
+
       const trend = analyzer.analyzeTrend(analyses);
       assert.strictEqual(trend.trend, 'worsening');
       assert.ok(trend.direction < 0);
@@ -255,7 +253,7 @@ describe('SentimentAnalyzer', () => {
         { sentiment: 'neutral' },
         { sentiment: 'neutral' },
       ];
-      
+
       const trend = analyzer.analyzeTrend(analyses);
       assert.strictEqual(trend.trend, 'stable');
     });
@@ -266,7 +264,7 @@ describe('SentimentAnalyzer', () => {
         { sentiment: 'negative' },
         { sentiment: 'positive' },
       ];
-      
+
       const trend = analyzer.analyzeTrend(analyses);
       assert.ok(trend.volatility);
       assert.ok(parseFloat(trend.volatility) >= 0);
@@ -297,7 +295,7 @@ describe('SentimentAnalyzer', () => {
         escalationProbability: '70',
         emotionalIntensity: 'high',
       };
-      
+
       const suggestion = analyzer.generateResponseSuggestion(analysis);
       assert.strictEqual(suggestion.tone, 'immediate_action');
       assert.strictEqual(suggestion.urgency, 'immediate');
@@ -310,7 +308,7 @@ describe('SentimentAnalyzer', () => {
         escalationProbability: '40',
         emotionalIntensity: 'moderate',
       };
-      
+
       const suggestion = analyzer.generateResponseSuggestion(analysis);
       assert.strictEqual(suggestion.tone, 'empathetic_professional');
       assert.strictEqual(suggestion.urgency, 'high');
@@ -322,7 +320,7 @@ describe('SentimentAnalyzer', () => {
         escalationProbability: '20',
         emotionalIntensity: 'low',
       };
-      
+
       const suggestion = analyzer.generateResponseSuggestion(analysis);
       assert.strictEqual(suggestion.tone, 'helpful_professional');
       assert.strictEqual(suggestion.urgency, 'normal');
@@ -334,7 +332,7 @@ describe('SentimentAnalyzer', () => {
         escalationProbability: '25',
         emotionalIntensity: 'low',
       };
-      
+
       const suggestion = analyzer.generateResponseSuggestion(analysis);
       assert.ok(suggestion.opening);
       assert.ok(suggestion.tone);
@@ -347,10 +345,9 @@ describe('SentimentAnalyzer', () => {
         escalationProbability: '55',
         emotionalIntensity: 'high',
       };
-      
+
       const suggestion = analyzer.generateResponseSuggestion(analysis);
       assert.ok(suggestion.suggestedCompensation.includes('discount'));
     });
   });
 });
-

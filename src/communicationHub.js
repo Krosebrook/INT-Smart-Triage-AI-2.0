@@ -495,13 +495,14 @@ Immediate action required!
    *
    * Accepts international format: +[country code][number]
    * Example: +15551234567
+   * Minimum 10 digits required
    *
    * @private
    * @param {string} phone - Phone number to validate
    * @returns {boolean} True if valid format
    */
   isValidPhoneNumber(phone) {
-    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+    const phoneRegex = /^\+?[1-9]\d{9,14}$/;
     return phoneRegex.test(phone.replace(/[\s\-()]/g, ''));
   }
 
@@ -535,7 +536,16 @@ Immediate action required!
    */
   async getChannelPreferences(userId) {
     if (!supabase) {
-      return { success: false, error: 'Database not configured' };
+      // Return default preferences when database is not configured
+      return {
+        success: true,
+        preferences: {
+          email: true,
+          sms: false,
+          slack: false,
+          teams: false,
+        },
+      };
     }
 
     try {

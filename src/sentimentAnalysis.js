@@ -364,7 +364,7 @@ export class SentimentAnalyzer {
       tone,
       closing,
       urgency: prob > 60 ? 'immediate' : prob > 30 ? 'high' : 'normal',
-      approvalRequired: prob > 70,
+      approvalRequired: prob >= 70,
       suggestedCompensation: prob > 50 ? 'consider_discount_or_credit' : 'none',
     };
   }

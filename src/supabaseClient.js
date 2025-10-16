@@ -1,11 +1,19 @@
 // Supabase client for INT Smart Triage AI 2.0
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Support both Vite (import.meta.env) and Node.js (process.env) environments
+const getEnvVar = (key) => {
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    return import.meta.env[key];
+  }
+  return process.env[key];
+};
+
+const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
+const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  // Silently ignore errors
+  // Silently ignore errors - allows tests to run without environment variables
 }
 
 export const supabase =

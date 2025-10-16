@@ -1,0 +1,1908 @@
+
+> int-smart-triage-ai-2.0@1.0.0 test
+> node --test test/*.test.js
+
+TAP version 13
+# Subtest: AssignmentEngine
+    # Subtest: Constructor
+        # Subtest: should initialize with departments
+        ok 1 - should initialize with departments
+          ---
+          duration_ms: 1.169696
+          type: 'test'
+          ...
+        # Subtest: should initialize with skill matrix
+        ok 2 - should initialize with skill matrix
+          ---
+          duration_ms: 0.50311
+          type: 'test'
+          ...
+        1..2
+    ok 1 - Constructor
+      ---
+      duration_ms: 2.440325
+      type: 'suite'
+      ...
+    # Subtest: determineDepartment()
+        # Subtest: should route security issues to Information Security
+        ok 1 - should route security issues to Information Security
+          ---
+          duration_ms: 0.655222
+          type: 'test'
+          ...
+        # Subtest: should route network issues to Technology
+        ok 2 - should route network issues to Technology
+          ---
+          duration_ms: 0.611106
+          type: 'test'
+          ...
+        # Subtest: should route website issues to Website Design
+        ok 3 - should route website issues to Website Design
+          ---
+          duration_ms: 0.38449
+          type: 'test'
+          ...
+        # Subtest: should default to Technology for generic issues
+        ok 4 - should default to Technology for generic issues
+          ---
+          duration_ms: 0.170776
+          type: 'test'
+          ...
+        # Subtest: should handle multiple matching keywords
+        ok 5 - should handle multiple matching keywords
+          ---
+          duration_ms: 0.146587
+          type: 'test'
+          ...
+        1..5
+    ok 2 - determineDepartment()
+      ---
+      duration_ms: 2.481469
+      type: 'suite'
+      ...
+    # Subtest: getMockCSRs()
+        # Subtest: should return all CSRs when no department specified
+        ok 1 - should return all CSRs when no department specified
+          ---
+          duration_ms: 0.29606
+          type: 'test'
+          ...
+        # Subtest: should filter CSRs by department
+        ok 2 - should filter CSRs by department
+          ---
+          duration_ms: 0.329476
+          type: 'test'
+          ...
+        # Subtest: should return empty array for non-existent department
+        ok 3 - should return empty array for non-existent department
+          ---
+          duration_ms: 0.226701
+          type: 'test'
+          ...
+        # Subtest: should include all required CSR properties
+        ok 4 - should include all required CSR properties
+          ---
+          duration_ms: 0.170254
+          type: 'test'
+          ...
+        1..4
+    ok 3 - getMockCSRs()
+      ---
+      duration_ms: 1.266091
+      type: 'suite'
+      ...
+    # Subtest: selectBestCSR()
+        # Subtest: should select CSR with lowest workload
+        ok 1 - should select CSR with lowest workload
+          ---
+          duration_ms: 0.299611
+          type: 'test'
+          ...
+        # Subtest: should prefer expert for high priority tickets
+        ok 2 - should prefer expert for high priority tickets
+          ---
+          duration_ms: 0.177412
+          type: 'test'
+          ...
+        # Subtest: should consider satisfaction rating in scoring
+        ok 3 - should consider satisfaction rating in scoring
+          ---
+          duration_ms: 0.14859
+          type: 'test'
+          ...
+        1..3
+    ok 4 - selectBestCSR()
+      ---
+      duration_ms: 0.748522
+      type: 'suite'
+      ...
+    # Subtest: estimateResponseTime()
+        # Subtest: should return 15 base minutes for high priority
+        ok 1 - should return 15 base minutes for high priority
+          ---
+          duration_ms: 0.237638
+          type: 'test'
+          ...
+        # Subtest: should return 60 base minutes for medium priority
+        ok 2 - should return 60 base minutes for medium priority
+          ---
+          duration_ms: 0.332087
+          type: 'test'
+          ...
+        # Subtest: should return 240 base minutes for low priority
+        ok 3 - should return 240 base minutes for low priority
+          ---
+          duration_ms: 0.169324
+          type: 'test'
+          ...
+        # Subtest: should add 10 minutes per workload item
+        ok 4 - should add 10 minutes per workload item
+          ---
+          duration_ms: 0.131976
+          type: 'test'
+          ...
+        # Subtest: should format hours correctly when over 60 minutes
+        ok 5 - should format hours correctly when over 60 minutes
+          ---
+          duration_ms: 0.233451
+          type: 'test'
+          ...
+        1..5
+    ok 5 - estimateResponseTime()
+      ---
+      duration_ms: 1.296811
+      type: 'suite'
+      ...
+    # Subtest: autoAssign()
+        # Subtest: should reject invalid report data
+        ok 1 - should reject invalid report data
+          ---
+          duration_ms: 0.340916
+          type: 'test'
+          ...
+        # Subtest: should reject report without issue description
+        ok 2 - should reject report without issue description
+          ---
+          duration_ms: 0.321093
+          type: 'test'
+          ...
+        # Subtest: should return assignment with mock CSRs
+        ok 3 - should return assignment with mock CSRs
+          ---
+          duration_ms: 0.386626
+          type: 'test'
+          ...
+        # Subtest: should handle missing priority gracefully
+        ok 4 - should handle missing priority gracefully
+          ---
+          duration_ms: 0.396072
+          type: 'test'
+          ...
+        1..4
+    ok 6 - autoAssign()
+      ---
+      duration_ms: 1.659021
+      type: 'suite'
+      ...
+    # Subtest: getAvailableCSRs()
+        # Subtest: should return mock CSRs when no database
+        ok 1 - should return mock CSRs when no database
+          ---
+          duration_ms: 0.325167
+          type: 'test'
+          ...
+        # Subtest: should filter by department
+        ok 2 - should filter by department
+          ---
+          duration_ms: 0.258286
+          type: 'test'
+          ...
+        1..2
+    ok 7 - getAvailableCSRs()
+      ---
+      duration_ms: 0.726679
+      type: 'suite'
+      ...
+    # Subtest: reassignTicket()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.391725
+          type: 'test'
+          ...
+        1..1
+    ok 8 - reassignTicket()
+      ---
+      duration_ms: 0.470111
+      type: 'suite'
+      ...
+    # Subtest: getWorkloadDistribution()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.323534
+          type: 'test'
+          ...
+        1..1
+    ok 9 - getWorkloadDistribution()
+      ---
+      duration_ms: 0.476557
+      type: 'suite'
+      ...
+    # Subtest: escalateTicket()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.241131
+          type: 'test'
+          ...
+        1..1
+    ok 10 - escalateTicket()
+      ---
+      duration_ms: 0.329172
+      type: 'suite'
+      ...
+    1..10
+ok 1 - AssignmentEngine
+  ---
+  duration_ms: 13.230589
+  type: 'suite'
+  ...
+# Subtest: CommunicationHub
+    # Subtest: Constructor
+        # Subtest: should initialize with supported channels
+        ok 1 - should initialize with supported channels
+          ---
+          duration_ms: 1.055547
+          type: 'test'
+          ...
+        # Subtest: should initialize integrations map
+        ok 2 - should initialize integrations map
+          ---
+          duration_ms: 0.288437
+          type: 'test'
+          ...
+        1..2
+    ok 1 - Constructor
+      ---
+      duration_ms: 2.11738
+      type: 'suite'
+      ...
+    # Subtest: sendNotification()
+        # Subtest: should return error for unsupported channel
+        ok 1 - should return error for unsupported channel
+          ---
+          duration_ms: 0.469817
+          type: 'test'
+          ...
+        # Subtest: should route to email channel
+        ok 2 - should route to email channel
+          ---
+          duration_ms: 0.783971
+          type: 'test'
+          ...
+        # Subtest: should route to SMS channel
+        ok 3 - should route to SMS channel
+          ---
+          duration_ms: 0.466466
+          type: 'test'
+          ...
+        1..3
+    ok 2 - sendNotification()
+      ---
+      duration_ms: 1.943812
+      type: 'suite'
+      ...
+    # Subtest: sendEmail()
+        # Subtest: should send email successfully
+        ok 1 - should send email successfully
+          ---
+          duration_ms: 0.22262
+          type: 'test'
+          ...
+        # Subtest: should generate unique message IDs
+        ok 2 - should generate unique message IDs
+          ---
+          duration_ms: 0.328385
+          type: 'test'
+          ...
+        1..2
+    ok 3 - sendEmail()
+      ---
+      duration_ms: 0.77537
+      type: 'suite'
+      ...
+    # Subtest: sendSms()
+        # Subtest: should send SMS successfully with valid phone
+        ok 1 - should send SMS successfully with valid phone
+          ---
+          duration_ms: 0.36969
+          type: 'test'
+          ...
+        # Subtest: should reject invalid phone number
+        ok 2 - should reject invalid phone number
+          ---
+          duration_ms: 0.256283
+          type: 'test'
+          ...
+        # Subtest: should calculate SMS segments correctly
+        ok 3 - should calculate SMS segments correctly
+          ---
+          duration_ms: 0.231743
+          type: 'test'
+          ...
+        1..3
+    ok 4 - sendSms()
+      ---
+      duration_ms: 0.989721
+      type: 'suite'
+      ...
+    # Subtest: sendSlack()
+        # Subtest: should send Slack message successfully
+        ok 1 - should send Slack message successfully
+          ---
+          duration_ms: 0.247103
+          type: 'test'
+          ...
+        # Subtest: should add high priority indicator
+        ok 2 - should add high priority indicator
+          ---
+          duration_ms: 0.205019
+          type: 'test'
+          ...
+        # Subtest: should use custom username and icon
+        ok 3 - should use custom username and icon
+          ---
+          duration_ms: 0.172305
+          type: 'test'
+          ...
+        1..3
+    ok 5 - sendSlack()
+      ---
+      duration_ms: 0.743112
+      type: 'suite'
+      ...
+    # Subtest: sendTeams()
+        # Subtest: should send Teams message successfully
+        ok 1 - should send Teams message successfully
+          ---
+          duration_ms: 0.317249
+          type: 'test'
+          ...
+        # Subtest: should set red theme for high priority
+        ok 2 - should set red theme for high priority
+          ---
+          duration_ms: 0.199902
+          type: 'test'
+          ...
+        # Subtest: should set blue theme for normal priority
+        ok 3 - should set blue theme for normal priority
+          ---
+          duration_ms: 0.16732
+          type: 'test'
+          ...
+        1..3
+    ok 6 - sendTeams()
+      ---
+      duration_ms: 0.857648
+      type: 'suite'
+      ...
+    # Subtest: sendPhone()
+        # Subtest: should initiate phone call successfully
+        ok 1 - should initiate phone call successfully
+          ---
+          duration_ms: 0.357815
+          type: 'test'
+          ...
+        1..1
+    ok 7 - sendPhone()
+      ---
+      duration_ms: 0.435109
+      type: 'suite'
+      ...
+    # Subtest: sendChat()
+        # Subtest: should send chat message successfully
+        ok 1 - should send chat message successfully
+          ---
+          duration_ms: 0.229778
+          type: 'test'
+          ...
+        1..1
+    ok 8 - sendChat()
+      ---
+      duration_ms: 0.295053
+      type: 'suite'
+      ...
+    # Subtest: broadcastToTeam()
+        # Subtest: should broadcast to multiple channels
+        ok 1 - should broadcast to multiple channels
+          ---
+          duration_ms: 0.398531
+          type: 'test'
+          ...
+        1..1
+    ok 9 - broadcastToTeam()
+      ---
+      duration_ms: 0.536888
+      type: 'suite'
+      ...
+    # Subtest: notifyHighPriorityTicket()
+        # Subtest: should send notifications to multiple channels
+        ok 1 - should send notifications to multiple channels
+          ---
+          duration_ms: 0.362371
+          type: 'test'
+          ...
+        1..1
+    ok 10 - notifyHighPriorityTicket()
+      ---
+      duration_ms: 0.49786
+      type: 'suite'
+      ...
+    # Subtest: isValidPhoneNumber()
+        # Subtest: should accept valid international format
+        ok 1 - should accept valid international format
+          ---
+          duration_ms: 0.18907
+          type: 'test'
+          ...
+        # Subtest: should accept phone with spaces and dashes
+        ok 2 - should accept phone with spaces and dashes
+          ---
+          duration_ms: 0.140862
+          type: 'test'
+          ...
+        # Subtest: should reject invalid formats
+        not ok 3 - should reject invalid formats
+          ---
+          duration_ms: 10.698615
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/communicationHub.test.js:209:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The expression evaluated to a falsy value:
+            
+              assert.ok(!hub.isValidPhoneNumber('123'))
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected: true
+          actual: false
+          operator: '=='
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/communicationHub.test.js:210:14)
+            Test.runInAsyncScope (node:async_hooks:214:14)
+            Test.run (node:internal/test_runner/test:1047:25)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        1..3
+    not ok 11 - isValidPhoneNumber()
+      ---
+      duration_ms: 11.27415
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/communicationHub.test.js:197:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: generateMessageId()
+        # Subtest: should generate unique IDs
+        ok 1 - should generate unique IDs
+          ---
+          duration_ms: 0.289111
+          type: 'test'
+          ...
+        # Subtest: should start with MSG- prefix
+        ok 2 - should start with MSG- prefix
+          ---
+          duration_ms: 0.168099
+          type: 'test'
+          ...
+        1..2
+    ok 12 - generateMessageId()
+      ---
+      duration_ms: 0.723289
+      type: 'suite'
+      ...
+    # Subtest: getConversationHistory()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.234619
+          type: 'test'
+          ...
+        1..1
+    ok 13 - getConversationHistory()
+      ---
+      duration_ms: 0.348472
+      type: 'suite'
+      ...
+    # Subtest: getChannelPreferences()
+        # Subtest: should return default preferences when database not configured
+        not ok 1 - should return default preferences when database not configured
+          ---
+          duration_ms: 0.636748
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/communicationHub.test.js:238:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            Expected values to be strictly equal:
+            
+            false !== true
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected: true
+          actual: false
+          operator: 'strictEqual'
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/communicationHub.test.js:240:14)
+            async Test.run (node:internal/test_runner/test:1054:7)
+            async Promise.all (index 0)
+            async Suite.run (node:internal/test_runner/test:1442:7)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        1..1
+    not ok 14 - getChannelPreferences()
+      ---
+      duration_ms: 0.741365
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/communicationHub.test.js:237:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: updateChannelPreferences()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.35675
+          type: 'test'
+          ...
+        1..1
+    ok 15 - updateChannelPreferences()
+      ---
+      duration_ms: 0.497813
+      type: 'suite'
+      ...
+    1..15
+not ok 2 - CommunicationHub
+  ---
+  duration_ms: 24.670682
+  type: 'suite'
+  location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/communicationHub.test.js:9:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: CustomerProfileService
+    # Subtest: getCustomerProfile()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.943649
+          type: 'test'
+          ...
+        # Subtest: should validate customer ID
+        not ok 2 - should validate customer ID
+          ---
+          duration_ms: 0.772588
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:23:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The input did not match the regular expression /required/. Input:
+            
+            'Database not configured'
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected:
+          actual: 'Database not configured'
+          operator: 'match'
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:26:14)
+            async Test.run (node:internal/test_runner/test:1054:7)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        1..2
+    not ok 1 - getCustomerProfile()
+      ---
+      duration_ms: 2.381494
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:16:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        async Promise.all (index 0)
+      ...
+    # Subtest: calculateOverallSentiment()
+        # Subtest: should return neutral for no tickets
+        ok 1 - should return neutral for no tickets
+          ---
+          duration_ms: 0.532786
+          type: 'test'
+          ...
+        # Subtest: should calculate sentiment from tickets
+        ok 2 - should calculate sentiment from tickets
+          ---
+          duration_ms: 0.812735
+          type: 'test'
+          ...
+        1..2
+    ok 2 - calculateOverallSentiment()
+      ---
+      duration_ms: 1.530177
+      type: 'suite'
+      ...
+    # Subtest: calculateLifetimeValue()
+        # Subtest: should calculate LTV from tickets
+        ok 1 - should calculate LTV from tickets
+          ---
+          duration_ms: 18.203882
+          type: 'test'
+          ...
+        # Subtest: should assign correct tier based on value
+        ok 2 - should assign correct tier based on value
+          ---
+          duration_ms: 0.474773
+          type: 'test'
+          ...
+        # Subtest: should assign standard tier for low value
+        ok 3 - should assign standard tier for low value
+          ---
+          duration_ms: 0.479376
+          type: 'test'
+          ...
+        1..3
+    ok 3 - calculateLifetimeValue()
+      ---
+      duration_ms: 19.578169
+      type: 'suite'
+      ...
+    # Subtest: calculateChurnRisk()
+        # Subtest: should return low risk for no issues
+        ok 1 - should return low risk for no issues
+          ---
+          duration_ms: 0.88893
+          type: 'test'
+          ...
+        # Subtest: should increase risk for unresolved tickets
+        ok 2 - should increase risk for unresolved tickets
+          ---
+          duration_ms: 1.312343
+          type: 'test'
+          ...
+        # Subtest: should increase risk for negative sentiment
+        ok 3 - should increase risk for negative sentiment
+          ---
+          duration_ms: 0.39049
+          type: 'test'
+          ...
+        # Subtest: should provide recommendations based on risk level
+        ok 4 - should provide recommendations based on risk level
+          ---
+          duration_ms: 0.503547
+          type: 'test'
+          ...
+        1..4
+    ok 4 - calculateChurnRisk()
+      ---
+      duration_ms: 3.47961
+      type: 'suite'
+      ...
+    # Subtest: calculateAvgResolutionTime()
+        # Subtest: should return 0 for no resolved tickets
+        ok 1 - should return 0 for no resolved tickets
+          ---
+          duration_ms: 0.312711
+          type: 'test'
+          ...
+        # Subtest: should calculate average resolution time
+        ok 2 - should calculate average resolution time
+          ---
+          duration_ms: 0.334327
+          type: 'test'
+          ...
+        1..2
+    ok 5 - calculateAvgResolutionTime()
+      ---
+      duration_ms: 0.80592
+      type: 'suite'
+      ...
+    # Subtest: getChurnPreventionRecommendations()
+        # Subtest: should provide urgent actions for high risk
+        ok 1 - should provide urgent actions for high risk
+          ---
+          duration_ms: 0.28238
+          type: 'test'
+          ...
+        # Subtest: should provide high priority actions for medium risk
+        ok 2 - should provide high priority actions for medium risk
+          ---
+          duration_ms: 0.162042
+          type: 'test'
+          ...
+        # Subtest: should provide low priority actions for low risk
+        ok 3 - should provide low priority actions for low risk
+          ---
+          duration_ms: 0.159393
+          type: 'test'
+          ...
+        1..3
+    ok 6 - getChurnPreventionRecommendations()
+      ---
+      duration_ms: 0.757589
+      type: 'suite'
+      ...
+    # Subtest: calculateSimilarity()
+        # Subtest: should return 0 for completely different customers
+        ok 1 - should return 0 for completely different customers
+          ---
+          duration_ms: 0.394962
+          type: 'test'
+          ...
+        # Subtest: should return high score for similar customers
+        ok 2 - should return high score for similar customers
+          ---
+          duration_ms: 0.425359
+          type: 'test'
+          ...
+        # Subtest: should consider common tags
+        ok 3 - should consider common tags
+          ---
+          duration_ms: 0.276836
+          type: 'test'
+          ...
+        1..3
+    ok 7 - calculateSimilarity()
+      ---
+      duration_ms: 1.299792
+      type: 'suite'
+      ...
+    # Subtest: updateCustomerProfile()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.303532
+          type: 'test'
+          ...
+        # Subtest: should validate parameters
+        not ok 2 - should validate parameters
+          ---
+          duration_ms: 0.735151
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:230:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The input did not match the regular expression /required/. Input:
+            
+            'Database not configured'
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected:
+          actual: 'Database not configured'
+          operator: 'match'
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:233:14)
+            async Test.run (node:internal/test_runner/test:1054:7)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        1..2
+    not ok 8 - updateCustomerProfile()
+      ---
+      duration_ms: 1.305569
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:221:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: addCustomerNote()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.491889
+          type: 'test'
+          ...
+        # Subtest: should validate all parameters
+        not ok 2 - should validate all parameters
+          ---
+          duration_ms: 0.482614
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:248:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The input did not match the regular expression /required/. Input:
+            
+            'Database not configured'
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected:
+          actual: 'Database not configured'
+          operator: 'match'
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:251:14)
+            async Test.run (node:internal/test_runner/test:1054:7)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        1..2
+    not ok 9 - addCustomerNote()
+      ---
+      duration_ms: 1.232238
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:237:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: addCustomerTag()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.444308
+          type: 'test'
+          ...
+        # Subtest: should validate parameters
+        not ok 2 - should validate parameters
+          ---
+          duration_ms: 0.436143
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:262:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The input did not match the regular expression /required/. Input:
+            
+            'Database not configured'
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected:
+          actual: 'Database not configured'
+          operator: 'match'
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:265:14)
+            async Test.run (node:internal/test_runner/test:1054:7)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        1..2
+    not ok 10 - addCustomerTag()
+      ---
+      duration_ms: 1.11528
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:255:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: findSimilarCustomers()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.594474
+          type: 'test'
+          ...
+        1..1
+    ok 11 - findSimilarCustomers()
+      ---
+      duration_ms: 0.726298
+      type: 'suite'
+      ...
+    # Subtest: getCommunicationPreferences()
+        # Subtest: should return default preferences when database not configured
+        ok 1 - should return default preferences when database not configured
+          ---
+          duration_ms: 0.375481
+          type: 'test'
+          ...
+        1..1
+    ok 12 - getCommunicationPreferences()
+      ---
+      duration_ms: 0.537599
+      type: 'suite'
+      ...
+    1..12
+not ok 3 - CustomerProfileService
+  ---
+  duration_ms: 36.401408
+  type: 'suite'
+  location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/customerProfileService.test.js:9:1'
+  failureType: 'subtestsFailed'
+  error: '4 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: EmailService
+    # Subtest: Constructor
+        # Subtest: should initialize with templates
+        ok 1 - should initialize with templates
+          ---
+          duration_ms: 1.457449
+          type: 'test'
+          ...
+        1..1
+    ok 1 - Constructor
+      ---
+      duration_ms: 2.36997
+      type: 'suite'
+      ...
+    # Subtest: initializeTemplates()
+        # Subtest: should have all required templates
+        ok 1 - should have all required templates
+          ---
+          duration_ms: 0.551545
+          type: 'test'
+          ...
+        # Subtest: should have subject and template for each
+        ok 2 - should have subject and template for each
+          ---
+          duration_ms: 2.219518
+          type: 'test'
+          ...
+        1..2
+    ok 2 - initializeTemplates()
+      ---
+      duration_ms: 3.190148
+      type: 'suite'
+      ...
+    # Subtest: generateEmail()
+        # Subtest: should generate email from template
+        ok 1 - should generate email from template
+          ---
+          duration_ms: 0.774705
+          type: 'test'
+          ...
+        # Subtest: should replace placeholders in subject
+        ok 2 - should replace placeholders in subject
+          ---
+          duration_ms: 0.581088
+          type: 'test'
+          ...
+        # Subtest: should replace placeholders in body
+        ok 3 - should replace placeholders in body
+          ---
+          duration_ms: 0.338495
+          type: 'test'
+          ...
+        # Subtest: should throw error for non-existent template
+        ok 4 - should throw error for non-existent template
+          ---
+          duration_ms: 0.976354
+          type: 'test'
+          ...
+        1..4
+    ok 3 - generateEmail()
+      ---
+      duration_ms: 3.155241
+      type: 'suite'
+      ...
+    # Subtest: stripHTML()
+        # Subtest: should remove HTML tags
+        ok 1 - should remove HTML tags
+          ---
+          duration_ms: 0.474231
+          type: 'test'
+          ...
+        # Subtest: should collapse whitespace
+        ok 2 - should collapse whitespace
+          ---
+          duration_ms: 0.46394
+          type: 'test'
+          ...
+        # Subtest: should handle empty string
+        ok 3 - should handle empty string
+          ---
+          duration_ms: 0.310328
+          type: 'test'
+          ...
+        1..3
+    ok 4 - stripHTML()
+      ---
+      duration_ms: 1.485729
+      type: 'suite'
+      ...
+    # Subtest: generateTrackingId()
+        # Subtest: should generate unique tracking IDs
+        ok 1 - should generate unique tracking IDs
+          ---
+          duration_ms: 0.48063
+          type: 'test'
+          ...
+        # Subtest: should start with TRACK- prefix
+        ok 2 - should start with TRACK- prefix
+          ---
+          duration_ms: 0.205541
+          type: 'test'
+          ...
+        # Subtest: should contain timestamp and random string
+        ok 3 - should contain timestamp and random string
+          ---
+          duration_ms: 0.212129
+          type: 'test'
+          ...
+        1..3
+    ok 5 - generateTrackingId()
+      ---
+      duration_ms: 1.090056
+      type: 'suite'
+      ...
+    # Subtest: getNextSteps()
+        # Subtest: should return high priority steps
+        ok 1 - should return high priority steps
+          ---
+          duration_ms: 0.37251
+          type: 'test'
+          ...
+        # Subtest: should return medium priority steps
+        ok 2 - should return medium priority steps
+          ---
+          duration_ms: 0.185737
+          type: 'test'
+          ...
+        # Subtest: should return low priority steps
+        ok 3 - should return low priority steps
+          ---
+          duration_ms: 0.171535
+          type: 'test'
+          ...
+        # Subtest: should default to medium for unknown priority
+        ok 4 - should default to medium for unknown priority
+          ---
+          duration_ms: 0.180118
+          type: 'test'
+          ...
+        1..4
+    ok 6 - getNextSteps()
+      ---
+      duration_ms: 1.145592
+      type: 'suite'
+      ...
+    # Subtest: getEstimatedTime()
+        # Subtest: should return correct time for each priority
+        ok 1 - should return correct time for each priority
+          ---
+          duration_ms: 2.145651
+          type: 'test'
+          ...
+        # Subtest: should default to medium for unknown priority
+        ok 2 - should default to medium for unknown priority
+          ---
+          duration_ms: 0.169788
+          type: 'test'
+          ...
+        1..2
+    ok 7 - getEstimatedTime()
+      ---
+      duration_ms: 2.504537
+      type: 'suite'
+      ...
+    # Subtest: sendEmail()
+        # Subtest: should send email with template
+        ok 1 - should send email with template
+          ---
+          duration_ms: 0.770025
+          type: 'test'
+          ...
+        # Subtest: should include HTML and text versions
+        ok 2 - should include HTML and text versions
+          ---
+          duration_ms: 0.871642
+          type: 'test'
+          ...
+        1..2
+    ok 8 - sendEmail()
+      ---
+      duration_ms: 1.793096
+      type: 'suite'
+      ...
+    # Subtest: sendTicketConfirmation()
+        # Subtest: should send confirmation email
+        ok 1 - should send confirmation email
+          ---
+          duration_ms: 0.586434
+          type: 'test'
+          ...
+        1..1
+    ok 9 - sendTicketConfirmation()
+      ---
+      duration_ms: 0.79485
+      type: 'suite'
+      ...
+    # Subtest: sendAssignmentNotification()
+        # Subtest: should send assignment email
+        ok 1 - should send assignment email
+          ---
+          duration_ms: 0.408964
+          type: 'test'
+          ...
+        1..1
+    ok 10 - sendAssignmentNotification()
+      ---
+      duration_ms: 0.532852
+      type: 'suite'
+      ...
+    # Subtest: sendHighPriorityAlert()
+        # Subtest: should send high priority alert
+        ok 1 - should send high priority alert
+          ---
+          duration_ms: 0.338315
+          type: 'test'
+          ...
+        1..1
+    ok 11 - sendHighPriorityAlert()
+      ---
+      duration_ms: 0.403239
+      type: 'suite'
+      ...
+    # Subtest: sendKnowledgeBaseArticles()
+        # Subtest: should send KB articles email
+        ok 1 - should send KB articles email
+          ---
+          duration_ms: 0.38093
+          type: 'test'
+          ...
+        1..1
+    ok 12 - sendKnowledgeBaseArticles()
+      ---
+      duration_ms: 0.499122
+      type: 'suite'
+      ...
+    # Subtest: scheduleFollowUp()
+        # Subtest: should schedule follow-up email
+        ok 1 - should schedule follow-up email
+          ---
+          duration_ms: 0.590506
+          type: 'test'
+          ...
+        # Subtest: should calculate future date correctly
+        ok 2 - should calculate future date correctly
+          ---
+          duration_ms: 0.255324
+          type: 'test'
+          ...
+        1..2
+    ok 13 - scheduleFollowUp()
+      ---
+      duration_ms: 0.96724
+      type: 'suite'
+      ...
+    # Subtest: trackEmailOpen()
+        # Subtest: should track email open
+        ok 1 - should track email open
+          ---
+          duration_ms: 0.212604
+          type: 'test'
+          ...
+        1..1
+    ok 14 - trackEmailOpen()
+      ---
+      duration_ms: 0.277975
+      type: 'suite'
+      ...
+    # Subtest: trackEmailClick()
+        # Subtest: should track email click
+        ok 1 - should track email click
+          ---
+          duration_ms: 0.244378
+          type: 'test'
+          ...
+        1..1
+    ok 15 - trackEmailClick()
+      ---
+      duration_ms: 0.33634
+      type: 'suite'
+      ...
+    # Subtest: wrapInLayout()
+        # Subtest: should wrap content in HTML layout
+        ok 1 - should wrap content in HTML layout
+          ---
+          duration_ms: 0.469437
+          type: 'test'
+          ...
+        # Subtest: should include current year in footer
+        ok 2 - should include current year in footer
+          ---
+          duration_ms: 0.314239
+          type: 'test'
+          ...
+        1..2
+    ok 16 - wrapInLayout()
+      ---
+      duration_ms: 0.963699
+      type: 'suite'
+      ...
+    1..16
+ok 4 - EmailService
+  ---
+  duration_ms: 23.712298
+  type: 'suite'
+  ...
+# Subtest: INT Smart Triage AI 2.0
+    # Subtest: should export a main function
+    ok 1 - should export a main function
+      ---
+      duration_ms: 0.847994
+      type: 'test'
+      ...
+    # Subtest: should return application info object
+    ok 2 - should return application info object
+      ---
+      duration_ms: 0.428065
+      type: 'test'
+      ...
+    # Subtest: should include mode property
+    ok 3 - should include mode property
+      ---
+      duration_ms: 1.526608
+      type: 'test'
+      ...
+    1..3
+ok 5 - INT Smart Triage AI 2.0
+  ---
+  duration_ms: 3.82251
+  type: 'suite'
+  ...
+# Subtest: KnowledgeBaseService
+    # Subtest: Constructor
+        # Subtest: should initialize with empty articles
+        ok 1 - should initialize with empty articles
+          ---
+          duration_ms: 0.666253
+          type: 'test'
+          ...
+        # Subtest: should initialize with empty search index
+        ok 2 - should initialize with empty search index
+          ---
+          duration_ms: 0.230261
+          type: 'test'
+          ...
+        # Subtest: should not be initialized
+        ok 3 - should not be initialized
+          ---
+          duration_ms: 0.127486
+          type: 'test'
+          ...
+        1..3
+    ok 1 - Constructor
+      ---
+      duration_ms: 1.638601
+      type: 'suite'
+      ...
+    # Subtest: extractKeywords()
+        # Subtest: should extract keywords from text
+        ok 1 - should extract keywords from text
+          ---
+          duration_ms: 0.792894
+          type: 'test'
+          ...
+        # Subtest: should filter stop words
+        not ok 2 - should filter stop words
+          ---
+          duration_ms: 9.416731
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/knowledgeBaseService.test.js:44:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The expression evaluated to a falsy value:
+            
+              assert.ok(!keywords.includes('over'))
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected: true
+          actual: false
+          operator: '=='
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/knowledgeBaseService.test.js:49:14)
+            Test.runInAsyncScope (node:async_hooks:214:14)
+            Test.run (node:internal/test_runner/test:1047:25)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        # Subtest: should filter short words
+        ok 3 - should filter short words
+          ---
+          duration_ms: 0.30092
+          type: 'test'
+          ...
+        # Subtest: should return most frequent words first
+        ok 4 - should return most frequent words first
+          ---
+          duration_ms: 0.400772
+          type: 'test'
+          ...
+        # Subtest: should limit to 10 keywords
+        ok 5 - should limit to 10 keywords
+          ---
+          duration_ms: 0.980024
+          type: 'test'
+          ...
+        1..5
+    not ok 2 - extractKeywords()
+      ---
+      duration_ms: 12.641041
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/knowledgeBaseService.test.js:32:3'
+      failureType: 'subtestsFailed'
+      error: '1 subtest failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: buildSearchIndex()
+        # Subtest: should build index from articles
+        ok 1 - should build index from articles
+          ---
+          duration_ms: 1.165395
+          type: 'test'
+          ...
+        # Subtest: should index words from all article fields
+        ok 2 - should index words from all article fields
+          ---
+          duration_ms: 0.8093
+          type: 'test'
+          ...
+        # Subtest: should skip words shorter than 3 characters
+        ok 3 - should skip words shorter than 3 characters
+          ---
+          duration_ms: 0.301661
+          type: 'test'
+          ...
+        1..3
+    ok 3 - buildSearchIndex()
+      ---
+      duration_ms: 2.570374
+      type: 'suite'
+      ...
+    # Subtest: findSemanticMatches()
+        # Subtest: should find semantic matches using synonyms
+        ok 1 - should find semantic matches using synonyms
+          ---
+          duration_ms: 1.29813
+          type: 'test'
+          ...
+        # Subtest: should return empty array for no matches
+        ok 2 - should return empty array for no matches
+          ---
+          duration_ms: 0.595338
+          type: 'test'
+          ...
+        # Subtest: should score matches appropriately
+        ok 3 - should score matches appropriately
+          ---
+          duration_ms: 0.667886
+          type: 'test'
+          ...
+        1..3
+    ok 4 - findSemanticMatches()
+      ---
+      duration_ms: 2.853759
+      type: 'suite'
+      ...
+    # Subtest: getArticleById()
+        # Subtest: should find article by ID
+        ok 1 - should find article by ID
+          ---
+          duration_ms: 0.68263
+          type: 'test'
+          ...
+        # Subtest: should return error for non-existent article
+        ok 2 - should return error for non-existent article
+          ---
+          duration_ms: 0.595139
+          type: 'test'
+          ...
+        1..2
+    ok 5 - getArticleById()
+      ---
+      duration_ms: 1.537763
+      type: 'suite'
+      ...
+    # Subtest: getRelatedArticles()
+        # Subtest: should find related articles by category and tags
+        ok 1 - should find related articles by category and tags
+          ---
+          duration_ms: 1.006078
+          type: 'test'
+          ...
+        # Subtest: should exclude the source article
+        ok 2 - should exclude the source article
+          ---
+          duration_ms: 0.552551
+          type: 'test'
+          ...
+        # Subtest: should return error for non-existent article
+        ok 3 - should return error for non-existent article
+          ---
+          duration_ms: 0.550159
+          type: 'test'
+          ...
+        # Subtest: should respect limit parameter
+        ok 4 - should respect limit parameter
+          ---
+          duration_ms: 0.409306
+          type: 'test'
+          ...
+        1..4
+    ok 6 - getRelatedArticles()
+      ---
+      duration_ms: 2.935536
+      type: 'suite'
+      ...
+    # Subtest: getPopularArticles()
+        # Subtest: should return articles sorted by popularity
+        ok 1 - should return articles sorted by popularity
+          ---
+          duration_ms: 0.661507
+          type: 'test'
+          ...
+        # Subtest: should respect limit parameter
+        ok 2 - should respect limit parameter
+          ---
+          duration_ms: 0.506157
+          type: 'test'
+          ...
+        1..2
+    ok 7 - getPopularArticles()
+      ---
+      duration_ms: 1.355044
+      type: 'suite'
+      ...
+    # Subtest: getArticlesByCategory()
+        # Subtest: should filter articles by category
+        ok 1 - should filter articles by category
+          ---
+          duration_ms: 0.610423
+          type: 'test'
+          ...
+        # Subtest: should return empty array for non-existent category
+        ok 2 - should return empty array for non-existent category
+          ---
+          duration_ms: 0.488917
+          type: 'test'
+          ...
+        1..2
+    ok 8 - getArticlesByCategory()
+      ---
+      duration_ms: 1.292188
+      type: 'suite'
+      ...
+    # Subtest: getArticlesByDepartment()
+        # Subtest: should filter articles by department
+        ok 1 - should filter articles by department
+          ---
+          duration_ms: 0.641836
+          type: 'test'
+          ...
+        1..1
+    ok 9 - getArticlesByDepartment()
+      ---
+      duration_ms: 0.782974
+      type: 'suite'
+      ...
+    # Subtest: getSuggestedArticles()
+        # Subtest: should extract keywords and search
+        ok 1 - should extract keywords and search
+          ---
+          duration_ms: 0.959475
+          type: 'test'
+          ...
+        1..1
+    ok 10 - getSuggestedArticles()
+      ---
+      duration_ms: 1.12333
+      type: 'suite'
+      ...
+    # Subtest: getSearchSuggestions()
+        # Subtest: should return matching titles
+        ok 1 - should return matching titles
+          ---
+          duration_ms: 0.498962
+          type: 'test'
+          ...
+        # Subtest: should return matching tags
+        ok 2 - should return matching tags
+          ---
+          duration_ms: 0.426204
+          type: 'test'
+          ...
+        # Subtest: should limit suggestions to 10
+        ok 3 - should limit suggestions to 10
+          ---
+          duration_ms: 0.506793
+          type: 'test'
+          ...
+        1..3
+    ok 11 - getSearchSuggestions()
+      ---
+      duration_ms: 1.651796
+      type: 'suite'
+      ...
+    # Subtest: rateArticle()
+        # Subtest: should return error when database not configured
+        ok 1 - should return error when database not configured
+          ---
+          duration_ms: 0.375158
+          type: 'test'
+          ...
+        1..1
+    ok 12 - rateArticle()
+      ---
+      duration_ms: 0.477545
+      type: 'suite'
+      ...
+    1..12
+not ok 6 - KnowledgeBaseService
+  ---
+  duration_ms: 32.662966
+  type: 'suite'
+  location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/knowledgeBaseService.test.js:9:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: SentimentAnalyzer
+    # Subtest: Constructor
+        # Subtest: should initialize word sets
+        ok 1 - should initialize word sets
+          ---
+          duration_ms: 2.430124
+          type: 'test'
+          ...
+        # Subtest: should have positive words
+        ok 2 - should have positive words
+          ---
+          duration_ms: 0.430087
+          type: 'test'
+          ...
+        # Subtest: should have negative words
+        ok 3 - should have negative words
+          ---
+          duration_ms: 0.649915
+          type: 'test'
+          ...
+        # Subtest: should have urgency words
+        ok 4 - should have urgency words
+          ---
+          duration_ms: 0.672519
+          type: 'test'
+          ...
+        1..4
+    ok 1 - Constructor
+      ---
+      duration_ms: 6.001388
+      type: 'suite'
+      ...
+    # Subtest: analyze()
+        # Subtest: should detect positive sentiment
+        ok 1 - should detect positive sentiment
+          ---
+          duration_ms: 2.350271
+          type: 'test'
+          ...
+        # Subtest: should detect negative sentiment
+        ok 2 - should detect negative sentiment
+          ---
+          duration_ms: 0.404854
+          type: 'test'
+          ...
+        # Subtest: should detect neutral sentiment
+        ok 3 - should detect neutral sentiment
+          ---
+          duration_ms: 0.282656
+          type: 'test'
+          ...
+        # Subtest: should detect urgency
+        ok 4 - should detect urgency
+          ---
+          duration_ms: 0.423974
+          type: 'test'
+          ...
+        # Subtest: should detect frustration indicators
+        ok 5 - should detect frustration indicators
+          ---
+          duration_ms: 0.439789
+          type: 'test'
+          ...
+        # Subtest: should detect escalation triggers
+        ok 6 - should detect escalation triggers
+          ---
+          duration_ms: 0.251564
+          type: 'test'
+          ...
+        # Subtest: should detect caps lock as negative indicator
+        ok 7 - should detect caps lock as negative indicator
+          ---
+          duration_ms: 0.183269
+          type: 'test'
+          ...
+        # Subtest: should detect excessive exclamation marks
+        ok 8 - should detect excessive exclamation marks
+          ---
+          duration_ms: 0.241587
+          type: 'test'
+          ...
+        # Subtest: should detect multiple question marks
+        ok 9 - should detect multiple question marks
+          ---
+          duration_ms: 0.163191
+          type: 'test'
+          ...
+        # Subtest: should enhance score based on customer tone
+        ok 10 - should enhance score based on customer tone
+          ---
+          duration_ms: 0.239441
+          type: 'test'
+          ...
+        # Subtest: should calculate escalation probability
+        not ok 11 - should calculate escalation probability
+          ---
+          duration_ms: 10.43879
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/sentimentAnalysis.test.js:101:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The expression evaluated to a falsy value:
+            
+              assert.ok(parseFloat(result.escalationProbability) > 50)
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected: true
+          actual: false
+          operator: '=='
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/sentimentAnalysis.test.js:103:14)
+            Test.runInAsyncScope (node:async_hooks:214:14)
+            Test.run (node:internal/test_runner/test:1047:25)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        # Subtest: should recommend appropriate action
+        not ok 12 - should recommend appropriate action
+          ---
+          duration_ms: 1.293926
+          type: 'test'
+          location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/sentimentAnalysis.test.js:106:5'
+          failureType: 'testCodeFailure'
+          error: |-
+            The expression evaluated to a falsy value:
+            
+              assert.ok(highEscalation.recommendedAction.includes('supervisor'))
+            
+          code: 'ERR_ASSERTION'
+          name: 'AssertionError'
+          expected: true
+          actual: false
+          operator: '=='
+          stack: |-
+            TestContext.<anonymous> (file:///home/kyler/INT-Smart-Triage-AI-2.0/test/sentimentAnalysis.test.js:113:14)
+            Test.runInAsyncScope (node:async_hooks:214:14)
+            Test.run (node:internal/test_runner/test:1047:25)
+            async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+          ...
+        # Subtest: should provide de-escalation tactics
+        ok 13 - should provide de-escalation tactics
+          ---
+          duration_ms: 0.179368
+          type: 'test'
+          ...
+        # Subtest: should include confidence score
+        ok 14 - should include confidence score
+          ---
+          duration_ms: 0.134255
+          type: 'test'
+          ...
+        1..14
+    not ok 2 - analyze()
+      ---
+      duration_ms: 17.962741
+      type: 'suite'
+      location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/sentimentAnalysis.test.js:44:3'
+      failureType: 'subtestsFailed'
+      error: '2 subtests failed'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: getDeEscalationTactics()
+        # Subtest: should provide tactics for high escalation risk
+        ok 1 - should provide tactics for high escalation risk
+          ---
+          duration_ms: 0.201222
+          type: 'test'
+          ...
+        # Subtest: should sort tactics by priority
+        ok 2 - should sort tactics by priority
+          ---
+          duration_ms: 0.17051
+          type: 'test'
+          ...
+        # Subtest: should include tactic and script
+        ok 3 - should include tactic and script
+          ---
+          duration_ms: 0.129945
+          type: 'test'
+          ...
+        1..3
+    ok 3 - getDeEscalationTactics()
+      ---
+      duration_ms: 0.664459
+      type: 'suite'
+      ...
+    # Subtest: calculateConfidence()
+        # Subtest: should return low confidence for very short text
+        ok 1 - should return low confidence for very short text
+          ---
+          duration_ms: 0.245242
+          type: 'test'
+          ...
+        # Subtest: should return medium confidence for medium text
+        ok 2 - should return medium confidence for medium text
+          ---
+          duration_ms: 0.152757
+          type: 'test'
+          ...
+        # Subtest: should return high confidence for long text with sentiment
+        ok 3 - should return high confidence for long text with sentiment
+          ---
+          duration_ms: 0.55801
+          type: 'test'
+          ...
+        # Subtest: should return lower confidence for no sentiment words
+        ok 4 - should return lower confidence for no sentiment words
+          ---
+          duration_ms: 0.135052
+          type: 'test'
+          ...
+        1..4
+    ok 4 - calculateConfidence()
+      ---
+      duration_ms: 1.270268
+      type: 'suite'
+      ...
+    # Subtest: predictEscalation()
+        # Subtest: should predict escalation based on current analysis
+        ok 1 - should predict escalation based on current analysis
+          ---
+          duration_ms: 0.387168
+          type: 'test'
+          ...
+        # Subtest: should increase probability with negative history
+        ok 2 - should increase probability with negative history
+          ---
+          duration_ms: 0.344695
+          type: 'test'
+          ...
+        # Subtest: should recommend supervisor for high escalation
+        ok 3 - should recommend supervisor for high escalation
+          ---
+          duration_ms: 0.255134
+          type: 'test'
+          ...
+        # Subtest: should suggest compensation for medium-high escalation
+        ok 4 - should suggest compensation for medium-high escalation
+          ---
+          duration_ms: 0.215736
+          type: 'test'
+          ...
+        1..4
+    ok 5 - predictEscalation()
+      ---
+      duration_ms: 1.449987
+      type: 'suite'
+      ...
+    # Subtest: analyzeTrend()
+        # Subtest: should return insufficient data for single analysis
+        ok 1 - should return insufficient data for single analysis
+          ---
+          duration_ms: 0.365656
+          type: 'test'
+          ...
+        # Subtest: should detect improving trend
+        ok 2 - should detect improving trend
+          ---
+          duration_ms: 0.312901
+          type: 'test'
+          ...
+        # Subtest: should detect worsening trend
+        ok 3 - should detect worsening trend
+          ---
+          duration_ms: 0.430182
+          type: 'test'
+          ...
+        # Subtest: should detect stable trend
+        ok 4 - should detect stable trend
+          ---
+          duration_ms: 0.446662
+          type: 'test'
+          ...
+        # Subtest: should calculate volatility
+        ok 5 - should calculate volatility
+          ---
+          duration_ms: 0.306313
+          type: 'test'
+          ...
+        1..5
+    ok 6 - analyzeTrend()
+      ---
+      duration_ms: 2.160925
+      type: 'suite'
+      ...
+    # Subtest: calculateVolatility()
+        # Subtest: should return 0 for single value
+        ok 1 - should return 0 for single value
+          ---
+          duration_ms: 0.288199
+          type: 'test'
+          ...
+        # Subtest: should return 0 for constant values
+        ok 2 - should return 0 for constant values
+          ---
+          duration_ms: 0.293383
+          type: 'test'
+          ...
+        # Subtest: should calculate volatility for varying values
+        ok 3 - should calculate volatility for varying values
+          ---
+          duration_ms: 0.207022
+          type: 'test'
+          ...
+        1..3
+    ok 7 - calculateVolatility()
+      ---
+      duration_ms: 0.949022
+      type: 'suite'
+      ...
+    # Subtest: generateResponseSuggestion()
+        # Subtest: should suggest immediate action for high escalation
+        ok 1 - should suggest immediate action for high escalation
+          ---
+          duration_ms: 0.32267
+          type: 'test'
+          ...
+        # Subtest: should suggest empathetic response for medium escalation
+        ok 2 - should suggest empathetic response for medium escalation
+          ---
+          duration_ms: 0.188738
+          type: 'test'
+          ...
+        # Subtest: should suggest standard response for low escalation
+        ok 3 - should suggest standard response for low escalation
+          ---
+          duration_ms: 0.162004
+          type: 'test'
+          ...
+        # Subtest: should include opening, tone, and closing
+        ok 4 - should include opening, tone, and closing
+          ---
+          duration_ms: 0.16565
+          type: 'test'
+          ...
+        # Subtest: should suggest compensation for medium-high escalation
+        ok 5 - should suggest compensation for medium-high escalation
+          ---
+          duration_ms: 0.757503
+          type: 'test'
+          ...
+        1..5
+    ok 8 - generateResponseSuggestion()
+      ---
+      duration_ms: 1.857024
+      type: 'suite'
+      ...
+    1..8
+not ok 7 - SentimentAnalyzer
+  ---
+  duration_ms: 33.862633
+  type: 'suite'
+  location: '/home/kyler/INT-Smart-Triage-AI-2.0/test/sentimentAnalysis.test.js:9:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..7
+# tests 189
+# suites 80
+# pass 180
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 246.269279

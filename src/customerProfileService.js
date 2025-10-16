@@ -45,12 +45,12 @@ export class CustomerProfileService {
    * console.log(profile.profile.riskScore.level); // 'low'
    */
   async getCustomerProfile(customerId) {
-    if (!supabase) {
-      return { success: false, error: 'Database not configured' };
-    }
-
     if (!customerId) {
       return { success: false, error: 'Customer ID is required' };
+    }
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
     }
 
     try {
@@ -441,12 +441,12 @@ export class CustomerProfileService {
    * });
    */
   async updateCustomerProfile(customerId, updates) {
-    if (!supabase) {
-      return { success: false, error: 'Database not configured' };
-    }
-
     if (!customerId || !updates) {
       return { success: false, error: 'Customer ID and updates are required' };
+    }
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
     }
 
     try {
@@ -482,12 +482,12 @@ export class CustomerProfileService {
    * await service.addCustomerNote('cust-123', 'Customer prefers email contact', 'Sarah J.');
    */
   async addCustomerNote(customerId, noteText, csrAgent) {
-    if (!supabase) {
-      return { success: false, error: 'Database not configured' };
-    }
-
     if (!customerId || !noteText || !csrAgent) {
       return { success: false, error: 'All parameters are required' };
+    }
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
     }
 
     try {
@@ -525,12 +525,12 @@ export class CustomerProfileService {
    * await service.addCustomerTag('cust-123', 'vip');
    */
   async addCustomerTag(customerId, tag) {
-    if (!supabase) {
-      return { success: false, error: 'Database not configured' };
-    }
-
     if (!customerId || !tag) {
       return { success: false, error: 'Customer ID and tag are required' };
+    }
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
     }
 
     try {
