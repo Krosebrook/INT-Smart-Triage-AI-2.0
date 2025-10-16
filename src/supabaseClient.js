@@ -5,9 +5,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    'Supabase credentials not found. Database features will be disabled.'
-  );
+  
 }
 
 export const supabase =
@@ -18,7 +16,7 @@ export const supabase =
 // Save triage report to database
 export async function saveTriageReport(reportData) {
   if (!supabase) {
-    console.warn('Supabase not configured. Skipping database save.');
+    
     return { success: false, error: 'Database not configured' };
   }
 
@@ -53,7 +51,7 @@ export async function saveTriageReport(reportData) {
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error saving to database:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -75,7 +73,7 @@ export async function getCustomerReports(customerName) {
 
     return { success: true, data, count: data.length };
   } catch (error) {
-    console.error('Error fetching customer reports:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -97,7 +95,7 @@ export async function getReportById(reportId) {
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error fetching report:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -156,7 +154,7 @@ export async function searchReports(query, filters = {}) {
 
     return { success: true, data, count: data.length };
   } catch (error) {
-    console.error('Error searching reports:', error);
+    
     return { success: false, error: error.message };
   }
 }

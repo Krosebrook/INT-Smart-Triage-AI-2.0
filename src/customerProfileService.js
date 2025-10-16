@@ -184,7 +184,7 @@ export class CustomerProfileService {
     };
   }
 
-  calculateChurnRisk(tickets, interactions) {
+  calculateChurnRisk(tickets, _interactions) {
     let riskScore = 0;
 
     const recentTickets = tickets.filter((t) => {

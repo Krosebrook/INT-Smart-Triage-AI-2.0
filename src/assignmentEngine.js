@@ -210,7 +210,6 @@ export class AssignmentEngine {
 
     return { success: true, data };
   }
-  }
 
   async logAssignment(reportId, csrName) {
     if (!supabase) return;

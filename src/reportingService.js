@@ -287,11 +287,7 @@ export class ReportingService {
   }
 
   async scheduleReport(templateName, schedule, recipients) {
-    console.log('Scheduling report:', {
-      template: templateName,
-      schedule,
-      recipients,
-    });
+    
 
     return {
       success: true,
@@ -338,7 +334,7 @@ export class ReportingService {
 
       return { success: true, reports: data || [] };
     } catch (error) {
-      console.error('Error fetching saved reports:', error);
+      
       return { success: false, error: error.message };
     }
   }
@@ -364,7 +360,7 @@ export class ReportingService {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Error saving report:', error);
+      
       return { success: false, error: error.message };
     }
   }
