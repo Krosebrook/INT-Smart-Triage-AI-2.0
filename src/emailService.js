@@ -146,11 +146,7 @@ export class EmailService {
       ...options,
     };
 
-    console.log('Email prepared:', {
-      to: emailData.to,
-      subject: emailData.subject,
-      template: templateName,
-    });
+    
 
     return {
       success: true,
@@ -328,9 +324,7 @@ export class EmailService {
   }
 
   async scheduleFollowUp(reportId, customerEmail, daysFromNow = 3) {
-    console.log(
-      `Follow-up scheduled for ${reportId} in ${daysFromNow} days to ${customerEmail}`
-    );
+    
 
     return {
       success: true,
@@ -343,7 +337,7 @@ export class EmailService {
   }
 
   async trackEmailOpen(trackingId) {
-    console.log(`Email opened: ${trackingId}`);
+    
     return {
       success: true,
       trackingId,
@@ -352,7 +346,7 @@ export class EmailService {
   }
 
   async trackEmailClick(trackingId, linkUrl) {
-    console.log(`Email link clicked: ${trackingId} - ${linkUrl}`);
+    
     return {
       success: true,
       trackingId,

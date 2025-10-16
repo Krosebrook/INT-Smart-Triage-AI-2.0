@@ -7,13 +7,17 @@ describe('INT Smart Triage AI 2.0', () => {
     assert.strictEqual(typeof main, 'function');
   });
 
-  it('should return expected message', () => {
+  it('should return application info object', () => {
     const result = main();
-    assert.strictEqual(result, 'Hello from INT Smart Triage AI 2.0');
+    assert.strictEqual(typeof result, 'object');
+    assert.strictEqual(result.name, 'INT Smart Triage AI 2.0');
+    assert.strictEqual(result.version, '1.0.0');
+    assert.strictEqual(result.status, 'operational');
   });
 
-  it('should return a non-empty string', () => {
+  it('should include mode property', () => {
     const result = main();
-    assert.ok(typeof result === 'string' && result.length > 0);
+    assert.ok(result.mode);
+    assert.strictEqual(typeof result.mode, 'string');
   });
 });

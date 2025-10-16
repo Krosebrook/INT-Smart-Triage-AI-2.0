@@ -18,7 +18,7 @@ class KnowledgeBaseService {
       this.buildSearchIndex();
       this.initialized = true;
     } catch (error) {
-      console.error('Failed to initialize knowledge base:', error);
+      
     }
   }
 
@@ -202,7 +202,7 @@ class KnowledgeBaseService {
         },
       ]);
     } catch (error) {
-      console.error('Failed to track search:', error);
+      
     }
   }
 
@@ -214,7 +214,7 @@ class KnowledgeBaseService {
         article_id: articleId,
       });
     } catch (error) {
-      console.error('Failed to track view:', error);
+      
     }
   }
 
@@ -240,7 +240,7 @@ class KnowledgeBaseService {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Failed to rate article:', error);
+      
       return { success: false, error: error.message };
     }
   }

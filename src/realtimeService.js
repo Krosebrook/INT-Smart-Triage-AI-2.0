@@ -10,7 +10,7 @@ class RealtimeService {
 
   subscribeToReports(callback) {
     if (!supabase) {
-      console.warn('Supabase not available. Real-time features disabled.');
+      
       return null;
     }
 
@@ -24,7 +24,7 @@ class RealtimeService {
           table: 'reports',
         },
         (payload) => {
-          console.log('Report change detected:', payload);
+          
           callback(payload);
         }
       )
@@ -48,7 +48,7 @@ class RealtimeService {
           filter: `report_id=eq.${reportId}`,
         },
         (payload) => {
-          console.log('Note change detected:', payload);
+          
           callback(payload);
         }
       )
@@ -76,11 +76,11 @@ class RealtimeService {
         this.triggerEvent('presence-update', state);
       })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log(`${key} joined`, newPresences);
+        
         this.triggerEvent('presence-join', { key, presences: newPresences });
       })
       .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log(`${key} left`, leftPresences);
+        
         this.triggerEvent('presence-leave', { key, presences: leftPresences });
       })
       .subscribe(async (status) => {

@@ -340,7 +340,7 @@ function generateKBArticles(category, priority) {
   return priority === 'high' ? articles.slice(0, 4) : articles.slice(0, 3);
 }
 
-function extractKeyIssues(text, category) {
+function extractKeyIssues(text, _category) {
   // Simple keyword extraction
   const keywords = text
     .split(' ')
@@ -349,7 +349,7 @@ function extractKeyIssues(text, category) {
   return keywords.join(', ');
 }
 
-function estimateResolutionTime(priority, category) {
+function estimateResolutionTime(priority, _category) {
   const times = {
     high: '1-4 hours',
     medium: '4-24 hours',

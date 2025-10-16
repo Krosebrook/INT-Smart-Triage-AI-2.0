@@ -162,7 +162,7 @@ export class ReportingService {
         ).toFixed(1),
       };
     } catch (error) {
-      console.error('Error generating overview:', error);
+      
       return this.getMockOverview();
     }
   }

@@ -20,8 +20,8 @@ export class CommunicationHub {
     };
   }
 
-  async sendEmail(recipient, message, options = {}) {
-    
+  async sendEmail(recipient, message, _options = {}) {
+
 
     return {
       success: true,
@@ -32,8 +32,8 @@ export class CommunicationHub {
     };
   }
 
-  async sendSms(phoneNumber, message, options = {}) {
-    
+  async sendSms(phoneNumber, message, _options = {}) {
+
 
     if (!this.isValidPhoneNumber(phoneNumber)) {
       return {
@@ -104,8 +104,8 @@ export class CommunicationHub {
     };
   }
 
-  async sendPhone(phoneNumber, message, options = {}) {
-    
+  async sendPhone(phoneNumber, message, _options = {}) {
+
 
     return {
       success: true,
@@ -118,8 +118,8 @@ export class CommunicationHub {
     };
   }
 
-  async sendChat(userId, message, options = {}) {
-    
+  async sendChat(userId, message, _options = {}) {
+
 
     if (supabase) {
       try {
@@ -160,7 +160,7 @@ export class CommunicationHub {
   }
 
   async broadcastToTeam(message, priority = 'normal', excludeUsers = []) {
-    console.log('Broadcasting to team:', { priority, excludeUsers });
+    
 
     const channels = ['slack', 'teams', 'email'];
     const results = [];
@@ -249,7 +249,7 @@ Immediate action required!
         },
       ]);
     } catch (error) {
-      console.error('Failed to log communication:', error);
+      
     }
   }
 
@@ -273,14 +273,14 @@ Immediate action required!
         count: data.length,
       };
     } catch (error) {
-      console.error('Error fetching conversation history:', error);
+      
       return { success: false, error: error.message };
     }
   }
 
   isValidPhoneNumber(phone) {
     const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
+    return phoneRegex.test(phone.replace(/[\s\-()]/g, ''));
   }
 
   generateMessageId() {
@@ -344,7 +344,7 @@ Immediate action required!
 
       return { success: true, data };
     } catch (error) {
-      console.error('Error updating preferences:', error);
+      
       return { success: false, error: error.message };
     }
   }

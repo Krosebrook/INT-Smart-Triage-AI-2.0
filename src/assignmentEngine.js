@@ -84,7 +84,7 @@ export class AssignmentEngine {
     return bestMatch;
   }
 
-  async getAvailableCSRs(department = null, priority = 'medium') {
+  async getAvailableCSRs(department = null, _priority = 'medium') {
     if (!supabase) {
       return this.getMockCSRs(department);
     }
@@ -186,34 +186,30 @@ export class AssignmentEngine {
   async assignToCSR(reportId, csr) {
     if (!supabase) return;
 
-    try {
-      const { data, error } = await supabase
-        .from('reports')
-        .update({
-          assigned_to: csr.name,
-          assigned_to_email: csr.email,
-          assigned_at: new Date().toISOString(),
-          status: 'assigned',
-        })
-        .eq('report_id', reportId)
-        .select();
+    const { data, error } = await supabase
+      .from('reports')
+      .update({
+        assigned_to: csr.name,
+        assigned_to_email: csr.email,
+        assigned_at: new Date().toISOString(),
+        status: 'assigned',
+      })
+      .eq('report_id', reportId)
+      .select();
 
-      if (error) throw error;
+    if (error) throw error;
 
-      await supabase
-        .from('csr_profiles')
-        .update({
-          current_workload: csr.current_workload + 1,
-        })
-        .eq('id', csr.id);
+    await supabase
+      .from('csr_profiles')
+      .update({
+        current_workload: csr.current_workload + 1,
+      })
+      .eq('id', csr.id);
 
-      await this.logAssignment(reportId, csr.name);
+    await this.logAssignment(reportId, csr.name);
 
-      return { success: true, data };
-    } catch (error) {
-      
-      throw error;
-    }
+    return { success: true, data };
+  }
   }
 
   async logAssignment(reportId, csrName) {
