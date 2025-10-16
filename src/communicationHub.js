@@ -106,10 +106,6 @@ export class CommunicationHub {
    * });
    */
   async sendEmail(recipient, message, _options = {}) {
-    console.log(
-      `📧 Sending email to ${recipient}: ${message.substring(0, 50)}...`
-    );
-
     return {
       success: true,
       channel: 'email',
@@ -136,10 +132,6 @@ export class CommunicationHub {
    * await hub.sendSms('+15551234567', 'Your ticket has been escalated');
    */
   async sendSms(phoneNumber, message, _options = {}) {
-    console.log(
-      `📱 Sending SMS to ${phoneNumber}: ${message.substring(0, 50)}...`
-    );
-
     if (!this.isValidPhoneNumber(phoneNumber)) {
       return {
         success: false,
@@ -177,8 +169,6 @@ export class CommunicationHub {
    * });
    */
   async sendSlack(channel, message, options = {}) {
-    console.log(`💬 Sending Slack message to ${channel}`);
-
     const payload = {
       channel: channel,
       text: message,
@@ -226,8 +216,6 @@ export class CommunicationHub {
    * });
    */
   async sendTeams(channelId, message, options = {}) {
-    console.log(`🟦 Sending Teams message to ${channelId}`);
-
     const card = {
       '@type': 'MessageCard',
       '@context': 'https://schema.org/extensions',
@@ -261,8 +249,6 @@ export class CommunicationHub {
    * await hub.sendPhone('+15551234567', 'You have an urgent ticket assigned');
    */
   async sendPhone(phoneNumber, message, _options = {}) {
-    console.log(`📞 Initiating call to ${phoneNumber}`);
-
     return {
       success: true,
       channel: 'phone',
@@ -287,8 +273,6 @@ export class CommunicationHub {
    * await hub.sendChat('user-123', 'Your ticket has been updated');
    */
   async sendChat(userId, message, _options = {}) {
-    console.log(`💬 Sending chat message to user ${userId}`);
-
     if (supabase) {
       try {
         const { data, error } = await supabase
@@ -313,7 +297,6 @@ export class CommunicationHub {
           sentAt: data[0].sent_at,
         };
       } catch (error) {
-        console.error('Error sending chat message:', error.message, { userId });
         return { success: false, error: error.message };
       }
     }
@@ -343,8 +326,6 @@ export class CommunicationHub {
    * await hub.broadcastToTeam('System maintenance in 30 minutes', 'high');
    */
   async broadcastToTeam(message, priority = 'normal', _excludeUsers = []) {
-    console.log(`📢 Broadcasting to team: ${message.substring(0, 50)}...`);
-
     const channels = ['slack', 'teams', 'email'];
     const results = [];
 
@@ -468,11 +449,7 @@ Immediate action required!
         },
       ]);
     } catch (error) {
-      console.error('Error logging communication:', error.message, {
-        channel,
-        recipient,
-        reportId,
-      });
+      
     }
   }
 

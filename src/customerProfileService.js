@@ -574,7 +574,6 @@ export class CustomerProfileService {
 
       return { success: true, message: 'Tag already exists' };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
@@ -638,7 +637,6 @@ export class CustomerProfileService {
         })),
       };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
@@ -723,7 +721,6 @@ export class CustomerProfileService {
         preferences: data?.communication_preferences || defaultPreferences,
       };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
