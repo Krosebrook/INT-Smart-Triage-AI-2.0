@@ -1,565 +1,652 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>INT Smart Triage AI 2.0 - CSR Dashboard</title>
-    <link rel="stylesheet" href="/public/theme.css">
+    <link rel="stylesheet" href="/public/theme.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: #2c3e50;
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .main-content {
+        padding: 40px;
+      }
+
+      .triage-form {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      textarea {
+        height: 120px;
+        resize: vertical;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        width: 100%;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .results-section {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        margin-top: 30px;
+        display: none;
+      }
+
+      .results-section.show {
+        display: block;
+      }
+
+      .result-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #667eea;
+      }
+
+      .result-card h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .priority-badge {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        color: white;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .priority-high {
+        background: #e74c3c;
+      }
+      .priority-medium {
+        background: #f39c12;
+      }
+      .priority-low {
+        background: #27ae60;
+      }
+
+      .status-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        font-weight: 600;
+      }
+
+      .status-online {
+        color: #27ae60;
+      }
+      .status-offline {
+        color: #e74c3c;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: #2c3e50;
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            padding: 40px;
-        }
-
-        .triage-form {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e8ed;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .results-section {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 10px;
-            margin-top: 30px;
-            display: none;
-        }
-
-        .results-section.show {
-            display: block;
-        }
-
-        .result-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
-        }
-
-        .result-card h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .priority-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            color: white;
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .priority-high { background: #e74c3c; }
-        .priority-medium { background: #f39c12; }
-        .priority-low { background: #27ae60; }
-
-        .status-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            font-weight: 600;
-        }
-
-        .status-online { color: #27ae60; }
-        .status-offline { color: #e74c3c; }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+      }
     </style>
-</head>
-<body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-        <span id="themeIcon">🌙</span>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      onclick="toggleTheme()"
+      aria-label="Toggle dark mode"
+    >
+      <span id="themeIcon">🌙</span>
     </button>
 
     <div class="status-indicator" id="statusIndicator">
-        <span class="status-offline">● Checking System Status...</span>
+      <span class="status-offline">● Checking System Status...</span>
     </div>
 
     <div class="container">
-        <div class="header">
-            <h1>INT Smart Triage AI 2.0</h1>
-            <p>Secure CSR Dashboard - Intelligent Ticket Triage & Knowledge Base Integration</p>
-            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                <a href="/public/advanced-analytics.html" style="padding: 8px 16px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">📊 Advanced Analytics</a>
-                <a href="/public/client-history.html" style="padding: 8px 16px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">📜 Client History</a>
-                <a href="/public/kb-search.html" style="padding: 8px 16px; background: #f39c12; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">🔍 Knowledge Base</a>
-                <a href="/public/analytics.html" style="padding: 8px 16px; background: #9b59b6; color: white; text-decoration: none; border-radius: 5px; font-size: 14px;">📈 Reports</a>
-            </div>
+      <div class="header">
+        <h1>INT Smart Triage AI 2.0</h1>
+        <p>
+          Secure CSR Dashboard - Intelligent Ticket Triage & Knowledge Base
+          Integration
+        </p>
+        <div
+          style="
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+          "
+        >
+          <a
+            href="/public/advanced-analytics.html"
+            style="
+              padding: 8px 16px;
+              background: #3498db;
+              color: white;
+              text-decoration: none;
+              border-radius: 5px;
+              font-size: 14px;
+            "
+            >📊 Advanced Analytics</a
+          >
+          <a
+            href="/public/client-history.html"
+            style="
+              padding: 8px 16px;
+              background: #27ae60;
+              color: white;
+              text-decoration: none;
+              border-radius: 5px;
+              font-size: 14px;
+            "
+            >📜 Client History</a
+          >
+          <a
+            href="/public/kb-search.html"
+            style="
+              padding: 8px 16px;
+              background: #f39c12;
+              color: white;
+              text-decoration: none;
+              border-radius: 5px;
+              font-size: 14px;
+            "
+            >🔍 Knowledge Base</a
+          >
+          <a
+            href="/public/analytics.html"
+            style="
+              padding: 8px 16px;
+              background: #9b59b6;
+              color: white;
+              text-decoration: none;
+              border-radius: 5px;
+              font-size: 14px;
+            "
+            >📈 Reports</a
+          >
         </div>
+      </div>
 
-        <div class="main-content">
-            <form class="triage-form" id="triageForm">
-                <h2 style="margin-bottom: 20px; color: #2c3e50;">New Ticket Triage</h2>
-                
-                <div class="form-group">
-                    <label for="customerName">Customer Name</label>
-                    <input type="text" id="customerName" name="customerName" required>
-                </div>
+      <div class="main-content">
+        <form class="triage-form" id="triageForm">
+          <h2 style="margin-bottom: 20px; color: #2c3e50">New Ticket Triage</h2>
 
-                <div class="form-group">
-                    <label for="ticketSubject">Ticket Subject</label>
-                    <input type="text" id="ticketSubject" name="ticketSubject" required>
-                </div>
+          <div class="form-group">
+            <label for="customerName">Customer Name</label>
+            <input type="text" id="customerName" name="customerName" required />
+          </div>
 
-                <div class="form-group">
-                    <label for="issueDescription">Issue Description</label>
-                    <textarea id="issueDescription" name="issueDescription" placeholder="Describe the customer's issue in detail..." required></textarea>
-                </div>
+          <div class="form-group">
+            <label for="ticketSubject">Ticket Subject</label>
+            <input
+              type="text"
+              id="ticketSubject"
+              name="ticketSubject"
+              required
+            />
+          </div>
 
-                <div class="form-group">
-                    <label for="customerTone">Customer Tone</label>
-                    <select id="customerTone" name="customerTone" required>
-                        <option value="">Select customer tone...</option>
-                        <option value="calm">Calm</option>
-                        <option value="frustrated">Frustrated</option>
-                        <option value="angry">Angry</option>
-                        <option value="confused">Confused</option>
-                        <option value="urgent">Urgent</option>
-                    </select>
-                </div>
+          <div class="form-group">
+            <label for="issueDescription">Issue Description</label>
+            <textarea
+              id="issueDescription"
+              name="issueDescription"
+              placeholder="Describe the customer's issue in detail..."
+              required
+            ></textarea>
+          </div>
 
-                <button type="submit" class="btn-primary" id="submitBtn">
-                    <span class="btn-text">Analyze & Triage Ticket</span>
-                    <span class="loading" style="display: none;"></span>
-                </button>
-            </form>
+          <div class="form-group">
+            <label for="customerTone">Customer Tone</label>
+            <select id="customerTone" name="customerTone" required>
+              <option value="">Select customer tone...</option>
+              <option value="calm">Calm</option>
+              <option value="frustrated">Frustrated</option>
+              <option value="angry">Angry</option>
+              <option value="confused">Confused</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
 
-            <div class="results-section" id="resultsSection">
-                <h2 style="margin-bottom: 20px; color: #2c3e50;">Triage Results</h2>
-                <div id="triageResults"></div>
-            </div>
+          <button type="submit" class="btn-primary" id="submitBtn">
+            <span class="btn-text">Analyze & Triage Ticket</span>
+            <span class="loading" style="display: none"></span>
+          </button>
+        </form>
+
+        <div class="results-section" id="resultsSection">
+          <h2 style="margin-bottom: 20px; color: #2c3e50">Triage Results</h2>
+          <div id="triageResults"></div>
         </div>
+      </div>
     </div>
 
     <script type="module">
-        // Import all services
-        import { supabase, saveTriageReport } from '/src/supabaseClient.js';
-        import { realtimeService } from '/src/realtimeService.js';
-        import { sentimentAnalyzer } from '/src/sentimentAnalysis.js';
-        import { assignmentEngine } from '/src/assignmentEngine.js';
-        import { emailService } from '/src/emailService.js';
-        import { communicationHub } from '/src/communicationHub.js';
+      // Import all services
+      import { supabase, saveTriageReport } from '/src/supabaseClient.js';
+      import { realtimeService } from '/src/realtimeService.js';
+      import { sentimentAnalyzer } from '/src/sentimentAnalysis.js';
+      import { assignmentEngine } from '/src/assignmentEngine.js';
+      import { emailService } from '/src/emailService.js';
+      import { communicationHub } from '/src/communicationHub.js';
 
-        // Client-side triage logic for bolt.new compatibility
-        function processTriageRequest(ticketData) {
-            const { issueDescription, customerTone, ticketSubject, customerName } = ticketData;
-            let priority = 'medium';
-            let confidence = 75;
-            let category = 'general';
-            let department = 'Technology';
+      // Client-side triage logic for bolt.new compatibility
+      function processTriageRequest(ticketData) {
+          const { issueDescription, customerTone, ticketSubject, customerName } = ticketData;
+          let priority = 'medium';
+          let confidence = 75;
+          let category = 'general';
+          let department = 'Technology';
 
-            const highPriorityKeywords = ['down', 'outage', 'critical', 'urgent', 'broken', 'not working', 'crashed', 'hack', 'breach', 'security', 'data loss'];
-            const infoSecKeywords = ['security', 'compliance', 'soc2', 'gdpr', 'cyber', 'breach', 'vulnerability', 'insurance', 'audit'];
-            const techKeywords = ['server', 'network', 'email', 'cloud', 'backup', 'it', 'computer', 'software', 'saas', 'migration'];
-            const webKeywords = ['website', 'web design', 'ecommerce', 'shopify', 'wordpress', 'landing page', 'hosting'];
-            const brandKeywords = ['logo', 'brand', 'identity', 'design', 'visual', 'color', 'typography'];
-            const contentKeywords = ['content', 'writing', 'seo', 'blog', 'copy', 'ebook', 'article'];
-            const marketingKeywords = ['marketing', 'hubspot', 'crm', 'automation', 'campaign', 'email marketing'];
-            const operationsKeywords = ['bookkeeping', 'accounting', 'process', 'workflow', 'ai', 'bi', 'analytics'];
+          const highPriorityKeywords = ['down', 'outage', 'critical', 'urgent', 'broken', 'not working', 'crashed', 'hack', 'breach', 'security', 'data loss'];
+          const infoSecKeywords = ['security', 'compliance', 'soc2', 'gdpr', 'cyber', 'breach', 'vulnerability', 'insurance', 'audit'];
+          const techKeywords = ['server', 'network', 'email', 'cloud', 'backup', 'it', 'computer', 'software', 'saas', 'migration'];
+          const webKeywords = ['website', 'web design', 'ecommerce', 'shopify', 'wordpress', 'landing page', 'hosting'];
+          const brandKeywords = ['logo', 'brand', 'identity', 'design', 'visual', 'color', 'typography'];
+          const contentKeywords = ['content', 'writing', 'seo', 'blog', 'copy', 'ebook', 'article'];
+          const marketingKeywords = ['marketing', 'hubspot', 'crm', 'automation', 'campaign', 'email marketing'];
+          const operationsKeywords = ['bookkeeping', 'accounting', 'process', 'workflow', 'ai', 'bi', 'analytics'];
 
-            const description = issueDescription.toLowerCase();
-            const subject = ticketSubject.toLowerCase();
-            const fullText = `${description} ${subject}`;
+          const description = issueDescription.toLowerCase();
+          const subject = ticketSubject.toLowerCase();
+          const fullText = `${description} ${subject}`;
 
-            // Determine priority
-            if (highPriorityKeywords.some(kw => fullText.includes(kw)) || customerTone === 'angry' || customerTone === 'urgent') {
-                priority = 'high';
-                confidence = 90;
-            } else if (customerTone === 'calm' && fullText.includes('question')) {
-                priority = 'low';
-                confidence = 85;
-            }
+          // Determine priority
+          if (highPriorityKeywords.some(kw => fullText.includes(kw)) || customerTone === 'angry' || customerTone === 'urgent') {
+              priority = 'high';
+              confidence = 90;
+          } else if (customerTone === 'calm' && fullText.includes('question')) {
+              priority = 'low';
+              confidence = 85;
+          }
 
-            // Determine department
-            if (infoSecKeywords.some(kw => fullText.includes(kw))) { department = 'Information Security'; category = 'security'; }
-            else if (techKeywords.some(kw => fullText.includes(kw))) { department = 'Technology'; category = 'technical'; }
-            else if (webKeywords.some(kw => fullText.includes(kw))) { department = 'Website Design'; category = 'web_design'; }
-            else if (brandKeywords.some(kw => fullText.includes(kw))) { department = 'Branding'; category = 'branding'; }
-            else if (contentKeywords.some(kw => fullText.includes(kw))) { department = 'Content'; category = 'content'; }
-            else if (marketingKeywords.some(kw => fullText.includes(kw))) { department = 'Marketing'; category = 'marketing'; }
-            else if (operationsKeywords.some(kw => fullText.includes(kw))) { department = 'Operations'; category = 'operations'; }
+          // Determine department
+          if (infoSecKeywords.some(kw => fullText.includes(kw))) { department = 'Information Security'; category = 'security'; }
+          else if (techKeywords.some(kw => fullText.includes(kw))) { department = 'Technology'; category = 'technical'; }
+          else if (webKeywords.some(kw => fullText.includes(kw))) { department = 'Website Design'; category = 'web_design'; }
+          else if (brandKeywords.some(kw => fullText.includes(kw))) { department = 'Branding'; category = 'branding'; }
+          else if (contentKeywords.some(kw => fullText.includes(kw))) { department = 'Content'; category = 'content'; }
+          else if (marketingKeywords.some(kw => fullText.includes(kw))) { department = 'Marketing'; category = 'marketing'; }
+          else if (operationsKeywords.some(kw => fullText.includes(kw))) { department = 'Operations'; category = 'operations'; }
 
-            const talkingPoints = [
-                `Thank you for reaching out to INT Inc. We're here to help.`,
-                `This is ${priority} priority and we'll treat it as such.`,
-                `Our ${department} team will assist you.`,
-                customerTone === 'angry' ? 'I sincerely apologize for any inconvenience.' : 'We appreciate your patience.'
-            ];
+          const talkingPoints = [
+              `Thank you for reaching out to INT Inc. We're here to help.`,
+              `This is ${priority} priority and we'll treat it as such.`,
+              `Our ${department} team will assist you.`,
+              customerTone === 'angry' ? 'I sincerely apologize for any inconvenience.' : 'We appreciate your patience.'
+          ];
 
-            const knowledgeBase = category === 'security'
-                ? ['KB-SEC-001: SOC2 Compliance Overview', 'KB-SEC-003: Cyber Insurance', 'KB-SEC-005: Vulnerability Assessment']
-                : category === 'technical'
-                ? ['KB-TECH-001: Managed IT Services', 'KB-TECH-004: Email Migration', 'KB-TECH-008: SaaS Migration']
-                : [`KB-${category.toUpperCase()}-001: Getting Started`, `KB-${category.toUpperCase()}-002: Best Practices`];
+          const knowledgeBase = category === 'security'
+              ? ['KB-SEC-001: SOC2 Compliance Overview', 'KB-SEC-003: Cyber Insurance', 'KB-SEC-005: Vulnerability Assessment']
+              : category === 'technical'
+              ? ['KB-TECH-001: Managed IT Services', 'KB-TECH-004: Email Migration', 'KB-TECH-008: SaaS Migration']
+              : [`KB-${category.toUpperCase()}-001: Getting Started`, `KB-${category.toUpperCase()}-002: Best Practices`];
 
-            return {
-                success: true,
-                priority,
-                confidence: `${confidence}%`,
-                department,
-                responseApproach: `${department} will address this ${priority} priority issue with ${customerTone} customer approach.`,
-                talkingPoints,
-                knowledgeBase,
-                reportId: `TR-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-                timestamp: new Date().toISOString()
-            };
-        }
+          return {
+              success: true,
+              priority,
+              confidence: `${confidence}%`,
+              department,
+              responseApproach: `${department} will address this ${priority} priority issue with ${customerTone} customer approach.`,
+              talkingPoints,
+              knowledgeBase,
+              reportId: `TR-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+              timestamp: new Date().toISOString()
+          };
+      }
 
-        // Check system health on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkSystemHealth();
-            initializeAdvancedFeatures();
-        });
+      // Check system health on page load
+      document.addEventListener('DOMContentLoaded', function() {
+          checkSystemHealth();
+          initializeAdvancedFeatures();
+      });
 
-        function initializeAdvancedFeatures() {
-            // Initialize real-time presence tracking
-            const csrName = 'CSR_USER'; // In production, get from auth
-            realtimeService.trackPresence(csrName, 'online');
+      function initializeAdvancedFeatures() {
+          // Initialize real-time presence tracking
+          const csrName = 'CSR_USER'; // In production, get from auth
+          realtimeService.trackPresence(csrName, 'online');
 
-            // Subscribe to real-time ticket updates
-            realtimeService.subscribeToReports((change) => {
-                console.log('Real-time ticket update:', change);
-                showNotification('Ticket updated in real-time!');
-            });
+          // Subscribe to real-time ticket updates
+          realtimeService.subscribeToReports((change) => {
+              console.log('Real-time ticket update:', change);
+              showNotification('Ticket updated in real-time!');
+          });
 
-            // Register service worker for PWA
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/public/sw.js')
-                    .then(reg => console.log('Service Worker registered:', reg))
-                    .catch(err => console.log('Service Worker registration failed:', err));
-            }
-        }
+          // Register service worker for PWA
+          if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/public/sw.js')
+                  .then(reg => console.log('Service Worker registered:', reg))
+                  .catch(err => console.log('Service Worker registration failed:', err));
+          }
+      }
 
-        function showNotification(message) {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('INT Smart Triage AI', { body: message });
-            }
-        }
+      function showNotification(message) {
+          if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification('INT Smart Triage AI', { body: message });
+          }
+      }
 
-        async function checkSystemHealth() {
-            const statusIndicator = document.getElementById('statusIndicator');
+      async function checkSystemHealth() {
+          const statusIndicator = document.getElementById('statusIndicator');
 
-            try {
-                // Client-side check - always shows online on bolt.new
-                // In production, this would call /api/health-check
-                statusIndicator.innerHTML = '<span class="status-online">● System Online (Client Mode)</span>';
-            } catch (error) {
-                console.error('Health check failed:', error);
-                statusIndicator.innerHTML = '<span class="status-offline">● System Offline</span>';
-            }
-        }
+          try {
+              // Client-side check - always shows online on bolt.new
+              // In production, this would call /api/health-check
+              statusIndicator.innerHTML = '<span class="status-online">● System Online (Client Mode)</span>';
+          } catch (error) {
+              console.error('Health check failed:', error);
+              statusIndicator.innerHTML = '<span class="status-offline">● System Offline</span>';
+          }
+      }
 
-        // Handle form submission
-        document.getElementById('triageForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = submitBtn.querySelector('.btn-text');
-            const loading = submitBtn.querySelector('.loading');
-            const resultsSection = document.getElementById('resultsSection');
-            const triageResults = document.getElementById('triageResults');
+      // Handle form submission
+      document.getElementById('triageForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
 
-            // Show loading state
-            btnText.textContent = 'Analyzing...';
-            loading.style.display = 'inline-block';
-            submitBtn.disabled = true;
+          const submitBtn = document.getElementById('submitBtn');
+          const btnText = submitBtn.querySelector('.btn-text');
+          const loading = submitBtn.querySelector('.loading');
+          const resultsSection = document.getElementById('resultsSection');
+          const triageResults = document.getElementById('triageResults');
 
-            // Collect form data
-            const formData = new FormData(e.target);
-            const triageData = {
-                customerName: formData.get('customerName'),
-                ticketSubject: formData.get('ticketSubject'),
-                issueDescription: formData.get('issueDescription'),
-                customerTone: formData.get('customerTone'),
-                timestamp: new Date().toISOString(),
-                csrAgent: 'CSR_USER' // In production, this would be dynamic
-            };
+          // Show loading state
+          btnText.textContent = 'Analyzing...';
+          loading.style.display = 'inline-block';
+          submitBtn.disabled = true;
 
-            try {
-                // Use client-side triage logic (works on bolt.new without API)
-                const result = processTriageRequest(triageData);
+          // Collect form data
+          const formData = new FormData(e.target);
+          const triageData = {
+              customerName: formData.get('customerName'),
+              ticketSubject: formData.get('ticketSubject'),
+              issueDescription: formData.get('issueDescription'),
+              customerTone: formData.get('customerTone'),
+              timestamp: new Date().toISOString(),
+              csrAgent: 'CSR_USER' // In production, this would be dynamic
+          };
 
-                // Perform sentiment analysis
-                const sentimentResult = sentimentAnalyzer.analyze(
-                    triageData.issueDescription,
-                    triageData.customerTone
-                );
-                result.sentiment = sentimentResult;
-                result.escalationRisk = sentimentResult.escalationProbability;
+          try {
+              // Use client-side triage logic (works on bolt.new without API)
+              const result = processTriageRequest(triageData);
 
-                // Auto-assign ticket
-                const assignment = await assignmentEngine.autoAssign({
-                    reportId: result.reportId,
-                    priority: result.priority,
-                    issueDescription: triageData.issueDescription,
-                    department: result.department
-                });
-                if (assignment.success) {
-                    result.assignedTo = assignment.assignedTo;
-                    result.estimatedResponseTime = assignment.estimatedResponseTime;
-                }
+              // Perform sentiment analysis
+              const sentimentResult = sentimentAnalyzer.analyze(
+                  triageData.issueDescription,
+                  triageData.customerTone
+              );
+              result.sentiment = sentimentResult;
+              result.escalationRisk = sentimentResult.escalationProbability;
 
-                // Simulate processing delay for realistic UX
-                await new Promise(resolve => setTimeout(resolve, 1500));
+              // Auto-assign ticket
+              const assignment = await assignmentEngine.autoAssign({
+                  reportId: result.reportId,
+                  priority: result.priority,
+                  issueDescription: triageData.issueDescription,
+                  department: result.department
+              });
+              if (assignment.success) {
+                  result.assignedTo = assignment.assignedTo;
+                  result.estimatedResponseTime = assignment.estimatedResponseTime;
+              }
 
-                // Save to Supabase database
-                const saveResult = await saveTriageReport({
-                    ...result,
-                    ...triageData
-                });
+              // Simulate processing delay for realistic UX
+              await new Promise(resolve => setTimeout(resolve, 1500));
 
-                if (saveResult.success) {
-                    console.log('Report saved to database:', saveResult.data);
+              // Save to Supabase database
+              const saveResult = await saveTriageReport({
+                  ...result,
+                  ...triageData
+              });
 
-                    // Send confirmation email
-                    const emailResult = await emailService.sendTicketConfirmation({
-                        customerName: triageData.customerName,
-                        customerEmail: triageData.customerEmail || 'customer@example.com',
-                        reportId: result.reportId,
-                        priority: result.priority,
-                        department: result.department,
-                        ticketSubject: triageData.ticketSubject,
-                        csrAgent: triageData.csrAgent
-                    });
-                    console.log('Email confirmation sent:', emailResult);
+              if (saveResult.success) {
+                  console.log('Report saved to database:', saveResult.data);
 
-                    // Notify via communication hub for high priority
-                    if (result.priority === 'high') {
-                        await communicationHub.notifyHighPriorityTicket({
-                            reportId: result.reportId,
-                            customerName: triageData.customerName,
-                            ticketSubject: triageData.ticketSubject,
-                            department: result.department
-                        });
-                    }
+                  // Send confirmation email
+                  const emailResult = await emailService.sendTicketConfirmation({
+                      customerName: triageData.customerName,
+                      customerEmail: triageData.customerEmail || 'customer@example.com',
+                      reportId: result.reportId,
+                      priority: result.priority,
+                      department: result.department,
+                      ticketSubject: triageData.ticketSubject,
+                      csrAgent: triageData.csrAgent
+                  });
+                  console.log('Email confirmation sent:', emailResult);
 
-                    // Broadcast to team via real-time
-                    realtimeService.broadcastTicketActivity(result.reportId, {
-                        action: 'created',
-                        priority: result.priority,
-                        assignedTo: result.assignedTo
-                    });
-                } else {
-                    console.warn('Failed to save to database:', saveResult.error);
-                }
+                  // Notify via communication hub for high priority
+                  if (result.priority === 'high') {
+                      await communicationHub.notifyHighPriorityTicket({
+                          reportId: result.reportId,
+                          customerName: triageData.customerName,
+                          ticketSubject: triageData.ticketSubject,
+                          department: result.department
+                      });
+                  }
 
-                // Display results
-                displayTriageResults(result, triageData.customerName);
-                resultsSection.classList.add('show');
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                  // Broadcast to team via real-time
+                  realtimeService.broadcastTicketActivity(result.reportId, {
+                      action: 'created',
+                      priority: result.priority,
+                      assignedTo: result.assignedTo
+                  });
+              } else {
+                  console.warn('Failed to save to database:', saveResult.error);
+              }
 
-            } catch (error) {
-                console.error('Error submitting triage request:', error);
-                triageResults.innerHTML = `
-                    <div class="result-card" style="border-left-color: #e74c3c;">
-                        <h3>Error Processing Request</h3>
-                        <p>There was an error processing your triage request. Please try again or contact system administrator.</p>
-                        <p><strong>Error:</strong> ${error.message}</p>
-                    </div>
-                `;
-                resultsSection.classList.add('show');
-            } finally {
-                // Reset button state
-                btnText.textContent = 'Analyze & Triage Ticket';
-                loading.style.display = 'none';
-                submitBtn.disabled = false;
-            }
-        });
+              // Display results
+              displayTriageResults(result, triageData.customerName);
+              resultsSection.classList.add('show');
+              resultsSection.scrollIntoView({ behavior: 'smooth' });
 
-        // Helper function to escape HTML and prevent XS              function escapeHtml(text) {
-            const di            ment.createElement('div');
-                 iv.textContent = text;
-            return d                ;
-        }
+          } catch (error) {
+              console.error('Error submitting triage request:', error);
+              triageResults.innerHTML = `
+                  <div class="result-card" style="border-left-color: #e74c3c;">
+                      <h3>Error Processing Request</h3>
+                      <p>There was an error processing your triage request. Please try again or contact system administrator.</p>
+                      <p><strong>Error:</strong> ${error.message}</p>
+                  </div>
+              `;
+              resultsSection.classList.add('show');
+          } finally {
+              // Reset button state
+              btnText.textContent = 'Analyze & Triage Ticket';
+              loading.style.display = 'none';
+              submitBtn.disabled = false;
+          }
+      });
 
-        function displayTriageResults(result, customerName) {
-            const triageResults = document.getElementById('triageResults');
-            const priority = result.priority || 'medium';
-            const safeCustomerName = escapeHtml(customerName);
-            const safeReportId = escapeHtml(result.reportId || 'N/A');
+      // Helper function to escape HTML and prevent XS              function escapeHtml(text) {
+          const di            ment.createElement('div');
+               iv.textContent = text;
+          return d                ;
+      }
 
-            triageResults.innerHTML = `
-                <div class="result-card">
-                    <h3>Triage Priority</h3>
-                    <span class="priority-badge priority-${priority}">${priority.toUpperCase()} PRIORITY</span>
-                    <p style="margin-top: 10px;"><strong>Confidence:</strong> ${result.confidence || '85%'}</p>
-                    <p><strong>Department:</strong> ${result.department || 'General'}</p>
-                </div>
+      function displayTriageResults(result, customerName) {
+          const triageResults = document.getElementById('triageResults');
+          const priority = result.priority || 'medium';
+          const safeCustomerName = escapeHtml(customerName);
+          const safeReportId = escapeHtml(result.reportId || 'N/A');
 
-                <div class="result-card">
-                    <h3>Recommended Response Approach</h3>
-                    <p>${escapeHtml(result.responseApproach || 'Standard empathetic response with technical focus. Acknowledge customer concern and provide clear next steps.')}</p>
-                </div>
+          triageResults.innerHTML = `
+              <div class="result-card">
+                  <h3>Triage Priority</h3>
+                  <span class="priority-badge priority-${priority}">${priority.toUpperCase()} PRIORITY</span>
+                  <p style="margin-top: 10px;"><strong>Confidence:</strong> ${result.confidence || '85%'}</p>
+                  <p><strong>Department:</strong> ${result.department || 'General'}</p>
+              </div>
 
-                <div class="result-card">
-                    <h3>Suggested Talking Points</h3>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        ${(result.talkingPoints || [
-                            'Acknowledge the customer\'s concern with empathy',
-                            'Explain the technical steps being taken to resolve the issue',
-                            'Provide a realistic timeline for resolution',
-                            'Offer additional support resources if needed'
-                        ]).map(point => `<li style="marg            eHtml(point)}</li>`).join('')}
-                    </ul>
-                </div>
+              <div class="result-card">
+                  <h3>Recommended Response Approach</h3>
+                  <p>${escapeHtml(result.responseApproach || 'Standard empathetic response with technical focus. Acknowledge customer concern and provide clear next steps.')}</p>
+              </div>
 
-                <div class="result-card">
-                    <h3>Knowledge Base Articles</h3>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        ${(result.knowledgeBase || [
-                            'KB-001: Common Technical Issues Troubleshooting',
-                            'KB-015: Customer Communication Best Practices',
-                            'KB-032: Escalation Procedures'
-                        ]).map(kb => `<li style="margin-            " style="color: #667eea;">${escapeHtml(kb)}</a></li>`).join('')}
-                    </ul>
-                </div>
+              <div class="result-card">
+                  <h3>Suggested Talking Points</h3>
+                  <ul style="margin-left: 20px; margin-top: 10px;">
+                      ${(result.talkingPoints || [
+                          'Acknowledge the customer\'s concern with empathy',
+                          'Explain the technical steps being taken to resolve the issue',
+                          'Provide a realistic timeline for resolution',
+                          'Offer additional support resources if needed'
+                      ]).map(point => `<li style="marg            eHtml(point)}</li>`).join('')}
+                  </ul>
+              </div>
 
-                <div class="result-card">
-                    <h3>Activity Logged</h3>
-                    <p><strong>Report ID:</strong> ${safeReportId}</p>
-                    <p><strong>Customer:</strong> ${safeCustomerName}</p>
-                    <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
-                    <p><strong>Status:</strong> <span style="color: #27ae60; font-weight: 600;">✓ Successfully saved to database</span></p>
-                </div>
+              <div class="result-card">
+                  <h3>Knowledge Base Articles</h3>
+                  <ul style="margin-left: 20px; margin-top: 10px;">
+                      ${(result.knowledgeBase || [
+                          'KB-001: Common Technical Issues Troubleshooting',
+                          'KB-015: Customer Communication Best Practices',
+                          'KB-032: Escalation Procedures'
+                      ]).map(kb => `<li style="margin-            " style="color: #667eea;">${escapeHtml(kb)}</a></li>`).join('')}
+                  </ul>
+              </div>
 
-                <div class="result-card" style="background: #f8f9ff; border: 2px solid #667eea;">
-                    <h3 style="color: #667eea;">📊 Next Actions</h3>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
-                        <button onclick="window.location.href='/client-history.html?customer=${encodeURIComponent(customerName)}'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
-                            View All Reports for ${safeCustomerName}
-                        </button>
-                        <button onclick="window.location.href='/client-history.html'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #764ba2; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
-                            Browse All Reports
-                        </button>
-                        <button onclick="window.location.reload()" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
-                            Create New Triage
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
+              <div class="result-card">
+                  <h3>Activity Logged</h3>
+                  <p><strong>Report ID:</strong> ${safeReportId}</p>
+                  <p><strong>Customer:</strong> ${safeCustomerName}</p>
+                  <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+                  <p><strong>Status:</strong> <span style="color: #27ae60; font-weight: 600;">✓ Successfully saved to database</span></p>
+              </div>
+
+              <div class="result-card" style="background: #f8f9ff; border: 2px solid #667eea;">
+                  <h3 style="color: #667eea;">📊 Next Actions</h3>
+                  <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                      <button onclick="window.location.href='/client-history.html?customer=${encodeURIComponent(customerName)}'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                          View All Reports for ${safeCustomerName}
+                      </button>
+                      <button onclick="window.location.href='/client-history.html'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #764ba2; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                          Browse All Reports
+                      </button>
+                      <button onclick="window.location.reload()" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                          Create New Triage
+                      </button>
+                  </div>
+              </div>
+          `;
+      }
     </script>
 
     <script type="module">
-        import { initTheme, toggleTheme } from '/public/theme.js';
-        import { initKeyboardShortcuts } from '/public/shortcuts.js';
-        import { initOnboarding } from '/public/onboarding.js';
-        window.toggleTheme = toggleTheme;
-        initTheme();
-        initKeyboardShortcuts();
-        initOnboarding();
+      import { initTheme, toggleTheme } from '/public/theme.js';
+      import { initKeyboardShortcuts } from '/public/shortcuts.js';
+      import { initOnboarding } from '/public/onboarding.js';
+      window.toggleTheme = toggleTheme;
+      initTheme();
+      initKeyboardShortcuts();
+      initOnboarding();
     </script>
-</body>
+  </body>
 </html>

@@ -134,7 +134,7 @@ export class EmailService {
     };
   }
 
-  async sendEmail(to, templateName, data, options = {}) {
+async sendEmail(to, templateName, data, options = {}) {
     const email = this.generateEmail(templateName, data);
 
     const emailData = {
@@ -145,8 +145,6 @@ export class EmailService {
       text: this.stripHTML(email.body),
       ...options,
     };
-
-    
 
     return {
       success: true,
@@ -324,8 +322,6 @@ export class EmailService {
   }
 
   async scheduleFollowUp(reportId, customerEmail, daysFromNow = 3) {
-    
-
     return {
       success: true,
       scheduledFor: new Date(
@@ -337,7 +333,6 @@ export class EmailService {
   }
 
   async trackEmailOpen(trackingId) {
-    
     return {
       success: true,
       trackingId,
@@ -346,7 +341,6 @@ export class EmailService {
   }
 
   async trackEmailClick(trackingId, linkUrl) {
-    
     return {
       success: true,
       trackingId,

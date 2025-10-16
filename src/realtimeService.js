@@ -10,7 +10,6 @@ class RealtimeService {
 
   subscribeToReports(callback) {
     if (!supabase) {
-      
       return null;
     }
 
@@ -24,7 +23,6 @@ class RealtimeService {
           table: 'reports',
         },
         (payload) => {
-          
           callback(payload);
         }
       )
@@ -48,7 +46,6 @@ class RealtimeService {
           filter: `report_id=eq.${reportId}`,
         },
         (payload) => {
-          
           callback(payload);
         }
       )
@@ -76,14 +73,12 @@ class RealtimeService {
         this.triggerEvent('presence-update', state);
       })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        
         this.triggerEvent('presence-join', { key, presences: newPresences });
       })
       .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        
         this.triggerEvent('presence-leave', { key, presences: leftPresences });
       })
-      .subscribe(async (status) => {
+      .subscribe(async (_status) => {
         if (status === 'SUBSCRIBED') {
           await presenceChannel.track({
             user: csrName,

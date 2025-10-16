@@ -5,6 +5,7 @@
 This is a secure, production-ready AI-powered ticket triage system designed for INT Inc.'s Customer Success Representatives (CSRs). The system analyzes customer tickets, assigns priority levels, provides empathetic response guidelines, and suggests relevant Knowledge Base articles—all while maintaining enterprise-grade security and complete audit trails.
 
 **Key Features:**
+
 - Intelligent ticket triage with confidence scoring
 - Tone-aware empathetic response generation
 - Knowledge Base article recommendations
@@ -53,6 +54,7 @@ This is a secure, production-ready AI-powered ticket triage system designed for 
 ## Coding Standards and Conventions
 
 ### JavaScript Style
+
 - **ES Modules**: Use `import/export` syntax (not CommonJS)
 - **Modern JavaScript**: Target ES2022+ features
 - **Const by default**: Use `const` unless reassignment is needed, then `let` (never `var`)
@@ -65,12 +67,14 @@ This is a secure, production-ready AI-powered ticket triage system designed for 
   - Prefix unused parameters with underscore: `_unusedParam`
 
 ### ESLint Configuration
+
 - Extends `eslint:recommended`
 - No unused variables (except those prefixed with `_`)
 - `no-console` warnings in development, errors in production
 - Exceptions: console allowed in `index.js` and test files
 
 ### Code Organization
+
 - **Modular architecture**: Each service in `src/` should have a single responsibility
 - **API endpoints**: Keep thin—delegate business logic to `src/` modules
 - **Error handling**: Always use try-catch blocks in async functions
@@ -78,6 +82,7 @@ This is a secure, production-ready AI-powered ticket triage system designed for 
 - **Comments**: Use JSDoc-style comments for functions, especially in API endpoints
 
 ### Security Best Practices
+
 **CRITICAL**: This project enforces strict security standards:
 
 1. **Row Level Security (RLS)**:
@@ -109,6 +114,7 @@ This is a secure, production-ready AI-powered ticket triage system designed for 
 ## Database Schema
 
 Key tables:
+
 - `triage_logs`: Stores all triage requests and results
 - `kb_articles`: Knowledge Base article metadata
 - `customer_profiles`: Customer history and preferences
@@ -120,12 +126,14 @@ All tables have RLS policies that restrict public access. Only service role can 
 ## Development Workflow
 
 ### Setup
+
 ```bash
 npm install
 cp .env.example .env  # Then fill in your values
 ```
 
 ### Development
+
 ```bash
 npm run dev          # Start Vite dev server
 npm run lint         # Check for linting errors
@@ -135,6 +143,7 @@ npm run format:check # Check formatting without changes
 ```
 
 ### Testing
+
 ```bash
 npm test                  # Run all tests
 npm run test:coverage     # Run tests with coverage report
@@ -142,6 +151,7 @@ npm run test:coverage-check # Enforce minimum coverage thresholds (70%)
 ```
 
 ### Build and Deploy
+
 ```bash
 npm run build    # Build for production
 npm run preview  # Preview production build locally
@@ -162,6 +172,7 @@ npm run validate # Run format check + lint + test + build
 ## Common Development Tasks
 
 ### Adding a New API Endpoint
+
 1. Create new file in `api/` directory (e.g., `api/new-endpoint.js`)
 2. Export default async function: `export default async function handler(req, res) { }`
 3. Add appropriate security headers and CORS configuration
@@ -172,6 +183,7 @@ npm run validate # Run format check + lint + test + build
 8. Test endpoint manually and add automated tests
 
 ### Adding a New Service Module
+
 1. Create new file in `src/` directory (e.g., `src/newService.js`)
 2. Import `supabaseClient.js` if database access is needed
 3. Export functions with clear JSDoc comments
@@ -180,6 +192,7 @@ npm run validate # Run format check + lint + test + build
 6. Update this claude.md if the module introduces new concepts
 
 ### Database Migrations
+
 1. Create new SQL file in `supabase/migrations/` with timestamp prefix
 2. Include both schema changes and RLS policies
 3. Test migration in Supabase SQL editor
@@ -187,6 +200,7 @@ npm run validate # Run format check + lint + test + build
 5. Update `.env.example` if new config is required
 
 ### Updating Frontend
+
 1. Modify `index.html` directly (single-page application)
 2. Follow existing CSS structure (uses CSS variables for theming)
 3. Use vanilla JavaScript with event delegation where possible
@@ -196,17 +210,20 @@ npm run validate # Run format check + lint + test + build
 ## Key Architectural Decisions
 
 ### Why Serverless?
+
 - **Scalability**: Automatic scaling with zero configuration
 - **Security**: Secrets stored server-side, never exposed to frontend
 - **Cost**: Pay only for actual usage
 - **Simplicity**: No server management or DevOps overhead
 
 ### Why RLS Instead of API Keys?
+
 - **Defense in depth**: Even if API keys leak, database is protected
 - **Compliance**: Meets enterprise security requirements
 - **Auditability**: Database-level access control is easier to audit
 
 ### Why Vanilla JavaScript?
+
 - **Performance**: No framework overhead
 - **Simplicity**: Easier onboarding for team members
 - **Control**: Full control over bundle size and behavior
@@ -215,6 +232,7 @@ npm run validate # Run format check + lint + test + build
 ## Debugging Tips
 
 ### API Endpoint Not Working
+
 1. Check Vercel logs: `vercel logs --follow`
 2. Verify environment variables are set in Vercel dashboard
 3. Test health-check endpoint: `GET /api/health-check`
@@ -222,12 +240,14 @@ npm run validate # Run format check + lint + test + build
 5. Verify RLS policies haven't been accidentally disabled
 
 ### Frontend Issues
+
 1. Open browser DevTools console for JavaScript errors
 2. Check Network tab for failed API requests
 3. Verify API endpoints return expected JSON structure
 4. Clear browser cache if seeing stale data
 
 ### Database Issues
+
 1. Verify RLS is enabled: Query should fail from SQL editor without service role
 2. Check Supabase logs for permission errors
 3. Verify service role key (not anon key) is configured
@@ -236,10 +256,12 @@ npm run validate # Run format check + lint + test + build
 ## Dependencies and Package Management
 
 ### Production Dependencies
+
 - `@supabase/supabase-js`: Supabase client library
 - `undici`: Fast HTTP client (used by Vercel functions)
 
 ### Dev Dependencies
+
 - `vite`: Build tool and dev server
 - `eslint`: JavaScript linting
 - `prettier`: Code formatting
@@ -251,6 +273,7 @@ npm run validate # Run format check + lint + test + build
 ## Helpful Context for AI Assistants
 
 ### When Modifying Code
+
 - Always prioritize security over convenience
 - Maintain backward compatibility with existing database schema
 - Keep API responses consistent in structure
@@ -258,6 +281,7 @@ npm run validate # Run format check + lint + test + build
 - Consider impact on CSR workflow (this is a production tool)
 
 ### When Adding Features
+
 - Check if feature requires database migration
 - Update relevant documentation files (README.md, DEPLOYMENT.md, etc.)
 - Add tests before implementation (TDD approach encouraged)
@@ -265,6 +289,7 @@ npm run validate # Run format check + lint + test + build
 - Ensure accessibility (ARIA labels, keyboard navigation)
 
 ### Common Pitfalls to Avoid
+
 - DON'T expose Supabase anon key to frontend
 - DON'T bypass RLS policies
 - DON'T log sensitive customer information
@@ -273,6 +298,7 @@ npm run validate # Run format check + lint + test + build
 - DON'T break existing API contracts without versioning
 
 ### Project-Specific Terminology
+
 - **CSR**: Customer Success Representative
 - **Triage**: Process of analyzing and prioritizing customer tickets
 - **Talking Points**: Empathetic response guidelines generated for CSRs
@@ -292,6 +318,7 @@ npm run validate # Run format check + lint + test + build
 ## Continuous Integration
 
 GitHub Actions workflow (`.github/workflows/`) runs on every push:
+
 1. Install dependencies
 2. Run linting checks
 3. Run format checks

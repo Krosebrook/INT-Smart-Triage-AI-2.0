@@ -5,7 +5,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  
+  // Silently ignore errors
 }
 
 export const supabase =
@@ -16,7 +16,6 @@ export const supabase =
 // Save triage report to database
 export async function saveTriageReport(reportData) {
   if (!supabase) {
-    
     return { success: false, error: 'Database not configured' };
   }
 
@@ -51,7 +50,6 @@ export async function saveTriageReport(reportData) {
 
     return { success: true, data };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -73,7 +71,6 @@ export async function getCustomerReports(customerName) {
 
     return { success: true, data, count: data.length };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -95,7 +92,6 @@ export async function getReportById(reportId) {
 
     return { success: true, data };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -154,7 +150,6 @@ export async function searchReports(query, filters = {}) {
 
     return { success: true, data, count: data.length };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -197,7 +192,6 @@ export async function getReportStats() {
 
     return { success: true, data: stats };
   } catch (error) {
-    console.error('Error fetching stats:', error);
     return { success: false, error: error.message };
   }
 }
@@ -227,7 +221,6 @@ export async function updateReportStatus(reportId, status) {
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error updating report status:', error);
     return { success: false, error: error.message };
   }
 }
@@ -248,7 +241,6 @@ export async function getNotes(reportId) {
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error fetching notes:', error);
     return { success: false, error: error.message };
   }
 }
@@ -274,7 +266,6 @@ export async function addNote(reportId, noteText, csrAgent) {
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error adding note:', error);
     return { success: false, error: error.message };
   }
 }
@@ -294,7 +285,6 @@ export async function deleteNote(noteId) {
 
     return { success: true };
   } catch (error) {
-    console.error('Error deleting note:', error);
     return { success: false, error: error.message };
   }
 }
@@ -319,7 +309,6 @@ export async function assignReport(reportId, assignedTo) {
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error assigning report:', error);
     return { success: false, error: error.message };
   }
 }
@@ -340,7 +329,6 @@ export async function getAvailableCSRs() {
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error fetching CSRs:', error);
     return { success: false, error: error.message };
   }
 }
@@ -359,12 +347,11 @@ export async function autoAssignReport(reportId) {
 
     return { success: true, assignedTo: data };
   } catch (error) {
-    console.error('Error auto-assigning report:', error);
     return { success: false, error: error.message };
   }
 }
 
-export async function getSuggestedResponses(issueDescription, category) {
+export async function getSuggestedResponses(issueDescription, _category) {
   const keywords = issueDescription.toLowerCase();
   const suggestions = [];
 

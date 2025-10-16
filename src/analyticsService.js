@@ -32,7 +32,6 @@ export async function getTicketVolumeByDay(days = 30) {
       })),
     };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -73,7 +72,6 @@ export async function getPriorityDistribution() {
       },
     };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -120,7 +118,6 @@ export async function getDepartmentWorkload() {
       })),
     };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -190,7 +187,6 @@ export async function getCSRPerformanceMetrics() {
       })),
     };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -251,7 +247,6 @@ export async function getResponseTimeAnalysis() {
       },
     };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -304,7 +299,6 @@ export async function getPredictiveTicketVolume() {
       data: predictions,
     };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }
@@ -341,7 +335,6 @@ export async function exportAnalyticsData(format = 'json', filters = {}) {
 
     return { success: true, data, format: 'json' };
   } catch (error) {
-    
     return { success: false, error: error.message };
   }
 }

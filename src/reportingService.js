@@ -62,7 +62,6 @@ export class ReportingService {
       startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       endDate = new Date(),
       format = 'json',
-      includeCharts = true,
     } = options;
 
     const reportData = {
@@ -162,7 +161,6 @@ export class ReportingService {
         ).toFixed(1),
       };
     } catch (error) {
-      
       return this.getMockOverview();
     }
   }
@@ -177,12 +175,12 @@ export class ReportingService {
     };
   }
 
-  async generatePrioritiesSection(startDate, endDate) {
+  async generatePrioritiesSection(_startDate, _endDate) {
     const result = await getPriorityDistribution();
     return result.data || {};
   }
 
-  async generatePerformanceSection(startDate, endDate) {
+  async generatePerformanceSection(_startDate, _endDate) {
     const result = await getCSRPerformanceMetrics();
     return result.data || [];
   }
@@ -193,7 +191,7 @@ export class ReportingService {
     return result.data || [];
   }
 
-  async generateWorkloadSection(startDate, endDate) {
+  async generateWorkloadSection(_startDate, _endDate) {
     const result = await getDepartmentWorkload();
     return result.data || [];
   }
@@ -287,8 +285,6 @@ export class ReportingService {
   }
 
   async scheduleReport(templateName, schedule, recipients) {
-    
-
     return {
       success: true,
       scheduleId: `SCHED-${Date.now()}`,
@@ -334,7 +330,6 @@ export class ReportingService {
 
       return { success: true, reports: data || [] };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
@@ -360,7 +355,6 @@ export class ReportingService {
 
       return { success: true, data };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
@@ -403,7 +397,7 @@ export class ReportingService {
     };
   }
 
-  async generateResolutionTimesSection(startDate, endDate) {
+  async generateResolutionTimesSection(_startDate, _endDate) {
     return {
       avgTotal: '3.2 hours',
       byPriority: {
@@ -414,7 +408,7 @@ export class ReportingService {
     };
   }
 
-  async generateSatisfactionSection(startDate, endDate) {
+  async generateSatisfactionSection(_startDate, _endDate) {
     return {
       overallScore: 4.6,
       totalResponses: 142,
@@ -428,7 +422,7 @@ export class ReportingService {
     };
   }
 
-  async generateEfficiencySection(startDate, endDate) {
+  async generateEfficiencySection(_startDate, _endDate) {
     return {
       ticketsPerHour: 4.2,
       firstResponseTime: '15 minutes',
@@ -436,7 +430,7 @@ export class ReportingService {
     };
   }
 
-  async generateSentimentSection(startDate, endDate) {
+  async generateSentimentSection(_startDate, _endDate) {
     return {
       positive: 68,
       neutral: 24,
@@ -444,26 +438,26 @@ export class ReportingService {
     };
   }
 
-  async generateFeedbackSection(startDate, endDate) {
+  async generateFeedbackSection(_startDate, _endDate) {
     return {
       totalComments: 85,
       themes: ['fast response', 'helpful support', 'clear communication'],
     };
   }
 
-  async generateVolumeSection(startDate, endDate) {
+  async generateVolumeSection(_startDate, _endDate) {
     const result = await getTicketVolumeByDay(30);
     return result.data || [];
   }
 
-  async generateResponseTimesSection(startDate, endDate) {
+  async generateResponseTimesSection(_startDate, _endDate) {
     return {
       avgFirstResponse: '18 minutes',
       avgFullResolution: '3.2 hours',
     };
   }
 
-  async generateSLASection(startDate, endDate) {
+  async generateSLASection(_startDate, _endDate) {
     return {
       met: 94,
       breached: 6,
@@ -471,7 +465,7 @@ export class ReportingService {
     };
   }
 
-  async generateEscalationsSection(startDate, endDate) {
+  async generateEscalationsSection(_startDate, _endDate) {
     return {
       total: 8,
       percentage: '5.1%',

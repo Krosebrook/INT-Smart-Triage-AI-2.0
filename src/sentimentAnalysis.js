@@ -336,7 +336,7 @@ export class SentimentAnalyzer {
   }
 
   generateResponseSuggestion(analysis) {
-    const { sentiment, escalationProbability, emotionalIntensity } = analysis;
+    const { escalationProbability } = analysis;
     const prob = parseFloat(escalationProbability);
 
     let opening = '';

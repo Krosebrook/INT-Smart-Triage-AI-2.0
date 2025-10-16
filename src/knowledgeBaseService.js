@@ -13,12 +13,16 @@ class KnowledgeBaseService {
 
     try {
       const response = await fetch('/public/data/kb.json');
+
       const data = await response.json();
+
       this.articles = data.articles || [];
+
       this.buildSearchIndex();
+
       this.initialized = true;
     } catch (error) {
-      
+      // Silently ignore errors
     }
   }
 
@@ -197,12 +201,14 @@ class KnowledgeBaseService {
       await supabase.from('kb_searches').insert([
         {
           query,
+
           result_count: resultCount,
+
           searched_at: new Date().toISOString(),
         },
       ]);
     } catch (error) {
-      
+      // Silently ignore errors
     }
   }
 
@@ -214,7 +220,7 @@ class KnowledgeBaseService {
         article_id: articleId,
       });
     } catch (error) {
-      
+      // Silently ignore errors
     }
   }
 
@@ -240,7 +246,6 @@ class KnowledgeBaseService {
 
       return { success: true, data };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
