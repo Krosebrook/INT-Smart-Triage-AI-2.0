@@ -28,25 +28,20 @@ const STATIC_ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
-
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then((cache) => {
-        console.log('Service Worker: Caching static assets');
         return cache.addAll(STATIC_ASSETS);
       })
       .then(() => self.skipWaiting())
-      .catch((error) => {
-        console.error('Service Worker: Cache installation failed:', error);
+      .catch((_error) => {
+        // Silently ignore errors
       })
   );
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
-
   event.waitUntil(
     caches
       .keys()
@@ -55,7 +50,6 @@ self.addEventListener('activate', (event) => {
           cacheNames
             .filter((name) => name !== CACHE_NAME && name !== RUNTIME_CACHE)
             .map((name) => {
-              console.log('Service Worker: Deleting old cache:', name);
               return caches.delete(name);
             })
         );
@@ -93,7 +87,6 @@ async function cacheFirst(request) {
     }
     return response;
   } catch (error) {
-    console.error('Service Worker: Fetch failed:', error);
     return new Response('Offline', {
       status: 503,
       statusText: 'Service Unavailable',
@@ -134,8 +127,6 @@ self.addEventListener('message', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  console.log('Service Worker: Push notification received');
-
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'INT Smart Triage AI';
   const options = {
@@ -164,13 +155,11 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   if (event.action === 'view') {
-    event.waitUntil(clients.openWindow(event.notification.data));
+    event.waitUntil(self.clients.openWindow(event.notification.data));
   }
 });
 
 self.addEventListener('sync', (event) => {
-  console.log('Service Worker: Background sync triggered');
-
   if (event.tag === 'sync-reports') {
     event.waitUntil(syncReports());
   }
@@ -189,16 +178,13 @@ async function syncReports() {
       try {
         await fetch(req.clone());
         await cache.delete(req);
-      } catch (error) {
-        console.error('Service Worker: Sync failed for request:', error);
+      } catch (_error) {
+        // Silently ignore errors
       }
     });
 
     await Promise.all(syncPromises);
-    console.log('Service Worker: Background sync completed');
-  } catch (error) {
-    console.error('Service Worker: Background sync error:', error);
+  } catch (_error) {
+    // Silently ignore errors
   }
 }
-
-console.log('Service Worker: Loaded');

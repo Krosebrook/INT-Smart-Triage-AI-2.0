@@ -55,19 +55,20 @@ export default async function handler(req, res) {
 
   try {
     // Create promise with 3s timeout as required
-    const healthCheck = new Promise(async (resolve, reject) => {
+    const healthCheck = new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject(new Error('Health check timeout after 3 seconds'));
       }, 3000);
 
-      try {
-        const result = await performHealthCheck();
-        clearTimeout(timeout);
-        resolve(result);
-      } catch (error) {
-        clearTimeout(timeout);
-        reject(error);
-      }
+      performHealthCheck()
+        .then((result) => {
+          clearTimeout(timeout);
+          resolve(result);
+        })
+        .catch((error) => {
+          clearTimeout(timeout);
+          reject(error);
+        });
     });
 
     const healthData = await healthCheck;
@@ -80,8 +81,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json(healthData);
   } catch (error) {
-    console.error('Health check error:', error);
-
     const errorResponse = {
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
@@ -120,7 +119,7 @@ async function performHealthCheck() {
   // Check Supabase connection and RLS status
   if (supabase) {
     // Test basic connectivity
-    const { data: connectionTest, error: connectionError } = await supabase
+    const { error: connectionError } = await supabase
       .from('reports')
       .select('count', { count: 'exact', head: true });
 

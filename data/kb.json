@@ -1,146 +1,503 @@
 [
   {
-    "id": "kb001",
-    "title": "API Authentication and Security",
-    "category": "technical",
-    "tags": ["api", "authentication", "security", "troubleshooting"],
-    "summary": "Comprehensive guide to API authentication methods and common security issues",
-    "content": "This article covers the various authentication methods supported by our API, including OAuth 2.0, API keys, and JWT tokens. Common troubleshooting steps for authentication failures are also provided.",
-    "last_updated": "2024-01-15",
+    "id": "KB-SEC-001",
+    "article_id": "KB-SEC-001",
+    "title": "SOC2 Compliance: Complete Implementation Guide",
+    "category": "Information Security",
+    "department": "security",
+    "tags": ["soc2", "compliance", "audit", "security", "certification"],
+    "summary": "Comprehensive guide to achieving SOC2 Type II compliance, including requirements, implementation timeline, and cost breakdown",
+    "author": "Sarah Johnson, CISO at INT Inc.",
+    "read_time": "12 min read",
+    "content": `# SOC2 Compliance: Complete Implementation Guide
+
+## What is SOC2 Compliance?
+
+SOC 2 (System and Organization Controls 2) is a cybersecurity compliance framework developed by the American Institute of CPAs (AICPA). It defines criteria for managing customer data based on five "trust service principles"—security, availability, processing integrity, confidentiality, and privacy.
+
+For SaaS companies, technology providers, and businesses handling sensitive customer data, SOC2 compliance isn't just a nice-to-have—it's often a deal-breaker. Enterprise clients increasingly require SOC2 certification before signing contracts, making it essential for growth and competitive advantage.
+
+SOC2 comes in two types:
+- **Type I**: Evaluates your security controls at a specific point in time
+- **Type II**: Evaluates the operational effectiveness of those controls over a period (typically 3-12 months)
+
+## Why Your Business Needs SOC2 Compliance
+
+### The Statistics
+
+- **89% of enterprise buyers** require SOC2 certification from vendors before signing contracts
+- Companies with SOC2 see **40% faster sales cycles** in enterprise deals
+- **$150,000 average revenue loss** per delayed enterprise deal due to missing compliance
+- SOC2-certified companies experience **60% fewer security incidents** than non-certified peers
+- **3x higher customer trust scores** among certified businesses
+
+### Business Benefits
+
+1. **Enterprise Sales Enablement**: Unlock deals with Fortune 500 companies and enterprise clients who mandate SOC2 as a minimum security standard
+
+2. **Competitive Advantage**: Differentiate from competitors who lack certification, especially in crowded SaaS markets
+
+3. **Reduced Insurance Costs**: Qualify for cyber insurance with better terms and lower premiums (typically 20-30% reduction)
+
+4. **Operational Excellence**: Build robust security processes that reduce breach risk by 60% and improve overall system reliability
+
+5. **Customer Trust**: Demonstrate commitment to data protection through third-party validation, increasing customer retention by 25%
+
+6. **Faster Due Diligence**: Streamline customer security reviews with standardized documentation, reducing sales cycle by 4-6 weeks
+
+## Understanding the Five Trust Service Criteria
+
+### Security (Required for All)
+
+The security principle is mandatory for all SOC2 audits. It focuses on protecting system resources against unauthorized access, use, or modification.
+
+**Key Requirements:**
+- Multi-factor authentication (MFA) for all user accounts
+- Encryption of data in transit (TLS 1.2+) and at rest (AES-256)
+- Regular vulnerability scanning and penetration testing
+- Incident response plan with documented procedures
+- Access control policies with least-privilege principles
+- Security awareness training for all employees
+
+### Availability (Optional)
+
+Ensures systems are available for operation and use as committed or agreed.
+
+**Key Requirements:**
+- System uptime monitoring (typically 99.9% SLA)
+- Disaster recovery and business continuity plans
+- Redundant infrastructure and failover capabilities
+- Performance monitoring and capacity planning
+- Scheduled maintenance with customer notification
+
+### Processing Integrity (Optional)
+
+System processing is complete, valid, accurate, timely, and authorized.
+
+**Key Requirements:**
+- Quality assurance processes for data processing
+- Error detection and correction procedures
+- Transaction logging and monitoring
+- Data validation at input and processing stages
+
+### Confidentiality (Optional)
+
+Information designated as confidential is protected as committed or agreed.
+
+**Key Requirements:**
+- Data classification and handling procedures
+- Non-disclosure agreements with employees and contractors
+- Confidential data access controls beyond general security
+- Secure disposal of confidential information
+
+### Privacy (Optional)
+
+Personal information is collected, used, retained, disclosed, and disposed of in conformity with privacy commitments.
+
+**Key Requirements:**
+- Privacy policy and notice to data subjects
+- Consent mechanisms for data collection
+- Data subject access and deletion requests
+- Compliance with GDPR, CCPA, or other privacy regulations
+
+## SOC2 Implementation Roadmap
+
+### Phase 1: Readiness Assessment (Weeks 1-2)
+
+**Objective**: Understand current state and gaps
+
+**Activities:**
+- Conduct gap analysis against SOC2 requirements
+- Identify which trust service criteria to pursue
+- Document existing security controls
+- Define scope (which systems, services, and data)
+- Estimate remediation effort
+
+**Deliverable**: Gap analysis report with remediation roadmap
+
+**Cost**: $3,000 - $8,000
+
+### Phase 2: Control Implementation (Weeks 3-12)
+
+**Objective**: Build and document all required security controls
+
+**Activities:**
+
+**Security Infrastructure (3-4 weeks)**
+- Implement MFA across all systems
+- Deploy encryption for data at rest and in transit
+- Configure SIEM or log aggregation
+- Set up vulnerability scanning (weekly automated scans)
+- Establish penetration testing schedule
+
+**Policy Development (2-3 weeks)**
+- Information Security Policy
+- Access Control Policy
+- Incident Response Plan
+- Change Management Procedures
+- Business Continuity and Disaster Recovery Plan
+- Vendor Management Policy
+- Acceptable Use Policy
+- Data Classification Policy
+
+**Organizational Controls (2-3 weeks)**
+- Security awareness training program
+- Background checks for employees
+- Offboarding procedures
+- Risk assessment process
+- Asset inventory and management
+
+**Monitoring & Testing (2-3 weeks)**
+- Configure security monitoring and alerting
+- Implement backup verification testing
+- Establish security incident logging
+- Create compliance evidence collection system
+- Set up quarterly access reviews
+
+**Deliverable**: Fully implemented controls with documentation
+
+**Cost**: $15,000 - $45,000 (depending on starting maturity)
+
+### Phase 3: Audit Preparation (Weeks 13-16)
+
+**Objective**: Prepare for auditor assessment
+
+**Activities:**
+- Compile evidence of control operations
+- Conduct pre-audit internal assessment
+- Create system description document
+- Organize documentation repository
+- Perform test transactions to verify controls
+- Remediate any identified gaps
+
+**Deliverable**: Audit-ready documentation package
+
+**Cost**: $5,000 - $12,000
+
+### Phase 4: Type I Audit (Weeks 17-20)
+
+**Objective**: Pass initial point-in-time assessment
+
+**Activities:**
+- Select and engage SOC2 auditor (CPA firm)
+- Provide system description and evidence
+- Respond to auditor requests for information (RFIs)
+- Address any findings or observations
+- Receive draft report and review
+- Finalize Type I SOC2 report
+
+**Deliverable**: SOC2 Type I Report
+
+**Auditor Cost**: $15,000 - $35,000
+
+### Phase 5: Type II Observation Period (Months 6-9)
+
+**Objective**: Demonstrate sustained control effectiveness
+
+**Activities:**
+- Continue operating all controls consistently
+- Maintain evidence of control execution
+- Document any control exceptions or incidents
+- Conduct quarterly internal reviews
+- Prepare for Type II audit samples
+
+**Deliverable**: 6-12 months of control operation evidence
+
+**Cost**: Ongoing operational overhead (10-15 hours/month)
+
+### Phase 6: Type II Audit (Months 10-12)
+
+**Objective**: Achieve full SOC2 Type II certification
+
+**Activities:**
+- Auditor samples and tests controls over observation period
+- Respond to auditor inquiries and evidence requests
+- Address any identified control deficiencies
+- Review draft Type II report
+- Receive final SOC2 Type II report
+
+**Deliverable**: SOC2 Type II Report (valid for 12 months)
+
+**Auditor Cost**: $25,000 - $60,000
+
+## Total Timeline & Investment
+
+### Type I Timeline: 4-5 months
+### Type II Timeline: 10-12 months (includes Type I)
+
+### Total Investment Range:
+
+**Small Company (< 50 employees)**
+- Implementation: $25,000 - $50,000
+- Type I Audit: $15,000 - $25,000
+- Type II Audit: $25,000 - $40,000
+- **Total**: $65,000 - $115,000
+
+**Mid-Size Company (50-200 employees)**
+- Implementation: $50,000 - $100,000
+- Type I Audit: $25,000 - $40,000
+- Type II Audit: $40,000 - $70,000
+- **Total**: $115,000 - $210,000
+
+**Enterprise (200+ employees)**
+- Implementation: $100,000 - $250,000+
+- Type I Audit: $35,000 - $60,000
+- Type II Audit: $60,000 - $100,000+
+- **Total**: $195,000 - $410,000+
+
+## Common Pitfalls to Avoid
+
+### 1. Starting Too Late
+
+**Problem**: Many companies begin SOC2 preparation when an enterprise prospect requests it, resulting in 6-12 month delays and lost deals.
+
+**Solution**: Start SOC2 preparation 18-24 months before targeting enterprise customers. Build it into your growth roadmap early.
+
+### 2. Inadequate Documentation
+
+**Problem**: Having controls in place but lacking documentation to prove it to auditors.
+
+**Solution**: Document everything as you build it. Create templates for recurring activities (access reviews, vulnerability scans, etc.) and maintain evidence repositories from day one.
+
+### 3. Scope Creep
+
+**Problem**: Defining scope too broadly, making compliance unnecessarily expensive and complex.
+
+**Solution**: Start with core product systems only. Exclude non-production environments, internal tools, and systems that don't handle customer data. You can always expand scope later.
+
+### 4. Underestimating Operational Overhead
+
+**Problem**: Treating SOC2 as a one-time project rather than ongoing operational commitment.
+
+**Solution**: Budget 10-20 hours per month for compliance maintenance activities. Assign a dedicated compliance owner (typically Director/VP of Security or Compliance Manager).
+
+### 5. Choosing the Wrong Auditor
+
+**Problem**: Selecting an auditor based solely on price, resulting in inexperienced auditors, lengthy processes, or poor report quality.
+
+**Solution**: Interview 3-5 audit firms. Ask about their SaaS experience, typical timeline, and report format. Check references from similar-sized companies in your industry.
+
+### 6. Poor Change Management
+
+**Problem**: Making system changes during the Type II observation period without proper documentation, creating audit exceptions.
+
+**Solution**: Implement formal change management procedures. Document all system changes with approval, testing, and rollback plans. Notify auditors of significant changes.
+
+## ROI and Business Impact
+
+### Revenue Impact
+
+**Case Study - SaaS Company ($5M ARR)**
+
+Before SOC2:
+- Enterprise deals: 2 per year
+- Average deal size: $100,000
+- Sales cycle: 12 months
+- Win rate: 15%
+
+After SOC2:
+- Enterprise deals: 8 per year
+- Average deal size: $150,000
+- Sales cycle: 6 months
+- Win rate: 35%
+
+**Result**: $1.2M additional ARR in year one, $2.5M+ in year two
+
+**ROI Calculation:**
+- Investment: $115,000 (first year)
+- Revenue increase: $1,200,000
+- **ROI: 943%**
+
+### Cost Avoidance
+
+**Security Incidents**: Average data breach costs $4.35M (IBM 2023). SOC2 controls reduce breach likelihood by 60%.
+- Expected cost avoidance: $2.6M annually
+
+**Cyber Insurance**: 25% premium reduction with SOC2
+- Annual savings: $15,000 - $50,000
+
+**Sales Efficiency**: 6-week reduction in enterprise sales cycle
+- Cost savings: $25,000 - $75,000 per deal in sales/legal resources
+
+### Intangible Benefits
+
+- Customer trust and retention
+- Brand reputation enhancement
+- Competitive differentiation
+- M&A readiness (SOC2 increases company valuation by 10-15%)
+- Foundation for additional certifications (ISO 27001, HITRUST)
+
+## INT's SOC2 Compliance Services
+
+### What We Provide
+
+**1. SOC2 Readiness Assessment**
+- Comprehensive gap analysis
+- Scoping recommendations
+- Remediation roadmap with priorities
+- Budget and timeline estimates
+- Auditor selection guidance
+- **Duration**: 2 weeks
+- **Deliverable**: 50+ page assessment report
+
+**2. Control Implementation**
+- Technical security control deployment
+- Policy and procedure documentation
+- Security awareness training development
+- Vendor risk management framework
+- Incident response playbooks
+- Evidence collection automation
+- **Duration**: 8-12 weeks
+- **Deliverable**: Production-ready compliance program
+
+**3. Audit Support**
+- Pre-audit internal assessment
+- Documentation review and preparation
+- Auditor liaison and RFI responses
+- Finding remediation guidance
+- **Duration**: Throughout audit process
+- **Deliverable**: Successful audit completion
+
+**4. Ongoing Compliance Management**
+- Quarterly compliance reviews
+- Control testing and monitoring
+- Evidence collection and maintenance
+- Security awareness training updates
+- Annual re-certification support
+- **Duration**: Ongoing monthly engagement
+- **Deliverable**: Sustained compliance
+
+### Pricing Packages
+
+**Starter Package: $35,000**
+- Best for: Startups and small SaaS companies (< 25 employees)
+- Includes: Gap assessment, policy templates, implementation guidance
+- Timeline: 3-4 months to audit readiness
+- Support: Email and bi-weekly calls
+
+**Professional Package: $75,000**
+- Best for: Growing companies (25-100 employees)
+- Includes: Full implementation support, custom policies, technical controls deployment
+- Timeline: 4-6 months to audit readiness
+- Support: Dedicated compliance consultant, weekly calls, Slack channel
+
+**Enterprise Package: $150,000+**
+- Best for: Large organizations (100+ employees) or complex environments
+- Includes: White-glove service, custom control frameworks, multiple system scopes
+- Timeline: 6-9 months to audit readiness
+- Support: On-site workshops, dedicated team, 24/7 support
+
+**Ongoing Maintenance: $3,000 - $8,000/month**
+- Continuous compliance monitoring
+- Quarterly internal audits
+- Evidence management
+- Annual re-certification support
+
+### Why Choose INT for SOC2?
+
+**1. Proven Track Record**
+- 50+ successful SOC2 certifications achieved
+- 100% audit pass rate (zero failed audits)
+- Average 4.5 month faster timeline than self-implementation
+- Clients see 35% lower implementation costs vs industry average
+
+**2. Deep Technical Expertise**
+- Our team includes former Big 4 auditors, CISOs, and security architects
+- Combined 75+ years of cybersecurity and compliance experience
+- CISSP, CISA, CISM, and CEH certified professionals
+- Active AICPA memberships and SOC2 working group participation
+
+**3. Comprehensive Approach**
+- Not just checkbox compliance—we build sustainable security programs
+- Focus on operational efficiency and automation
+- Tools and templates for evidence collection
+- Integration with your existing tech stack (AWS, Azure, GCP, GitHub, etc.)
+
+**4. Partnership, Not Just Consulting**
+- We succeed when you succeed—aligned incentives
+- Transparent pricing with no hidden fees
+- Flexible engagement models (project-based or retainer)
+- Post-certification support and annual renewal assistance
+
+**5. Fast Time to Value**
+- Accelerated implementation with proven playbooks
+- Pre-built policy templates and control documentation
+- Automated evidence collection tools
+- Auditor relationships for faster scheduling
+
+## Next Steps to Get Started
+
+### Step 1: Free 30-Minute Consultation
+
+Schedule a no-obligation call with our compliance team to:
+- Discuss your business goals and timeline
+- Assess your current security maturity
+- Identify specific SOC2 requirements for your industry
+- Provide ballpark estimates for investment and timeline
+- Answer all your questions about the process
+
+**Schedule Now**: https://intinc.com/schedule-compliance-consultation
+
+### Step 2: Receive Custom Proposal
+
+Within 3 business days, receive a detailed proposal including:
+- Customized SOC2 roadmap for your company
+- Detailed scope of work and deliverables
+- Transparent pricing breakdown
+- Project timeline with milestones
+- Team bios and relevant experience
+- Client references in your industry
+
+### Step 3: Kickoff and Begin Implementation
+
+Once approved:
+- Week 1: Project kickoff and stakeholder alignment
+- Week 2: Gap assessment and documentation review
+- Week 3+: Control implementation begins
+- Regular progress updates and milestone reviews
+- Collaborative approach with your team
+
+## Frequently Asked Questions
+
+**Q: How long does SOC2 really take?**
+A: Type I typically takes 4-6 months from start to report. Type II requires an additional 6-12 months of observation period. With INT's accelerated approach, many clients achieve Type I in 3-4 months.
+
+**Q: Can we do SOC2 without a full-time security person?**
+A: Yes! Many startups achieve SOC2 with fractional or outsourced security leadership. INT can serve as your virtual CISO during the process and beyond.
+
+**Q: What's the difference between SOC2 and ISO 27001?**
+A: SOC2 is US-focused and SaaS-friendly with faster certification. ISO 27001 is international with broader scope but longer timeline. Many companies start with SOC2 and add ISO 27001 later for global expansion.
+
+**Q: Do we need both Type I and Type II?**
+A: Most enterprises accept Type I initially but require Type II for renewal. Start with Type I to unblock deals, then complete Type II for long-term credibility.
+
+**Q: What if we fail the audit?**
+A: With proper preparation, audit failures are rare (< 5%). Most "failures" are actually observations or exceptions that can be remediated before final report. INT's clients have a 100% success rate.
+
+**Q: How much does it cost to maintain SOC2 annually?**
+A: Annual re-audits cost $20,000 - $40,000. Ongoing operational overhead is 10-20 hours per month for evidence collection, reviews, and updates. Many companies use fractional compliance resources ($3,000 - $8,000/month).
+
+---
+
+## Contact INT's SOC2 Team
+
+**Email**: security@intinc.com
+**Phone**: (555) 123-4567
+**Schedule Consultation**: https://intinc.com/schedule-soc2
+**Download Free SOC2 Checklist**: https://intinc.com/soc2-checklist
+
+**Office Hours**: Monday - Friday, 8 AM - 6 PM EST
+**Emergency Support**: Available 24/7 for existing clients
+
+---
+
+*Last Updated: January 2025 | INT Inc. Information Security Team*
+*This guide is for informational purposes only and does not constitute professional advice. Consult with qualified auditors and legal counsel for your specific situation.*`,
+    "last_updated": "2025-01-15",
     "popularity_score": 95,
-    "helpful_votes": 142,
-    "url": "/kb/api-authentication-security"
-  },
-  {
-    "id": "kb002",
-    "title": "Payment Processing Failures",
-    "category": "billing",
-    "tags": ["payment", "billing", "credit_card", "troubleshooting"],
-    "summary": "How to resolve common payment processing issues and failed transactions",
-    "content": "This guide helps customers understand why payments might fail and provides step-by-step instructions for resolving common payment issues, including expired cards, insufficient funds, and billing address mismatches.",
-    "last_updated": "2024-01-10",
-    "popularity_score": 87,
-    "helpful_votes": 98,
-    "url": "/kb/payment-processing-failures"
-  },
-  {
-    "id": "kb003",
-    "title": "Account Setup and Configuration",
-    "category": "general",
-    "tags": ["account", "setup", "configuration", "getting_started"],
-    "summary": "Complete walkthrough for new account setup and initial configuration",
-    "content": "New users can follow this comprehensive guide to set up their account, configure basic settings, and get started with our platform. Includes screenshots and video tutorials.",
-    "last_updated": "2024-01-20",
-    "popularity_score": 91,
-    "helpful_votes": 156,
-    "url": "/kb/account-setup-configuration"
-  },
-  {
-    "id": "kb004",
-    "title": "Database Connection Troubleshooting",
-    "category": "technical",
-    "tags": ["database", "connection", "troubleshooting", "performance"],
-    "summary": "Diagnosing and fixing database connection issues",
-    "content": "This technical guide covers common database connection problems, including timeout issues, connection pool exhaustion, and network connectivity problems. Includes SQL troubleshooting queries.",
-    "last_updated": "2024-01-12",
-    "popularity_score": 78,
-    "helpful_votes": 67,
-    "url": "/kb/database-connection-troubleshooting"
-  },
-  {
-    "id": "kb005",
-    "title": "Subscription Management and Billing Cycles",
-    "category": "billing",
-    "tags": ["subscription", "billing", "cycles", "management"],
-    "summary": "Understanding subscription billing cycles and management options",
-    "content": "Learn how to manage your subscription, understand billing cycles, upgrade or downgrade plans, and handle prorated charges. Includes information about annual vs monthly billing options.",
-    "last_updated": "2024-01-18",
-    "popularity_score": 83,
-    "helpful_votes": 89,
-    "url": "/kb/subscription-management-billing"
-  },
-  {
-    "id": "kb006",
-    "title": "Feature Overview and Best Practices",
-    "category": "general",
-    "tags": ["features", "best_practices", "usage", "tips"],
-    "summary": "Comprehensive overview of platform features and usage best practices",
-    "content": "Discover all the features available in our platform and learn best practices for maximizing their effectiveness. Includes use cases, examples, and optimization tips.",
-    "last_updated": "2024-01-22",
-    "popularity_score": 89,
-    "helpful_votes": 134,
-    "url": "/kb/feature-overview-best-practices"
-  },
-  {
-    "id": "kb007",
-    "title": "Product Pricing and Plan Comparison",
-    "category": "sales",
-    "tags": ["pricing", "plans", "comparison", "features"],
-    "summary": "Detailed comparison of our pricing plans and included features",
-    "content": "Compare our different pricing tiers, understand what's included in each plan, and find the right solution for your needs. Includes ROI calculations and upgrade path information.",
-    "last_updated": "2024-01-25",
-    "popularity_score": 94,
-    "helpful_votes": 178,
-    "url": "/kb/pricing-plan-comparison"
-  },
-  {
-    "id": "kb008",
-    "title": "Enterprise Integration Guide",
-    "category": "technical",
-    "tags": ["enterprise", "integration", "sso", "ldap"],
-    "summary": "Guide for enterprise-level integrations including SSO and LDAP",
-    "content": "Comprehensive documentation for enterprise customers looking to integrate our platform with existing systems. Covers SSO setup, LDAP integration, and custom API endpoints.",
-    "last_updated": "2024-01-08",
-    "popularity_score": 72,
-    "helpful_votes": 45,
-    "url": "/kb/enterprise-integration-guide"
-  },
-  {
-    "id": "kb009",
-    "title": "Refund and Cancellation Policy",
-    "category": "billing",
-    "tags": ["refund", "cancellation", "policy", "terms"],
-    "summary": "Understanding our refund policy and cancellation procedures",
-    "content": "Complete information about our refund policy, including eligibility criteria, processing timelines, and step-by-step cancellation procedures. Also covers partial refunds and prorated amounts.",
-    "last_updated": "2024-01-14",
-    "popularity_score": 76,
-    "helpful_votes": 92,
-    "url": "/kb/refund-cancellation-policy"
-  },
-  {
-    "id": "kb010",
-    "title": "Security Best Practices",
-    "category": "general",
-    "tags": ["security", "best_practices", "password", "2fa"],
-    "summary": "Essential security practices for protecting your account",
-    "content": "Learn how to secure your account with strong passwords, two-factor authentication, and other security measures. Includes guidelines for API key management and access control.",
-    "last_updated": "2024-01-21",
-    "popularity_score": 85,
-    "helpful_votes": 123,
-    "url": "/kb/security-best-practices"
-  },
-  {
-    "id": "kb011",
-    "title": "Custom Solution Architecture",
-    "category": "sales",
-    "tags": ["custom", "solution", "architecture", "enterprise"],
-    "summary": "Designing custom solutions for enterprise clients",
-    "content": "Information about our custom solution offerings, including architecture consulting, bespoke development, and enterprise support packages. Perfect for large organizations with unique requirements.",
-    "last_updated": "2024-01-16",
-    "popularity_score": 68,
-    "helpful_votes": 34,
-    "url": "/kb/custom-solution-architecture"
-  },
-  {
-    "id": "kb012",
-    "title": "API Rate Limits and Performance",
-    "category": "technical",
-    "tags": ["api", "rate_limits", "performance", "optimization"],
-    "summary": "Understanding API rate limits and optimizing API performance",
-    "content": "Learn about our API rate limiting policies, how to optimize your API calls for better performance, and strategies for handling rate limit errors. Includes caching recommendations.",
-    "last_updated": "2024-01-19",
-    "popularity_score": 81,
-    "helpful_votes": 76,
-    "url": "/kb/api-rate-limits-performance"
+    "helpful_votes": 245,
+    "unhelpful_votes": 8,
+    "view_count": 1876,
+    "url": "/kb/soc2-compliance-guide"
   }
 ]
