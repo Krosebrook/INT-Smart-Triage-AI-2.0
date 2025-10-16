@@ -1,0 +1,205 @@
+[
+  {
+    "id": "KB-TECH-002",
+    "title": "Email Migration: Office 365 and Google Workspace Complete Guide",
+    "category": "Technology",
+    "department": "technology",
+    "content_summary": "Step-by-step email migration guide covering planning, execution, testing, and post-migration optimization for Office 365 and Google Workspace transitions with zero downtime methodology"
+  },
+  {
+    "id": "KB-TECH-003",
+    "title": "Cloud Backup & Disaster Recovery Strategy Guide",
+    "category": "Technology",
+    "department": "technology",
+    "content_summary": "Complete backup and disaster recovery planning including RPO/RTO requirements, 3-2-1 backup strategy, vendor selection, testing procedures, and business continuity planning"
+  },
+  {
+    "id": "KB-TECH-004",
+    "title": "SaaS Application Migration: Legacy to Cloud Transformation",
+    "category": "Technology",
+    "department": "technology",
+    "content_summary": "Comprehensive SaaS migration guide covering readiness assessment, application mapping, data migration strategies, user adoption planning, and ROI measurement"
+  },
+  {
+    "id": "KB-TECH-005",
+    "title": "Network Security Best Practices: Building Secure Infrastructure",
+    "category": "Technology",
+    "department": "technology",
+    "content_summary": "Complete network security implementation including firewall configuration, VPN setup, network segmentation, zero-trust architecture, and continuous monitoring"
+  },
+  {
+    "id": "KB-WEB-001",
+    "title": "Custom Website Design Process: From Concept to Launch",
+    "category": "Website Design",
+    "department": "web-design",
+    "content_summary": "End-to-end website design methodology including discovery, wireframing, UI/UX design, development, testing, and launch with transparent pricing breakdown"
+  },
+  {
+    "id": "KB-WEB-002",
+    "title": "E-commerce Platform Comparison: Shopify vs WooCommerce vs Custom",
+    "category": "Website Design",
+    "department": "web-design",
+    "content_summary": "Detailed e-commerce platform analysis comparing features, costs, scalability, and use cases for Shopify, WooCommerce, Magento, and custom solutions"
+  },
+  {
+    "id": "KB-WEB-003",
+    "title": "WordPress Security & Maintenance: Complete Protection Guide",
+    "category": "Website Design",
+    "department": "web-design",
+    "content_summary": "WordPress security hardening including updates, backups, malware prevention, performance optimization, and ongoing maintenance best practices"
+  },
+  {
+    "id": "KB-WEB-004",
+    "title": "Website Performance Optimization: Speed & Core Web Vitals",
+    "category": "Website Design",
+    "department": "web-design",
+    "content_summary": "Performance optimization covering Core Web Vitals, image optimization, caching strategies, CDN implementation, and mobile performance"
+  },
+  {
+    "id": "KB-WEB-005",
+    "title": "Mobile-First Design Principles: Responsive Development Guide",
+    "category": "Website Design",
+    "department": "web-design",
+    "content_summary": "Mobile-first design methodology including responsive frameworks, touch optimization, mobile UX patterns, and cross-device testing"
+  },
+  {
+    "id": "KB-BRAND-001",
+    "title": "Brand Strategy Development: Building Powerful Brand Identity",
+    "category": "Branding",
+    "department": "branding",
+    "content_summary": "Complete brand strategy including market research, positioning, messaging, visual identity, and brand architecture development"
+  },
+  {
+    "id": "KB-BRAND-002",
+    "title": "Logo Design Process: Creating Memorable Brand Marks",
+    "category": "Branding",
+    "department": "branding",
+    "content_summary": "Professional logo design process covering research, concepting, refinement, delivery, and brand guidelines with pricing breakdown"
+  },
+  {
+    "id": "KB-BRAND-003",
+    "title": "Visual Identity Systems: Consistent Brand Expression",
+    "category": "Branding",
+    "department": "branding",
+    "content_summary": "Building comprehensive visual identity including color systems, typography, imagery, patterns, and application guidelines"
+  },
+  {
+    "id": "KB-BRAND-004",
+    "title": "Brand Guidelines Creation: Documentation for Consistency",
+    "category": "Branding",
+    "department": "branding",
+    "content_summary": "Creating effective brand guidelines covering logo usage, color, typography, photography, tone of voice, and application examples"
+  },
+  {
+    "id": "KB-BRAND-005",
+    "title": "Rebranding Best Practices: Strategic Brand Evolution",
+    "category": "Branding",
+    "department": "branding",
+    "content_summary": "Rebranding strategy including timing assessment, stakeholder management, transition planning, and launch execution"
+  },
+  {
+    "id": "KB-CONT-001",
+    "title": "Content Strategy Framework: Planning for Business Growth",
+    "category": "Content",
+    "department": "content",
+    "content_summary": "Content strategy development including audience research, content pillars, channel strategy, SEO integration, and performance measurement"
+  },
+  {
+    "id": "KB-CONT-002",
+    "title": "SEO Copywriting Best Practices: Content That Ranks and Converts",
+    "category": "Content",
+    "department": "content",
+    "content_summary": "SEO copywriting covering keyword research, on-page optimization, user intent, readability, and conversion optimization techniques"
+  },
+  {
+    "id": "KB-CONT-003",
+    "title": "Blog Content Planning: Building Effective Editorial Calendar",
+    "category": "Content",
+    "department": "content",
+    "content_summary": "Blog strategy including topic ideation, editorial calendar creation, content production workflow, and performance tracking"
+  },
+  {
+    "id": "KB-CONT-004",
+    "title": "E-book Creation Process: High-Value Lead Generation Content",
+    "category": "Content",
+    "department": "content",
+    "content_summary": "E-book creation from research and outlining to design, gating strategy, promotion, and lead nurturing integration"
+  },
+  {
+    "id": "KB-CONT-005",
+    "title": "Content Calendar Management: Organizing Content Operations",
+    "category": "Content",
+    "department": "content",
+    "content_summary": "Content calendar management including tools, workflows, team collaboration, approval processes, and performance analytics"
+  },
+  {
+    "id": "KB-MARK-001",
+    "title": "HubSpot Setup & Configuration: Complete Implementation Guide",
+    "category": "Marketing",
+    "department": "marketing",
+    "content_summary": "HubSpot implementation covering portal setup, CRM configuration, marketing automation, sales enablement, and reporting dashboards"
+  },
+  {
+    "id": "KB-MARK-002",
+    "title": "Marketing Automation Workflows: Building Effective Nurture Campaigns",
+    "category": "Marketing",
+    "department": "marketing",
+    "content_summary": "Marketing automation including lead scoring, nurture workflows, behavioral triggers, multi-channel campaigns, and conversion optimization"
+  },
+  {
+    "id": "KB-MARK-003",
+    "title": "CRM Migration Guide: Salesforce, HubSpot, and Beyond",
+    "category": "Marketing",
+    "department": "marketing",
+    "content_summary": "CRM migration covering data preparation, mapping, cleansing, testing, cutover strategy, and post-migration optimization"
+  },
+  {
+    "id": "KB-MARK-004",
+    "title": "Email Marketing Campaign Best Practices: Driving Engagement",
+    "category": "Marketing",
+    "department": "marketing",
+    "content_summary": "Email marketing covering strategy, design, copywriting, segmentation, A/B testing, deliverability, and analytics"
+  },
+  {
+    "id": "KB-MARK-005",
+    "title": "Lead Nurturing Strategies: Converting Prospects to Customers",
+    "category": "Marketing",
+    "department": "marketing",
+    "content_summary": "Lead nurturing including segmentation, content mapping, multi-touch campaigns, lead scoring, and sales handoff processes"
+  },
+  {
+    "id": "KB-OPS-001",
+    "title": "Bookkeeping Services: Financial Management for Growing Businesses",
+    "category": "Operations",
+    "department": "operations",
+    "content_summary": "Bookkeeping services covering monthly close, reconciliation, financial reporting, QuickBooks setup, and tax preparation support"
+  },
+  {
+    "id": "KB-OPS-002",
+    "title": "Process Documentation & Management: Operational Excellence",
+    "category": "Operations",
+    "department": "operations",
+    "content_summary": "Process documentation including SOP creation, workflow mapping, tools selection, and continuous improvement methodologies"
+  },
+  {
+    "id": "KB-OPS-003",
+    "title": "AI & BI Implementation Guide: Data-Driven Decision Making",
+    "category": "Operations",
+    "department": "operations",
+    "content_summary": "AI and BI implementation covering data strategy, tool selection, dashboard design, predictive analytics, and ROI measurement"
+  },
+  {
+    "id": "KB-OPS-004",
+    "title": "Workflow Automation: Eliminating Manual Tasks for Productivity",
+    "category": "Operations",
+    "department": "operations",
+    "content_summary": "Workflow automation including process mapping, tool selection (Zapier, Power Automate), implementation, and efficiency gains"
+  },
+  {
+    "id": "KB-OPS-005",
+    "title": "Business Intelligence Dashboards: Visualizing Data for Decisions",
+    "category": "Operations",
+    "department": "operations",
+    "content_summary": "BI dashboard creation covering KPI selection, data sources, visualization best practices, real-time reporting, and adoption strategy"
+  }
+]

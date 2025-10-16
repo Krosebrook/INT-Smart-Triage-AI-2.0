@@ -28,22 +28,27 @@
 **File:** `/src/supabaseClient.js`
 
 ### Purpose
+
 Provides centralized database access layer for all Supabase operations. Acts as the primary interface for CRUD operations on reports, notes, assignments, and customer data.
 
 ### Key Exports
 
 #### Main Client
+
 ```javascript
 export const supabase: SupabaseClient | null
 ```
+
 Singleton Supabase client instance. Returns `null` if environment variables are not configured.
 
 #### Functions
 
 ##### `saveTriageReport(reportData)`
+
 Save a new triage report to the database.
 
 **Parameters:**
+
 ```javascript
 {
   reportId: string,           // Unique report identifier
@@ -64,6 +69,7 @@ Save a new triage report to the database.
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -73,6 +79,7 @@ Save a new triage report to the database.
 ```
 
 **Example:**
+
 ```javascript
 import { saveTriageReport } from './supabaseClient.js';
 
@@ -89,14 +96,16 @@ const result = await saveTriageReport({
   talkingPoints: ['Acknowledge urgency', 'Provide ETA'],
   knowledgeBase: [],
   department: 'Technology',
-  csrAgent: 'Sarah Johnson'
+  csrAgent: 'Sarah Johnson',
 });
 ```
 
 ##### `getCustomerReports(customerName)`
+
 Retrieve all reports for a specific customer.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -107,9 +116,11 @@ Retrieve all reports for a specific customer.
 ```
 
 ##### `getReportById(reportId)`
+
 Fetch a single report by its unique ID.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -119,9 +130,11 @@ Fetch a single report by its unique ID.
 ```
 
 ##### `searchReports(query, filters)`
+
 Search reports with full-text search and filters.
 
 **Parameters:**
+
 ```javascript
 {
   query: string,              // Search text
@@ -137,18 +150,21 @@ Search reports with full-text search and filters.
 ```
 
 **Example:**
+
 ```javascript
 const results = await searchReports('password reset', {
   priority: 'high',
   dateFrom: '2025-10-01T00:00:00Z',
-  dateTo: '2025-10-16T23:59:59Z'
+  dateTo: '2025-10-16T23:59:59Z',
 });
 ```
 
 ##### `getReportStats()`
+
 Get aggregate statistics across all reports.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -167,40 +183,51 @@ Get aggregate statistics across all reports.
 ```
 
 ##### `updateReportStatus(reportId, status)`
+
 Update the status of a report.
 
 **Status Values:** `'new'` | `'assigned'` | `'in_progress'` | `'resolved'` | `'escalated'`
 
 ##### `getNotes(reportId)`
+
 Get all notes for a specific report.
 
 ##### `addNote(reportId, noteText, csrAgent)`
+
 Add a note to a report.
 
 ##### `deleteNote(noteId)`
+
 Delete a specific note.
 
 ##### `assignReport(reportId, assignedTo)`
+
 Manually assign a report to a CSR.
 
 ##### `getAvailableCSRs()`
+
 Get all currently available CSR agents.
 
 ##### `autoAssignReport(reportId)`
+
 Automatically assign a report using the database's stored procedure.
 
 ##### `getSuggestedResponses(issueDescription, category)`
+
 Get AI-suggested response templates based on the issue.
 
 ##### `searchKnowledgeBase(query, category)`
+
 Search the knowledge base for relevant articles.
 
 ### Dependencies
+
 - `@supabase/supabase-js`
 
 ### Configuration
 
 Required environment variables:
+
 ```bash
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key-here
@@ -220,6 +247,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key-here
 **File:** `/src/assignmentEngine.js`
 
 ### Purpose
+
 Intelligent ticket routing and assignment system that automatically assigns incoming support tickets to the most appropriate CSR based on department expertise, workload, skill level, and ticket priority.
 
 ### Key Classes
@@ -227,6 +255,7 @@ Intelligent ticket routing and assignment system that automatically assigns inco
 #### `AssignmentEngine`
 
 A comprehensive class for managing ticket assignments with multiple factors:
+
 - Department-based routing
 - Skill-based CSR selection
 - Workload balancing
@@ -236,9 +265,11 @@ A comprehensive class for managing ticket assignments with multiple factors:
 ### Key Functions
 
 ##### `autoAssign(reportData)`
+
 Automatically assign a report to the best available CSR.
 
 **Algorithm:**
+
 1. Determines appropriate department using keyword matching
 2. Fetches available CSRs for that department
 3. Scores CSRs based on:
@@ -250,6 +281,7 @@ Automatically assign a report to the best available CSR.
 4. Assigns to highest-scoring CSR
 
 **Parameters:**
+
 ```javascript
 {
   issueDescription: string,
@@ -259,6 +291,7 @@ Automatically assign a report to the best available CSR.
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -273,23 +306,26 @@ Automatically assign a report to the best available CSR.
 ```
 
 **Example:**
+
 ```javascript
 import { assignmentEngine } from './assignmentEngine.js';
 
 const result = await assignmentEngine.autoAssign({
-  issueDescription: "Need help securing our network infrastructure",
-  priority: "high",
-  reportId: "TR-12345"
+  issueDescription: 'Need help securing our network infrastructure',
+  priority: 'high',
+  reportId: 'TR-12345',
 });
 
-console.log(result.assignedTo);  // "Sarah Johnson"
-console.log(result.department);  // "Information Security"
+console.log(result.assignedTo); // "Sarah Johnson"
+console.log(result.department); // "Information Security"
 ```
 
 ##### `determineDepartment(issueDescription)`
+
 Determines the best department based on keyword matching.
 
 **Department Keywords:**
+
 - **Information Security:** security, compliance, audit, vulnerability
 - **Technology:** server, network, email, cloud, IT
 - **Website Design:** website, web, design, ecommerce
@@ -301,9 +337,11 @@ Determines the best department based on keyword matching.
 **Returns:** `string` - Department name
 
 ##### `getAvailableCSRs(department, priority)`
+
 Retrieves available CSRs filtered by department specialty.
 
 **Returns:**
+
 ```javascript
 Array<{
   id: number,
@@ -318,15 +356,19 @@ Array<{
 ```
 
 ##### `selectBestCSR(csrs, reportData)`
+
 Applies scoring algorithm to select the best CSR.
 
 ##### `assignToCSR(reportId, csr)`
+
 Assigns report to specific CSR and updates database.
 
 ##### `reassignTicket(reportId, newCSRName, reason)`
+
 Reassigns a ticket to a different CSR.
 
 **Example:**
+
 ```javascript
 await assignmentEngine.reassignTicket(
   'TR-12345',
@@ -336,14 +378,17 @@ await assignmentEngine.reassignTicket(
 ```
 
 ##### `escalateTicket(reportId, escalationReason)`
+
 Escalates a ticket to high priority and assigns to supervisor.
 
 **Validation:**
+
 - Ticket must exist
 - Ticket cannot already be resolved
 - Ticket cannot be escalated twice
 
 **Example:**
+
 ```javascript
 const result = await assignmentEngine.escalateTicket(
   'TR-12345',
@@ -352,9 +397,11 @@ const result = await assignmentEngine.escalateTicket(
 ```
 
 ##### `getWorkloadDistribution()`
+
 Gets current workload across all CSRs.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -368,9 +415,11 @@ Gets current workload across all CSRs.
 ```
 
 ##### `estimateResponseTime(priority, workload)`
+
 Calculates estimated response time.
 
 **Base Times:**
+
 - High: 15 minutes
 - Medium: 60 minutes
 - Low: 240 minutes
@@ -380,6 +429,7 @@ Calculates estimated response time.
 ### Data Structures
 
 #### CSR Profile
+
 ```javascript
 {
   id: number,
@@ -395,6 +445,7 @@ Calculates estimated response time.
 ```
 
 #### Assignment Result
+
 ```javascript
 {
   success: boolean,
@@ -408,6 +459,7 @@ Calculates estimated response time.
 ```
 
 ### Dependencies
+
 - `./supabaseClient.js`
 
 ### Implementation Details
@@ -424,6 +476,7 @@ Calculates estimated response time.
 **File:** `/src/sentimentAnalysis.js`
 
 ### Purpose
+
 AI-powered sentiment analysis engine that analyzes customer communications to determine emotional tone, escalation risk, and recommended response strategies.
 
 ### Key Classes
@@ -433,9 +486,11 @@ AI-powered sentiment analysis engine that analyzes customer communications to de
 ### Key Functions
 
 ##### `analyze(text, customerTone)`
+
 Performs comprehensive sentiment analysis on text.
 
 **Analysis Factors:**
+
 - Positive/negative word detection
 - Urgency keywords
 - Frustration indicators
@@ -445,12 +500,14 @@ Performs comprehensive sentiment analysis on text.
 - Customer tone input
 
 **Parameters:**
+
 ```javascript
 text: string,          // Text to analyze
 customerTone?: string  // Optional pre-classified tone
 ```
 
 **Returns:**
+
 ```javascript
 {
   sentiment: string,  // 'positive' | 'slightly_positive' | 'neutral' |
@@ -482,6 +539,7 @@ customerTone?: string  // Optional pre-classified tone
 ```
 
 **Example:**
+
 ```javascript
 import { sentimentAnalyzer } from './sentimentAnalysis.js';
 
@@ -489,19 +547,22 @@ const analysis = sentimentAnalyzer.analyze(
   "I've been waiting for THREE DAYS and nobody has helped me!!!"
 );
 
-console.log(analysis.sentiment);  // "negative"
-console.log(analysis.escalationProbability);  // "75.0"
-console.log(analysis.recommendedAction);  // "immediate_supervisor_involvement"
+console.log(analysis.sentiment); // "negative"
+console.log(analysis.escalationProbability); // "75.0"
+console.log(analysis.recommendedAction); // "immediate_supervisor_involvement"
 ```
 
 ##### `predictEscalation(currentAnalysis, historicalData)`
+
 Predicts escalation probability based on current and historical data.
 
 **Historical Data Factors:**
+
 - Past negative interactions (+10 points each)
 - Recent unresolved tickets (+15 points each)
 
 **Returns:**
+
 ```javascript
 {
   probability: string,  // Percentage
@@ -512,14 +573,17 @@ Predicts escalation probability based on current and historical data.
 ```
 
 ##### `analyzeTrend(analyses)`
+
 Analyzes sentiment trend across multiple interactions.
 
 **Parameters:**
+
 ```javascript
 analyses: Array<AnalysisResult>
 ```
 
 **Returns:**
+
 ```javascript
 {
   trend: 'improving' | 'worsening' | 'stable' | 'insufficient_data',
@@ -531,9 +595,11 @@ analyses: Array<AnalysisResult>
 ```
 
 ##### `generateResponseSuggestion(analysis)`
+
 Generates recommended response based on sentiment analysis.
 
 **Returns:**
+
 ```javascript
 {
   opening: string,
@@ -546,6 +612,7 @@ Generates recommended response based on sentiment analysis.
 ```
 
 **Example:**
+
 ```javascript
 const suggestion = sentimentAnalyzer.generateResponseSuggestion(analysis);
 
@@ -580,16 +647,20 @@ console.log(suggestion.suggestedCompensation);
 
 ```javascript
 // Complete workflow
-const text = "This is the THIRD time I'm contacting support about this issue! Still not resolved!!!";
+const text =
+  "This is the THIRD time I'm contacting support about this issue! Still not resolved!!!";
 
 const analysis = sentimentAnalyzer.analyze(text, 'frustrated');
-console.log(analysis.escalationProbability);  // "85.0"
+console.log(analysis.escalationProbability); // "85.0"
 
-const prediction = sentimentAnalyzer.predictEscalation(analysis, historicalData);
-console.log(prediction.recommendSupervisor);  // true
+const prediction = sentimentAnalyzer.predictEscalation(
+  analysis,
+  historicalData
+);
+console.log(prediction.recommendSupervisor); // true
 
 const suggestion = sentimentAnalyzer.generateResponseSuggestion(analysis);
-console.log(suggestion.urgency);  // "immediate"
+console.log(suggestion.urgency); // "immediate"
 ```
 
 ---
@@ -599,19 +670,23 @@ console.log(suggestion.urgency);  // "immediate"
 **File:** `/src/analyticsService.js`
 
 ### Purpose
+
 Provides advanced analytics and reporting capabilities for ticket volume, priority distribution, department workload, CSR performance, and predictive analytics.
 
 ### Key Functions
 
 ##### `getTicketVolumeByDay(days)`
+
 Retrieves ticket volume grouped by day.
 
 **Parameters:**
+
 ```javascript
-days: number = 30  // Number of days to look back
+days: number = 30; // Number of days to look back
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -624,6 +699,7 @@ days: number = 30  // Number of days to look back
 ```
 
 **Example:**
+
 ```javascript
 import { getTicketVolumeByDay } from './analyticsService.js';
 
@@ -632,9 +708,11 @@ const volumeData = await getTicketVolumeByDay(7);
 ```
 
 ##### `getPriorityDistribution()`
+
 Get distribution of tickets by priority level.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -655,9 +733,11 @@ Get distribution of tickets by priority level.
 ```
 
 ##### `getDepartmentWorkload()`
+
 Get workload distribution across departments (last 7 days).
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -672,9 +752,11 @@ Get workload distribution across departments (last 7 days).
 ```
 
 ##### `getCSRPerformanceMetrics()`
+
 Get performance metrics for all CSRs (last 30 days).
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -690,17 +772,20 @@ Get performance metrics for all CSRs (last 30 days).
 ```
 
 **Example:**
+
 ```javascript
 const metrics = await getCSRPerformanceMetrics();
-metrics.data.forEach(csr => {
+metrics.data.forEach((csr) => {
   console.log(`${csr.agent}: ${csr.resolutionRate}% resolution rate`);
 });
 ```
 
 ##### `getResponseTimeAnalysis()`
+
 Analyze response times by priority level.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -722,15 +807,18 @@ Analyze response times by priority level.
 ```
 
 ##### `getPredictiveTicketVolume()`
+
 Predict ticket volume for next 24 hours based on historical patterns.
 
 **Algorithm:**
+
 1. Analyzes last 60 days of ticket data
 2. Groups tickets by day-of-week and hour
 3. Calculates average volume for each hour slot
 4. Projects next 24 hours
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -743,9 +831,11 @@ Predict ticket volume for next 24 hours based on historical patterns.
 ```
 
 ##### `exportAnalyticsData(format, filters)`
+
 Export analytics data in various formats.
 
 **Parameters:**
+
 ```javascript
 format: 'json' | 'csv',
 filters: {
@@ -757,6 +847,7 @@ filters: {
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -767,11 +858,12 @@ filters: {
 ```
 
 **Example:**
+
 ```javascript
 const csvData = await exportAnalyticsData('csv', {
   startDate: '2025-10-01',
   endDate: '2025-10-16',
-  priority: 'high'
+  priority: 'high',
 });
 
 // Download CSV
@@ -780,6 +872,7 @@ const url = URL.createObjectURL(blob);
 ```
 
 ### Dependencies
+
 - `./supabaseClient.js`
 
 ### Implementation Details
@@ -796,6 +889,7 @@ const url = URL.createObjectURL(blob);
 **File:** `/src/knowledgeBaseService.js`
 
 ### Purpose
+
 AI-powered knowledge base search system with semantic matching, relevance scoring, and article recommendations. Provides self-service support through intelligent article suggestions.
 
 ### Key Classes
@@ -805,9 +899,11 @@ AI-powered knowledge base search system with semantic matching, relevance scorin
 ### Key Functions
 
 ##### `initialize()`
+
 Loads knowledge base articles and builds search index.
 
 **Process:**
+
 1. Fetches articles from `/public/data/kb.json`
 2. Builds inverted search index
 3. Indexes title, category, department, tags, summary, and content
@@ -815,9 +911,11 @@ Loads knowledge base articles and builds search index.
 **Note:** Called automatically on first search if not initialized.
 
 ##### `search(query, options)`
+
 Searches knowledge base with keyword and semantic matching.
 
 **Parameters:**
+
 ```javascript
 query: string,
 options: {
@@ -829,6 +927,7 @@ options: {
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -849,6 +948,7 @@ options: {
 ```
 
 **Example:**
+
 ```javascript
 import { knowledgeBaseService } from './knowledgeBaseService.js';
 
@@ -857,19 +957,21 @@ const results = await knowledgeBaseService.search(
   {
     category: 'Account Access',
     limit: 5,
-    minRelevance: 0.5
+    minRelevance: 0.5,
   }
 );
 
-results.results.forEach(article => {
+results.results.forEach((article) => {
   console.log(`${article.title} - ${article.relevance}% relevant`);
 });
 ```
 
 ##### `findSemanticMatches(query)`
+
 Finds articles using semantic/synonym matching.
 
 **Synonym Mappings:**
+
 - security → protection, safety, compliance, audit
 - hack → breach, attack, intrusion, vulnerability
 - website → site, web, page, portal
@@ -881,9 +983,11 @@ Finds articles using semantic/synonym matching.
 **Returns:** Array of `{index, score}` pairs
 
 ##### `getArticleById(articleId)`
+
 Fetches a specific article and tracks view.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -893,14 +997,17 @@ Fetches a specific article and tracks view.
 ```
 
 ##### `getRelatedArticles(articleId, limit)`
+
 Finds related articles based on category, department, and tags.
 
 **Scoring:**
+
 - Same category: +3 points
 - Same department: +2 points
 - Each common tag: +1 point
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -909,14 +1016,17 @@ Finds related articles based on category, department, and tags.
 ```
 
 ##### `getSuggestedArticles(issueDescription, options)`
+
 Extracts keywords and suggests relevant articles.
 
 **Process:**
+
 1. Extracts keywords (removes stop words)
 2. Ranks by frequency
 3. Uses top 10 keywords for search
 
 **Example:**
+
 ```javascript
 const suggestions = await knowledgeBaseService.getSuggestedArticles(
   "I'm having trouble logging into my account. My password doesn't work anymore.",
@@ -925,18 +1035,23 @@ const suggestions = await knowledgeBaseService.getSuggestedArticles(
 ```
 
 ##### `getPopularArticles(limit)`
+
 Gets most popular articles by popularity score.
 
 ##### `getArticlesByCategory(category)`
+
 Retrieves all articles in a specific category.
 
 ##### `getArticlesByDepartment(department)`
+
 Retrieves all articles for a specific department.
 
 ##### `rateArticle(articleId, helpful, feedback)`
+
 Submits user feedback on article helpfulness.
 
 **Parameters:**
+
 ```javascript
 articleId: string,
 helpful: boolean,
@@ -944,9 +1059,11 @@ feedback?: string  // Optional text feedback
 ```
 
 ##### `getSearchSuggestions(partial)`
+
 Get autocomplete suggestions for search queries.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -957,6 +1074,7 @@ Get autocomplete suggestions for search queries.
 ### Data Structures
 
 #### Article Schema
+
 ```javascript
 {
   id: string,
@@ -974,9 +1092,11 @@ Get autocomplete suggestions for search queries.
 ```
 
 ### Dependencies
+
 - `./supabaseClient.js`
 
 ### Configuration
+
 Knowledge base articles loaded from: `/public/data/kb.json`
 
 ### Implementation Details
@@ -994,6 +1114,7 @@ Knowledge base articles loaded from: `/public/data/kb.json`
 **File:** `/src/customerProfileService.js`
 
 ### Purpose
+
 Comprehensive customer intelligence system providing complete customer profiles, interaction history, sentiment analysis, lifetime value calculations, and churn risk assessment.
 
 ### Key Classes
@@ -1003,9 +1124,11 @@ Comprehensive customer intelligence system providing complete customer profiles,
 ### Key Functions
 
 ##### `getCustomerProfile(customerId)`
+
 Retrieves complete customer profile with analytics.
 
 **Aggregates:**
+
 - Basic profile information
 - Ticket history
 - Communication history
@@ -1014,11 +1137,13 @@ Retrieves complete customer profile with analytics.
 - Churn risk score
 
 **Parameters:**
+
 ```javascript
-customerId: string
+customerId: string;
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1073,6 +1198,7 @@ customerId: string
 ```
 
 **Example:**
+
 ```javascript
 import { customerProfileService } from './customerProfileService.js';
 
@@ -1080,21 +1206,24 @@ const profile = await customerProfileService.getCustomerProfile('cust-12345');
 
 if (profile.profile.riskScore.level === 'high') {
   console.log('HIGH CHURN RISK - Immediate action required');
-  profile.profile.riskScore.recommendations.forEach(rec => {
+  profile.profile.riskScore.recommendations.forEach((rec) => {
     console.log(`${rec.priority}: ${rec.action}`);
   });
 }
 ```
 
 ##### `calculateOverallSentiment(tickets)`
+
 Calculates sentiment based on recent ticket history.
 
 **Process:**
+
 1. Analyzes last 10 tickets
 2. Calculates average sentiment score
 3. Determines trend direction
 
 **Sentiment Values:**
+
 - positive: +2
 - slightly_positive: +1
 - neutral: 0
@@ -1102,9 +1231,11 @@ Calculates sentiment based on recent ticket history.
 - negative: -2
 
 ##### `calculateLifetimeValue(tickets)`
+
 Estimates customer lifetime value.
 
 **Calculation:**
+
 - Base: $500 per resolved ticket
 - Tiers:
   - Premium: > $10,000
@@ -1112,20 +1243,24 @@ Estimates customer lifetime value.
   - Standard: ≤ $5,000
 
 ##### `calculateChurnRisk(tickets, interactions)`
+
 Calculates churn risk based on multiple factors.
 
 **Risk Factors:**
+
 - Unresolved recent tickets: +15 points each
 - Negative sentiment tickets: +20 points each
 - Slow resolution times (>48h avg): +25 points
 - No contact in 60+ days: +30 points
 
 **Risk Levels:**
+
 - High: > 70 points
 - Medium: 40-70 points
 - Low: < 40 points
 
 **Example:**
+
 ```javascript
 const riskScore = profile.riskScore;
 
@@ -1137,48 +1272,60 @@ if (riskScore.level === 'high') {
 ```
 
 ##### `updateCustomerProfile(customerId, updates)`
+
 Updates customer profile information.
 
 **Example:**
+
 ```javascript
 await customerProfileService.updateCustomerProfile('cust-12345', {
   name: 'John Doe',
   email: 'john.doe@acme.com',
-  tags: ['vip', 'enterprise', 'priority-support']
+  tags: ['vip', 'enterprise', 'priority-support'],
 });
 ```
 
 ##### `addCustomerNote(customerId, noteText, csrAgent)`
+
 Adds a note to customer profile.
 
 ##### `addCustomerTag(customerId, tag)`
+
 Adds a tag to customer for categorization.
 
 **Common Tags:** vip, enterprise, at-risk, champion, detractor
 
 ##### `findSimilarCustomers(customerId, limit)`
+
 Finds customers with similar profiles.
 
 **Similarity Factors:**
+
 - Common tags: 30% weight
 - Similar sentiment: 20% weight
 - Same tier: 30% weight
 - Similar risk score: 20% weight
 
 **Example:**
+
 ```javascript
-const similar = await customerProfileService.findSimilarCustomers('cust-12345', 5);
+const similar = await customerProfileService.findSimilarCustomers(
+  'cust-12345',
+  5
+);
 
 // Apply successful strategies from similar customers
-similar.similarCustomers.forEach(customer => {
+similar.similarCustomers.forEach((customer) => {
   console.log(`${customer.name} - ${customer.similarityScore}% similar`);
 });
 ```
 
 ##### `getCommunicationPreferences(customerId)`
+
 Retrieves customer's communication preferences.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1193,6 +1340,7 @@ Retrieves customer's communication preferences.
 ```
 
 ### Dependencies
+
 - `./supabaseClient.js`
 - `./sentimentAnalysis.js`
 
@@ -1210,6 +1358,7 @@ Retrieves customer's communication preferences.
 **File:** `/src/emailService.js`
 
 ### Purpose
+
 Automated email template system for customer communications with support for multiple templates, HTML generation, dynamic content injection, and email tracking.
 
 ### Key Classes
@@ -1230,15 +1379,18 @@ The service includes 6 pre-built templates:
 ### Key Functions
 
 ##### `generateEmail(templateName, data)`
+
 Generates email from template with variable substitution.
 
 **Parameters:**
+
 ```javascript
 templateName: string,
 data: Object  // Key-value pairs for template variables
 ```
 
 **Returns:**
+
 ```javascript
 {
   subject: string,
@@ -1248,6 +1400,7 @@ data: Object  // Key-value pairs for template variables
 ```
 
 **Example:**
+
 ```javascript
 import { emailService } from './emailService.js';
 
@@ -1259,16 +1412,18 @@ const email = emailService.generateEmail('ticket_received', {
   ticketSubject: 'Server access issue',
   nextSteps: 'A specialist will contact you within 30 minutes',
   estimatedTime: '30 minutes',
-  csrName: 'Sarah Johnson'
+  csrName: 'Sarah Johnson',
 });
 
-console.log(email.subject);  // "Ticket #TR-12345 - We've Received Your Request"
+console.log(email.subject); // "Ticket #TR-12345 - We've Received Your Request"
 ```
 
 ##### `sendEmail(to, templateName, data, options)`
+
 Sends email using specified template.
 
 **Parameters:**
+
 ```javascript
 to: string,             // Recipient email
 templateName: string,
@@ -1281,6 +1436,7 @@ options: {
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1291,6 +1447,7 @@ options: {
 ```
 
 **Example:**
+
 ```javascript
 const result = await emailService.sendEmail(
   'customer@example.com',
@@ -1301,45 +1458,52 @@ const result = await emailService.sendEmail(
     estimatedTime: '30 minutes',
     csrEmail: 'sarah.johnson@intinc.com',
     csrPhone: '(555) 123-4567',
-    csrName: 'Sarah Johnson'
+    csrName: 'Sarah Johnson',
   }
 );
 ```
 
 ##### `sendTicketConfirmation(reportData)`
+
 Convenience method for sending ticket confirmation.
 
 ##### `sendAssignmentNotification(reportData, assignedTo)`
+
 Sends notification when ticket is assigned.
 
 ##### `sendHighPriorityAlert(reportData, csrContact)`
+
 Sends urgent alert for high-priority tickets.
 
 ##### `sendKnowledgeBaseArticles(reportData, articles)`
+
 Sends helpful KB articles to customer.
 
 **Example:**
+
 ```javascript
 await emailService.sendKnowledgeBaseArticles(reportData, [
   {
     title: 'How to Reset Your Password',
     category: 'Account Access',
     readTime: '3 min',
-    url: '/kb/password-reset'
+    url: '/kb/password-reset',
   },
   {
     title: 'Two-Factor Authentication Setup',
     category: 'Security',
     readTime: '5 min',
-    url: '/kb/2fa-setup'
-  }
+    url: '/kb/2fa-setup',
+  },
 ]);
 ```
 
 ##### `wrapInLayout(content, options)`
+
 Wraps email content in professional HTML layout.
 
 **Features:**
+
 - Responsive design
 - Brand colors (gradient header)
 - Footer with company info
@@ -1347,12 +1511,15 @@ Wraps email content in professional HTML layout.
 - Consistent styling
 
 ##### `stripHTML(html)`
+
 Converts HTML to plain text for email text version.
 
 ##### `scheduleFollowUp(reportId, customerEmail, daysFromNow)`
+
 Schedules a follow-up email.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1363,9 +1530,11 @@ Schedules a follow-up email.
 ```
 
 ##### `trackEmailOpen(trackingId)`
+
 Tracks email open event.
 
 ##### `trackEmailClick(trackingId, linkUrl)`
+
 Tracks link click in email.
 
 ### Template Variables
@@ -1397,6 +1566,7 @@ Each template accepts different variables. Common variables:
 **File:** `/src/communicationHub.js`
 
 ### Purpose
+
 Centralized multi-channel communication system supporting email, SMS, Slack, Microsoft Teams, phone calls, and in-app chat. Provides unified interface for sending notifications and maintaining conversation history.
 
 ### Key Classes
@@ -1415,9 +1585,11 @@ Centralized multi-channel communication system supporting email, SMS, Slack, Mic
 ### Key Functions
 
 ##### `sendNotification(channel, recipient, message, options)`
+
 Universal method for sending notifications across all channels.
 
 **Parameters:**
+
 ```javascript
 channel: 'email' | 'sms' | 'slack' | 'teams' | 'phone' | 'chat',
 recipient: string,  // Email/phone/channel ID depending on channel
@@ -1426,6 +1598,7 @@ options: Object     // Channel-specific options
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1438,6 +1611,7 @@ options: Object     // Channel-specific options
 ```
 
 **Example:**
+
 ```javascript
 import { communicationHub } from './communicationHub.js';
 
@@ -1458,21 +1632,26 @@ await communicationHub.sendNotification(
 ```
 
 ##### `sendEmail(recipient, message, options)`
+
 Sends email notification.
 
 ##### `sendSms(phoneNumber, message, options)`
+
 Sends SMS notification.
 
 **Validation:**
+
 - Phone must be in international format (+[country][number])
 - Regex: `/^\+?[1-9]\d{1,14}$/`
 
 **Returns:** Includes `segments` field (number of 160-char segments)
 
 ##### `sendSlack(channel, message, options)`
+
 Sends Slack message.
 
 **Options:**
+
 ```javascript
 {
   username?: string,      // Bot username
@@ -1483,29 +1662,35 @@ Sends Slack message.
 ```
 
 **Priority Colors:**
+
 - high → 'danger' (red)
 - normal → 'good' (green)
 
 **Example:**
+
 ```javascript
 await communicationHub.sendSlack(
   '#support-team',
   'New escalation: Customer threatening legal action',
   {
     priority: 'high',
-    attachments: [{
-      title: 'View Ticket',
-      title_link: '/report-detail.html?id=TR-12345',
-      color: 'danger'
-    }]
+    attachments: [
+      {
+        title: 'View Ticket',
+        title_link: '/report-detail.html?id=TR-12345',
+        color: 'danger',
+      },
+    ],
   }
 );
 ```
 
 ##### `sendTeams(channelId, message, options)`
+
 Sends Microsoft Teams message.
 
 **Options:**
+
 ```javascript
 {
   title?: string,         // Card title
@@ -1516,10 +1701,12 @@ Sends Microsoft Teams message.
 ```
 
 **Theme Colors:**
+
 - high → 'FF0000' (red)
 - normal → '0078D7' (blue)
 
 **Example:**
+
 ```javascript
 await communicationHub.sendTeams(
   'channel-id',
@@ -1527,19 +1714,23 @@ await communicationHub.sendTeams(
   {
     priority: 'high',
     title: '🚨 Security Alert',
-    actions: [{
-      '@type': 'OpenUri',
-      name: 'View Details',
-      targets: [{ uri: '/security/incident/123' }]
-    }]
+    actions: [
+      {
+        '@type': 'OpenUri',
+        name: 'View Details',
+        targets: [{ uri: '/security/incident/123' }],
+      },
+    ],
   }
 );
 ```
 
 ##### `sendPhone(phoneNumber, message, options)`
+
 Initiates automated phone call.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1553,17 +1744,21 @@ Initiates automated phone call.
 ```
 
 ##### `sendChat(userId, message, options)`
+
 Sends in-app chat message.
 
 **Behavior:**
+
 - Stores message in `chat_messages` table
 - Can be read by user in app
 - Useful for non-urgent notifications
 
 ##### `broadcastToTeam(message, priority, excludeUsers)`
+
 Broadcasts message across multiple channels (Slack, Teams, Email).
 
 **Example:**
+
 ```javascript
 await communicationHub.broadcastToTeam(
   'System maintenance scheduled for tonight at 11 PM',
@@ -1573,14 +1768,17 @@ await communicationHub.broadcastToTeam(
 ```
 
 ##### `notifyHighPriorityTicket(ticketData)`
+
 Specialized method for high-priority ticket notifications.
 
 **Sends:**
+
 - Slack message to #urgent-tickets
 - Teams message to urgent-channel
 - SMS to assigned CSR
 
 **Parameters:**
+
 ```javascript
 {
   reportId: string,
@@ -1592,9 +1790,11 @@ Specialized method for high-priority ticket notifications.
 ```
 
 ##### `getConversationHistory(reportId)`
+
 Retrieves all communications related to a report.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1610,9 +1810,11 @@ Retrieves all communications related to a report.
 ```
 
 ##### `getChannelPreferences(userId)`
+
 Gets user's preferred communication channels.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1626,16 +1828,19 @@ Gets user's preferred communication channels.
 ```
 
 ##### `updateChannelPreferences(userId, preferences)`
+
 Updates user's channel preferences.
 
 ### Data Structures
 
 #### Message ID Format
+
 ```
 MSG-{timestamp}-{9-char-random}
 ```
 
 #### Communication Log Entry
+
 ```javascript
 {
   channel: string,
@@ -1648,6 +1853,7 @@ MSG-{timestamp}-{9-char-random}
 ```
 
 ### Dependencies
+
 - `./supabaseClient.js`
 
 ### Implementation Details
@@ -1665,6 +1871,7 @@ MSG-{timestamp}-{9-char-random}
 **File:** `/src/realtimeService.js`
 
 ### Purpose
+
 Real-time collaboration service using Supabase Realtime for live updates, presence tracking, and ticket activity broadcasting.
 
 ### Key Classes
@@ -1674,19 +1881,23 @@ Real-time collaboration service using Supabase Realtime for live updates, presen
 ### Key Functions
 
 ##### `subscribeToReports(callback)`
+
 Subscribes to real-time changes on reports table.
 
 **Triggers on:**
+
 - INSERT (new report)
 - UPDATE (status change, assignment, etc.)
 - DELETE (report deleted)
 
 **Parameters:**
+
 ```javascript
 callback: (payload) => void
 ```
 
 **Payload:**
+
 ```javascript
 {
   eventType: 'INSERT' | 'UPDATE' | 'DELETE',
@@ -1698,6 +1909,7 @@ callback: (payload) => void
 ```
 
 **Example:**
+
 ```javascript
 import { realtimeService } from './realtimeService.js';
 
@@ -1715,9 +1927,11 @@ realtimeService.subscribeToReports((payload) => {
 ```
 
 ##### `subscribeToNotes(reportId, callback)`
+
 Subscribes to notes for a specific report.
 
 **Example:**
+
 ```javascript
 realtimeService.subscribeToNotes('TR-12345', (payload) => {
   if (payload.eventType === 'INSERT') {
@@ -1728,20 +1942,24 @@ realtimeService.subscribeToNotes('TR-12345', (payload) => {
 ```
 
 ##### `trackPresence(csrName, status)`
+
 Tracks CSR online/offline presence.
 
 **Parameters:**
+
 ```javascript
 csrName: string,
 status: 'online' | 'away' | 'busy' | 'offline'
 ```
 
 **Events:**
+
 - `sync` - Presence state synchronized
 - `join` - User joined
 - `leave` - User left
 
 **Example:**
+
 ```javascript
 const channel = realtimeService.trackPresence('Sarah Johnson', 'online');
 
@@ -1760,27 +1978,32 @@ realtimeService.on('presence-leave', ({ key, presences }) => {
 ```
 
 ##### `broadcastTicketActivity(reportId, activity)`
+
 Broadcasts ticket activity to all connected clients.
 
 **Activity Types:**
+
 - Viewing ticket
 - Adding note
 - Changing status
 - Assigning CSR
 
 **Example:**
+
 ```javascript
 realtimeService.broadcastTicketActivity('TR-12345', {
   type: 'viewing',
   user: 'Sarah Johnson',
-  timestamp: new Date().toISOString()
+  timestamp: new Date().toISOString(),
 });
 ```
 
 ##### `subscribeToTicketActivity(callback)`
+
 Subscribes to ticket activity broadcasts.
 
 **Example:**
+
 ```javascript
 realtimeService.subscribeToTicketActivity((payload) => {
   const { reportId, activity } = payload.payload;
@@ -1792,18 +2015,22 @@ realtimeService.subscribeToTicketActivity((payload) => {
 ```
 
 ##### `notifyCSRs(message, priority)`
+
 Sends notification to all online CSRs.
 
 **Parameters:**
+
 ```javascript
 message: string,
 priority: 'urgent' | 'high' | 'normal' | 'low'
 ```
 
 ##### `getOnlineCSRs()`
+
 Gets list of currently online CSRs.
 
 **Returns:**
+
 ```javascript
 Object<string, {
   user: string,
@@ -1813,25 +2040,31 @@ Object<string, {
 ```
 
 ##### `unsubscribe(channelName)`
+
 Unsubscribes from a specific channel.
 
 ##### `unsubscribeAll()`
+
 Cleans up all subscriptions.
 
 ### Event Handling
 
 ##### `on(eventName, handler)`
+
 Registers event handler.
 
 **Events:**
+
 - `presence-update` - Presence state changed
 - `presence-join` - User joined
 - `presence-leave` - User left
 
 ##### `off(eventName, handler)`
+
 Removes event handler.
 
 ### Dependencies
+
 - `./supabaseClient.js`
 - Supabase Realtime
 
@@ -1879,6 +2112,7 @@ window.addEventListener('beforeunload', () => {
 **File:** `/src/reportingService.js`
 
 ### Purpose
+
 Comprehensive reporting and export system for generating executive summaries, performance reports, customer satisfaction reports, and operational metrics with support for multiple export formats.
 
 ### Key Classes
@@ -1898,9 +2132,11 @@ The service includes 5 pre-built report templates:
 ### Key Functions
 
 ##### `generateReport(templateName, options)`
+
 Generates a complete report from template.
 
 **Parameters:**
+
 ```javascript
 templateName: string,
 options: {
@@ -1912,6 +2148,7 @@ options: {
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1935,6 +2172,7 @@ options: {
 ```
 
 **Example:**
+
 ```javascript
 import { reportingService } from './reportingService.js';
 
@@ -1942,7 +2180,7 @@ const report = await reportingService.generateReport('executive_summary', {
   startDate: new Date('2025-10-01'),
   endDate: new Date('2025-10-16'),
   format: 'json',
-  csrAgent: 'Sarah Johnson'
+  csrAgent: 'Sarah Johnson',
 });
 
 console.log(report.report.sections.overview);
@@ -1956,9 +2194,11 @@ console.log(report.report.sections.overview);
 ```
 
 ##### `generateCustomReport(sections, options)`
+
 Generates custom report with specified sections.
 
 **Available Sections:**
+
 - overview
 - priorities
 - performance
@@ -1975,20 +2215,23 @@ Generates custom report with specified sections.
 - escalations
 
 **Example:**
+
 ```javascript
 const customReport = await reportingService.generateCustomReport(
   ['overview', 'performance', 'satisfaction'],
   {
     startDate: new Date('2025-10-01'),
-    endDate: new Date('2025-10-16')
+    endDate: new Date('2025-10-16'),
   }
 );
 ```
 
 ##### `exportToCSV(reportData)`
+
 Exports report data to CSV format.
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -1999,6 +2242,7 @@ Exports report data to CSV format.
 ```
 
 **Example:**
+
 ```javascript
 const csvReport = await reportingService.exportToCSV(report.report);
 
@@ -2012,15 +2256,19 @@ a.click();
 ```
 
 ##### `exportToPDF(reportData)`
+
 Exports report to PDF (requires server-side implementation).
 
 ##### `exportToExcel(reportData)`
+
 Exports report to Excel (requires library integration).
 
 ##### `scheduleReport(templateName, schedule, recipients)`
+
 Schedules automatic report generation.
 
 **Parameters:**
+
 ```javascript
 templateName: string,
 schedule: 'daily' | 'weekly' | 'monthly',
@@ -2028,6 +2276,7 @@ recipients: Array<string>  // Email addresses
 ```
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -2040,24 +2289,28 @@ recipients: Array<string>  // Email addresses
 ```
 
 **Example:**
+
 ```javascript
-await reportingService.scheduleReport(
-  'executive_summary',
-  'weekly',
-  ['ceo@intinc.com', 'coo@intinc.com']
-);
+await reportingService.scheduleReport('executive_summary', 'weekly', [
+  'ceo@intinc.com',
+  'coo@intinc.com',
+]);
 ```
 
 ##### `getSavedReports(limit)`
+
 Retrieves previously generated reports.
 
 ##### `saveReport(reportData, name)`
+
 Saves a report to database.
 
 ##### `getAvailableTemplates()`
+
 Gets list of all available report templates.
 
 **Returns:**
+
 ```javascript
 Array<{
   id: string,
@@ -2073,6 +2326,7 @@ Array<{
 Each section provides specific analytics:
 
 #### Overview Section
+
 ```javascript
 {
   totalTickets: number,
@@ -2084,6 +2338,7 @@ Each section provides specific analytics:
 ```
 
 #### Performance Section
+
 ```javascript
 Array<{
   agent: string,
@@ -2096,6 +2351,7 @@ Array<{
 ```
 
 #### Priorities Section
+
 ```javascript
 {
   counts: {
@@ -2113,6 +2369,7 @@ Array<{
 ```
 
 #### Trends Section
+
 ```javascript
 Array<{
   date: string,
@@ -2121,6 +2378,7 @@ Array<{
 ```
 
 #### Workload Section
+
 ```javascript
 Array<{
   department: string,
@@ -2132,6 +2390,7 @@ Array<{
 ```
 
 #### Satisfaction Section
+
 ```javascript
 {
   overallScore: number,  // 0-5
@@ -2147,6 +2406,7 @@ Array<{
 ```
 
 #### SLA Section
+
 ```javascript
 {
   met: number,      // Percentage
@@ -2156,6 +2416,7 @@ Array<{
 ```
 
 ### Dependencies
+
 - `./supabaseClient.js`
 - `./analyticsService.js`
 
@@ -2170,14 +2431,11 @@ Array<{
 
 ```javascript
 // Generate monthly executive summary
-const report = await reportingService.generateReport(
-  'executive_summary',
-  {
-    startDate: new Date('2025-09-01'),
-    endDate: new Date('2025-09-30'),
-    format: 'json'
-  }
-);
+const report = await reportingService.generateReport('executive_summary', {
+  startDate: new Date('2025-09-01'),
+  endDate: new Date('2025-09-30'),
+  format: 'json',
+});
 
 // Export to CSV
 const csv = await reportingService.exportToCSV(report.report);
@@ -2186,11 +2444,9 @@ const csv = await reportingService.exportToCSV(report.report);
 await reportingService.saveReport(report.report, 'September 2025 Summary');
 
 // Schedule monthly reports
-await reportingService.scheduleReport(
-  'executive_summary',
-  'monthly',
-  ['leadership@intinc.com']
-);
+await reportingService.scheduleReport('executive_summary', 'monthly', [
+  'leadership@intinc.com',
+]);
 ```
 
 ---
@@ -2239,7 +2495,7 @@ if (!supabase) {
 All timestamps use ISO 8601 format:
 
 ```javascript
-new Date().toISOString()  // "2025-10-16T15:30:45.123Z"
+new Date().toISOString(); // "2025-10-16T15:30:45.123Z"
 ```
 
 ### Configuration
@@ -2267,7 +2523,7 @@ import { saveTriageReport } from './supabaseClient.js';
 const report = await saveTriageReport({
   ...ticketData,
   customerTone: sentiment.sentiment,
-  priority: sentiment.escalationProbability > 70 ? 'high' : 'medium'
+  priority: sentiment.escalationProbability > 70 ? 'high' : 'medium',
 });
 
 // 3. Auto-assign to CSR
@@ -2275,7 +2531,7 @@ import { assignmentEngine } from './assignmentEngine.js';
 const assignment = await assignmentEngine.autoAssign({
   issueDescription: ticketDescription,
   priority: report.priority,
-  reportId: report.reportId
+  reportId: report.reportId,
 });
 
 // 4. Send notifications
@@ -2284,7 +2540,7 @@ await communicationHub.notifyHighPriorityTicket({
   reportId: report.reportId,
   customerName: ticketData.customerName,
   ticketSubject: ticketData.ticketSubject,
-  department: assignment.department
+  department: assignment.department,
 });
 
 // 5. Send email to customer
@@ -2346,14 +2602,14 @@ renderDashboard(stats.data);
 import {
   getTicketVolumeByDay,
   getPriorityDistribution,
-  getCSRPerformanceMetrics
+  getCSRPerformanceMetrics,
 } from './analyticsService.js';
 
 // Load all analytics
 const [volume, priorities, performance] = await Promise.all([
   getTicketVolumeByDay(30),
   getPriorityDistribution(),
-  getCSRPerformanceMetrics()
+  getCSRPerformanceMetrics(),
 ]);
 
 // Render charts
@@ -2383,7 +2639,7 @@ describe('SentimentAnalyzer', () => {
 
   test('detects positive sentiment', () => {
     const result = sentimentAnalyzer.analyze(
-      "Great service! Thank you so much, very helpful!"
+      'Great service! Thank you so much, very helpful!'
     );
 
     expect(result.sentiment).toBe('positive');
@@ -2446,6 +2702,7 @@ const sanitizedQuery = query?.trim().replace(/[%_]/g, '\\$&') || '';
 ### From Version 1.0 to 2.0
 
 1. **Update imports:**
+
    ```javascript
    // Old
    import { supabase } from './src/supabase.js';
@@ -2455,6 +2712,7 @@ const sanitizedQuery = query?.trim().replace(/[%_]/g, '\\$&') || '';
    ```
 
 2. **Update function calls:**
+
    ```javascript
    // Old
    const result = await getCustomerHistory(customerId);
@@ -2479,6 +2737,7 @@ const sanitizedQuery = query?.trim().replace(/[%_]/g, '\\$&') || '';
 **Issue:** `Database not configured` error
 
 **Solution:** Check environment variables are set correctly:
+
 ```bash
 echo $VITE_SUPABASE_URL
 echo $VITE_SUPABASE_ANON_KEY

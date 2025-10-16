@@ -449,7 +449,7 @@ Immediate action required!
         },
       ]);
     } catch (error) {
-      
+      // Silent fail - logging communication failure is non-critical
     }
   }
 
@@ -486,9 +486,6 @@ Immediate action required!
         count: data.length,
       };
     } catch (error) {
-      console.error('Error fetching conversation history:', error.message, {
-        reportId,
-      });
       return { success: false, error: error.message };
     }
   }
@@ -614,9 +611,6 @@ Immediate action required!
 
       return { success: true, data };
     } catch (error) {
-      console.error('Error updating channel preferences:', error.message, {
-        userId,
-      });
       return { success: false, error: error.message };
     }
   }

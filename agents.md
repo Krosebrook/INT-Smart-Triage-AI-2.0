@@ -98,7 +98,7 @@ Modern agentic systems combine reasoning-capable models, dynamic tool chains, an
 
 ## Lifecycle Governance & Owners
 
-- G0 Concept Intake — Product Lead, AI Program Manager (`docs/agent-change-management-playbook.md`).
+- G0 Concept Intake — Product Lead, AI Program Manager (`docs/agent-change-management-playbook.md`, tracker: `docs/agent-governance-owner-acknowledgements.md`).
 - G1 Architecture & Policy Review — AI Architect, Security Architect, Privacy Counsel.
 - G2 Planning & Control Design — AI Architect, Senior SWE.
 - G3 Tooling & Memory Readiness — MLOps Lead, Platform/SRE Lead.

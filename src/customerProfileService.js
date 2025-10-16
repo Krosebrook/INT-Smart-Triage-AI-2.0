@@ -81,9 +81,6 @@ export class CustomerProfileService {
         },
       };
     } catch (error) {
-      console.error('Error fetching customer profile:', error.message, {
-        customerId,
-      });
       return { success: false, error: error.message };
     }
   }
@@ -129,9 +126,6 @@ export class CustomerProfileService {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Error fetching basic profile:', error.message, {
-        customerId,
-      });
       return { success: false, error: error.message };
     }
   }
@@ -161,9 +155,6 @@ export class CustomerProfileService {
 
       return { success: true, data: data || [] };
     } catch (error) {
-      console.error('Error fetching ticket history:', error.message, {
-        customerId,
-      });
       return { success: false, error: error.message };
     }
   }
@@ -474,9 +465,6 @@ export class CustomerProfileService {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Error updating customer profile:', error.message, {
-        customerId,
-      });
       return { success: false, error: error.message };
     }
   }
@@ -519,10 +507,6 @@ export class CustomerProfileService {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Error adding customer note:', error.message, {
-        customerId,
-        csrAgent,
-      });
       return { success: false, error: error.message };
     }
   }

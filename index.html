@@ -565,10 +565,11 @@
           }
       });
 
-      // Helper function to escape HTML and prevent XS              function escapeHtml(text) {
-          const di            ment.createElement('div');
-               iv.textContent = text;
-          return d                ;
+      // Helper function to escape HTML and prevent XSS
+      function escapeHtml(text) {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
       }
 
       function displayTriageResults(result, customerName) {
@@ -598,7 +599,7 @@
                           'Explain the technical steps being taken to resolve the issue',
                           'Provide a realistic timeline for resolution',
                           'Offer additional support resources if needed'
-                      ]).map(point => `<li style="marg            eHtml(point)}</li>`).join('')}
+                      ]).map(point => `<li style="margin-bottom: 5px;">${escapeHtml(point)}</li>`).join('')}
                   </ul>
               </div>
 
@@ -609,7 +610,7 @@
                           'KB-001: Common Technical Issues Troubleshooting',
                           'KB-015: Customer Communication Best Practices',
                           'KB-032: Escalation Procedures'
-                      ]).map(kb => `<li style="margin-            " style="color: #667eea;">${escapeHtml(kb)}</a></li>`).join('')}
+                      ]).map(kb => `<li style="margin-bottom: 5px;"><a href="#" style="color: #667eea;">${escapeHtml(kb)}</a></li>`).join('')}
                   </ul>
               </div>
 
