@@ -1,3 +1,18 @@
+# Check if package-lock.json is in sync with package.json
+echo "🔍 Checking if package-lock.json is in sync with package.json..."
+npm install --package-lock-only --dry-run > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "❌ ERROR: Your package-lock.json is out of sync with package.json!"
+  echo ""
+  echo "Please run the following commands and try again:"
+  echo "  1. rm -rf package-lock.json node_modules"
+  echo "  2. npm install"
+  echo "  3. git add package-lock.json"
+  echo ""
+  exit 1
+fi
+echo "✅ Lockfile is in sync"
+
 # Run lint-staged for code quality checks
 npx --no-install lint-staged || echo "Lint-staged failed, please fix linting errors"
 
