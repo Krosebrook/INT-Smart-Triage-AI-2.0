@@ -199,8 +199,10 @@ export class CommunicationHub {
   /**
    * Send Microsoft Teams notification.
    *
+   * Uses incoming webhook to send adaptive cards to Teams channels.
+   *
    * @async
-   * @param {string} channelId - Teams channel ID
+   * @param {string} channelId - Teams channel ID or webhook URL
    * @param {string} message - Message content
    * @param {Object} [options={}] - Teams options
    * @param {string} [options.title='INT Smart Triage AI'] - Card title
@@ -216,6 +218,7 @@ export class CommunicationHub {
    * });
    */
   async sendTeams(channelId, message, options = {}) {
+    // Build Adaptive Card (MessageCard format for incoming webhooks)
     const card = {
       '@type': 'MessageCard',
       '@context': 'https://schema.org/extensions',
@@ -226,14 +229,72 @@ export class CommunicationHub {
       potentialAction: options.actions || [],
     };
 
-    return {
-      success: true,
-      channel: 'teams',
-      recipient: channelId,
-      card,
-      messageId: this.generateMessageId(),
-      sentAt: new Date().toISOString(),
-    };
+    // Get webhook URL from environment
+    const webhookUrl = process.env.TEAMS_WEBHOOK_URL;
+
+    // If webhook not configured, return mock success (for testing/dev)
+    if (!webhookUrl) {
+      return {
+        success: true,
+        channel: 'teams',
+        recipient: channelId,
+        card,
+        messageId: this.generateMessageId(),
+        sentAt: new Date().toISOString(),
+        note: 'Webhook not configured - mock response',
+      };
+    }
+
+    try {
+      // Send to Teams via webhook
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(card),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Teams webhook error: ${response.status} - ${errorText}`);
+      }
+
+      const messageId = this.generateMessageId();
+
+      // Log communication
+      await this.logCommunication(
+        'teams',
+        channelId,
+        message,
+        'success',
+        options.reportId || null
+      );
+
+      return {
+        success: true,
+        channel: 'teams',
+        recipient: channelId,
+        messageId,
+        sentAt: new Date().toISOString(),
+      };
+    } catch (error) {
+      // Log failed communication
+      await this.logCommunication(
+        'teams',
+        channelId,
+        message,
+        'failed',
+        options.reportId || null
+      );
+
+      return {
+        success: false,
+        channel: 'teams',
+        recipient: channelId,
+        error: error.message,
+      };
+    }
   }
 
   /**

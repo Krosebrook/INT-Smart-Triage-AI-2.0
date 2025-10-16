@@ -1,0 +1,156 @@
+[
+  {
+    "id": "automation-ops",
+    "codename": "Autopilot",
+    "name": "Automation Operations Agent",
+    "mission": "Run scheduled validation, migration, and deployment safeguard tasks without human intervention.",
+    "status": "registered",
+    "owners": ["Platform Engineering"],
+    "interfaces": {
+      "inputs": ["deployment_calendar", "supabase_migrations", "npm_scripts"],
+      "outputs": ["supabase.audit_logs", "slack.ops-automation"]
+    },
+    "activation_notes": "Requires scheduler binding and scoped service key to execute commands.",
+    "verification": "Check nightly automation log in analytics dashboard or run `node scripts/agents-status.js --agent automation-ops`."
+  },
+  {
+    "id": "intake-triage-planner",
+    "codename": "Compass",
+    "name": "Intake Triage Planner",
+    "mission": "Convert raw triage submissions into structured briefs with priority, risk, and success metrics.",
+    "status": "registered",
+    "owners": ["Triage Intelligence"],
+    "interfaces": {
+      "inputs": ["api.triage-report", "personas_catalog", "governance_sops"],
+      "outputs": ["planner_notes", "priority_explanation", "escalation_flags"]
+    },
+    "activation_notes": "Needs prompt package and planner middleware integration to execute autonomously.",
+    "verification": "New tickets should include planner metadata once runtime is wired." 
+  },
+  {
+    "id": "department-router",
+    "codename": "Switchboard",
+    "name": "Department Router Agent",
+    "mission": "Assign the best-fit department and CSR with confidence scores and audit logs.",
+    "status": "registered",
+    "owners": ["Customer Success Ops"],
+    "interfaces": {
+      "inputs": ["planner_output", "csr_availability", "assignment_rules"],
+      "outputs": ["assignment_history", "routing_confidence", "escalation_events"]
+    },
+    "activation_notes": "Embeddings + live workload feed must be connected for autonomous routing.",
+    "verification": "Inspect `assignment_history` for agent-authored entries once enabled."
+  },
+  {
+    "id": "workload-balancer",
+    "codename": "Equilibrium",
+    "name": "Workload Balancer Agent",
+    "mission": "Rebalance queues and escalate before SLA breaches occur.",
+    "status": "registered",
+    "owners": ["Customer Success Ops"],
+    "interfaces": {
+      "inputs": ["analytics_metrics", "sla_policies", "csr_schedules"],
+      "outputs": ["reassignment_actions", "sla_warnings", "ops_alerts"]
+    },
+    "activation_notes": "Requires scheduler + governance approval for automatic reassignments.",
+    "verification": "SLA warning channel should show agent-issued notices once active."
+  },
+  {
+    "id": "knowledge-retrieval",
+    "codename": "Lighthouse",
+    "name": "Knowledge Retrieval Specialist",
+    "mission": "Provide sourced KB snippets for every ticket.",
+    "status": "registered",
+    "owners": ["Knowledge Management"],
+    "interfaces": {
+      "inputs": ["kb_vector_store", "planner_context", "customer_profile"],
+      "outputs": ["ranked_snippets", "citations", "retrieval_latency_metrics"]
+    },
+    "activation_notes": "Vector index and prompt templates must be deployed before serving.",
+    "verification": "Ticket UI should display citations with Lighthouse attribution."
+  },
+  {
+    "id": "sentiment-coach",
+    "codename": "Empathy",
+    "name": "Sentiment Coach Agent",
+    "mission": "Deliver tone-aware coaching notes to frontline responders.",
+    "status": "registered",
+    "owners": ["Customer Success Enablement"],
+    "interfaces": {
+      "inputs": ["detected_sentiment", "persona_guides", "csat_history"],
+      "outputs": ["coaching_snippets", "tone_shift_flags", "learning_feedback"]
+    },
+    "activation_notes": "Requires sentiment stream subscription and CSAT feedback loop integration.",
+    "verification": "UI coaching panel should show Empathy-authored snippets automatically."
+  },
+  {
+    "id": "resolution-drafter",
+    "codename": "Scribe",
+    "name": "Resolution Drafting Agent",
+    "mission": "Draft compliant, channel-ready responses leveraging retrieval context.",
+    "status": "registered",
+    "owners": ["Customer Success Ops"],
+    "interfaces": {
+      "inputs": ["planner_brief", "retrieval_snippets", "tone_guidance"],
+      "outputs": ["channel_drafts", "validation_results", "edit_feedback"]
+    },
+    "activation_notes": "PII scrubber and channel validators must run post-generation prior to dispatch.",
+    "verification": "Queued drafts in Communication Hub tagged with Scribe once live."
+  },
+  {
+    "id": "governance-auditor",
+    "codename": "Sentinel-G",
+    "name": "Governance Auditor Agent",
+    "mission": "Ensure gate deliverables and approvals stay compliant with the change-management playbook.",
+    "status": "registered",
+    "owners": ["Governance Board"],
+    "interfaces": {
+      "inputs": ["gate_artifacts", "git_diffs", "owner_acknowledgements"],
+      "outputs": ["compliance_reports", "blockers", "evidence_snapshots"]
+    },
+    "activation_notes": "Needs policy engine and integration with PR checks to enforce gates.",
+    "verification": "PR CI should fail with Sentinel-G annotations when artifacts missing."
+  },
+  {
+    "id": "customer-memory-curator",
+    "codename": "Archivist",
+    "name": "Customer Memory Curator",
+    "mission": "Maintain and surface evergreen customer context while pruning stale data.",
+    "status": "registered",
+    "owners": ["Customer Intelligence"],
+    "interfaces": {
+      "inputs": ["customer_profiles", "report_notes", "historical_resolutions"],
+      "outputs": ["context_packets", "profile_updates", "dedupe_events"]
+    },
+    "activation_notes": "Must hook into profile service and privacy filters before write access granted.",
+    "verification": "Planner briefs should contain Archivist-sourced context packets."
+  },
+  {
+    "id": "analytics-storyteller",
+    "codename": "Pulse",
+    "name": "Analytics Storyteller Agent",
+    "mission": "Summarize operational health and anomalies for stakeholders.",
+    "status": "registered",
+    "owners": ["Operations Analytics"],
+    "interfaces": {
+      "inputs": ["analytics_time_series", "sla_targets", "deployment_changelog"],
+      "outputs": ["daily_heartbeat", "anomaly_alerts", "exec_summary"]
+    },
+    "activation_notes": "Batch scheduler and dashboard publishing need configuration for automated delivery.",
+    "verification": "Docs/reports directory should refresh daily with Pulse-labeled files."
+  },
+  {
+    "id": "security-compliance-sentinel",
+    "codename": "Aegis",
+    "name": "Security & Compliance Sentinel",
+    "mission": "Monitor for risky actions, halt policy violations, and drive escalations.",
+    "status": "registered",
+    "owners": ["Security & Compliance"],
+    "interfaces": {
+      "inputs": ["ticket_content", "tool_logs", "policy_rules"],
+      "outputs": ["blocked_actions", "escalation_tickets", "audit_trails"]
+    },
+    "activation_notes": "Requires moderation classifiers and approval workflow integration before enforcement.",
+    "verification": "Audit log should show Aegis blocking high risk operations when active."
+  }
+]
