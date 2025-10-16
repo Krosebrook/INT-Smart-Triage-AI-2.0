@@ -170,3 +170,4 @@ async function performHealthCheck() {
         }
 
         return healthData;
+}

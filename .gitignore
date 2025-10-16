@@ -103,3 +103,7 @@ tmp
 # OS generated files
 .DS_Store
 Thumbs.db
+
+
+#Ignore cursor AI rules
+.cursor\rules\codacy.mdc
