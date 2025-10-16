@@ -13,6 +13,7 @@
  */
 
 import { supabase } from './supabaseClient.js';
+import { logger } from './logger.js';
 
 /**
  * Real-time Service for WebSocket-based collaboration and notifications.
@@ -73,7 +74,7 @@ class RealtimeService {
    */
   subscribeToReports(callback) {
     if (!supabase) {
-      console.warn('Supabase not configured - realtime features disabled');
+      logger.warn('Supabase not configured - realtime features disabled');
       return null;
     }
 
@@ -87,7 +88,9 @@ class RealtimeService {
           table: 'reports',
         },
         (payload) => {
-          console.log('Report change detected:', payload.eventType);
+          logger.debug('Report change detected', {
+            eventType: payload.eventType,
+          });
           callback(payload);
         }
       )
@@ -127,7 +130,9 @@ class RealtimeService {
           filter: `report_id=eq.${reportId}`,
         },
         (payload) => {
-          console.log('Note change detected:', payload.eventType);
+          logger.debug('Note change detected', {
+            eventType: payload.eventType,
+          });
           callback(payload);
         }
       )
@@ -163,7 +168,7 @@ class RealtimeService {
    *   console.log(`${key} went offline`);
    * });
    */
-  trackPresence(csrName, status = 'online') {
+  trackPresence(csrName, _status = 'online') {
     if (!supabase) return null;
 
     const presenceChannel = supabase.channel('csr-presence', {
@@ -181,11 +186,11 @@ class RealtimeService {
         this.triggerEvent('presence-update', state);
       })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log(`${key} joined`);
+        logger.debug('CSR joined', { csrName: key });
         this.triggerEvent('presence-join', { key, presences: newPresences });
       })
       .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log(`${key} left`);
+        logger.debug('CSR left', { csrName: key });
         this.triggerEvent('presence-leave', { key, presences: leftPresences });
       })
       .subscribe(async (status) => {

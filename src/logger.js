@@ -107,18 +107,23 @@ function log(level, message, context) {
   const reset = colors.reset;
 
   // Use appropriate console method
+  // eslint-disable-next-line no-console
   switch (level) {
     case LogLevel.ERROR:
+      // eslint-disable-next-line no-console
       console.error(`${color}${formattedMessage}${reset}`);
       break;
     case LogLevel.WARN:
+      // eslint-disable-next-line no-console
       console.warn(`${color}${formattedMessage}${reset}`);
       break;
     case LogLevel.INFO:
+      // eslint-disable-next-line no-console
       console.info(`${color}${formattedMessage}${reset}`);
       break;
     case LogLevel.DEBUG:
     default:
+      // eslint-disable-next-line no-console
       console.log(`${color}${formattedMessage}${reset}`);
       break;
   }

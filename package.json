@@ -17,6 +17,8 @@
     "test:coverage": "c8 --reporter=text --reporter=html --reporter=lcov node --test test/*.test.js",
     "test:coverage-check": "c8 --check-coverage --lines 70 --functions 70 --branches 70 node --test test/*.test.js",
     "validate": "npm run format:check && npm run lint && npm test && npm run build",
+    "validate:env": "node scripts/validate-env.js",
+    "predeploy": "npm run validate:env",
     "prepare": "husky"
   },
   "dependencies": {
@@ -56,5 +58,14 @@
       "dist/**"
     ],
     "all": true
+  },
+  "lint-staged": {
+    "*.{js,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,html,css}": [
+      "prettier --write"
+    ]
   }
 }

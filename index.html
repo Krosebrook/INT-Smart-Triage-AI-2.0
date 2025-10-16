@@ -341,115 +341,228 @@
 
       // Client-side triage logic for bolt.new compatibility
       function processTriageRequest(ticketData) {
-          const { issueDescription, customerTone, ticketSubject, customerName } = ticketData;
-          let priority = 'medium';
-          let confidence = 75;
-          let category = 'general';
-          let department = 'Technology';
+        const { issueDescription, customerTone, ticketSubject, customerName } =
+          ticketData;
+        let priority = 'medium';
+        let confidence = 75;
+        let category = 'general';
+        let department = 'Technology';
 
-          const highPriorityKeywords = ['down', 'outage', 'critical', 'urgent', 'broken', 'not working', 'crashed', 'hack', 'breach', 'security', 'data loss'];
-          const infoSecKeywords = ['security', 'compliance', 'soc2', 'gdpr', 'cyber', 'breach', 'vulnerability', 'insurance', 'audit'];
-          const techKeywords = ['server', 'network', 'email', 'cloud', 'backup', 'it', 'computer', 'software', 'saas', 'migration'];
-          const webKeywords = ['website', 'web design', 'ecommerce', 'shopify', 'wordpress', 'landing page', 'hosting'];
-          const brandKeywords = ['logo', 'brand', 'identity', 'design', 'visual', 'color', 'typography'];
-          const contentKeywords = ['content', 'writing', 'seo', 'blog', 'copy', 'ebook', 'article'];
-          const marketingKeywords = ['marketing', 'hubspot', 'crm', 'automation', 'campaign', 'email marketing'];
-          const operationsKeywords = ['bookkeeping', 'accounting', 'process', 'workflow', 'ai', 'bi', 'analytics'];
+        const highPriorityKeywords = [
+          'down',
+          'outage',
+          'critical',
+          'urgent',
+          'broken',
+          'not working',
+          'crashed',
+          'hack',
+          'breach',
+          'security',
+          'data loss',
+        ];
+        const infoSecKeywords = [
+          'security',
+          'compliance',
+          'soc2',
+          'gdpr',
+          'cyber',
+          'breach',
+          'vulnerability',
+          'insurance',
+          'audit',
+        ];
+        const techKeywords = [
+          'server',
+          'network',
+          'email',
+          'cloud',
+          'backup',
+          'it',
+          'computer',
+          'software',
+          'saas',
+          'migration',
+        ];
+        const webKeywords = [
+          'website',
+          'web design',
+          'ecommerce',
+          'shopify',
+          'wordpress',
+          'landing page',
+          'hosting',
+        ];
+        const brandKeywords = [
+          'logo',
+          'brand',
+          'identity',
+          'design',
+          'visual',
+          'color',
+          'typography',
+        ];
+        const contentKeywords = [
+          'content',
+          'writing',
+          'seo',
+          'blog',
+          'copy',
+          'ebook',
+          'article',
+        ];
+        const marketingKeywords = [
+          'marketing',
+          'hubspot',
+          'crm',
+          'automation',
+          'campaign',
+          'email marketing',
+        ];
+        const operationsKeywords = [
+          'bookkeeping',
+          'accounting',
+          'process',
+          'workflow',
+          'ai',
+          'bi',
+          'analytics',
+        ];
 
-          const description = issueDescription.toLowerCase();
-          const subject = ticketSubject.toLowerCase();
-          const fullText = `${description} ${subject}`;
+        const description = issueDescription.toLowerCase();
+        const subject = ticketSubject.toLowerCase();
+        const fullText = `${description} ${subject}`;
 
-          // Determine priority
-          if (highPriorityKeywords.some(kw => fullText.includes(kw)) || customerTone === 'angry' || customerTone === 'urgent') {
-              priority = 'high';
-              confidence = 90;
-          } else if (customerTone === 'calm' && fullText.includes('question')) {
-              priority = 'low';
-              confidence = 85;
-          }
+        // Determine priority
+        if (
+          highPriorityKeywords.some((kw) => fullText.includes(kw)) ||
+          customerTone === 'angry' ||
+          customerTone === 'urgent'
+        ) {
+          priority = 'high';
+          confidence = 90;
+        } else if (customerTone === 'calm' && fullText.includes('question')) {
+          priority = 'low';
+          confidence = 85;
+        }
 
-          // Determine department
-          if (infoSecKeywords.some(kw => fullText.includes(kw))) { department = 'Information Security'; category = 'security'; }
-          else if (techKeywords.some(kw => fullText.includes(kw))) { department = 'Technology'; category = 'technical'; }
-          else if (webKeywords.some(kw => fullText.includes(kw))) { department = 'Website Design'; category = 'web_design'; }
-          else if (brandKeywords.some(kw => fullText.includes(kw))) { department = 'Branding'; category = 'branding'; }
-          else if (contentKeywords.some(kw => fullText.includes(kw))) { department = 'Content'; category = 'content'; }
-          else if (marketingKeywords.some(kw => fullText.includes(kw))) { department = 'Marketing'; category = 'marketing'; }
-          else if (operationsKeywords.some(kw => fullText.includes(kw))) { department = 'Operations'; category = 'operations'; }
+        // Determine department
+        if (infoSecKeywords.some((kw) => fullText.includes(kw))) {
+          department = 'Information Security';
+          category = 'security';
+        } else if (techKeywords.some((kw) => fullText.includes(kw))) {
+          department = 'Technology';
+          category = 'technical';
+        } else if (webKeywords.some((kw) => fullText.includes(kw))) {
+          department = 'Website Design';
+          category = 'web_design';
+        } else if (brandKeywords.some((kw) => fullText.includes(kw))) {
+          department = 'Branding';
+          category = 'branding';
+        } else if (contentKeywords.some((kw) => fullText.includes(kw))) {
+          department = 'Content';
+          category = 'content';
+        } else if (marketingKeywords.some((kw) => fullText.includes(kw))) {
+          department = 'Marketing';
+          category = 'marketing';
+        } else if (operationsKeywords.some((kw) => fullText.includes(kw))) {
+          department = 'Operations';
+          category = 'operations';
+        }
 
-          const talkingPoints = [
-              `Thank you for reaching out to INT Inc. We're here to help.`,
-              `This is ${priority} priority and we'll treat it as such.`,
-              `Our ${department} team will assist you.`,
-              customerTone === 'angry' ? 'I sincerely apologize for any inconvenience.' : 'We appreciate your patience.'
-          ];
+        const talkingPoints = [
+          `Thank you for reaching out to INT Inc. We're here to help.`,
+          `This is ${priority} priority and we'll treat it as such.`,
+          `Our ${department} team will assist you.`,
+          customerTone === 'angry'
+            ? 'I sincerely apologize for any inconvenience.'
+            : 'We appreciate your patience.',
+        ];
 
-          const knowledgeBase = category === 'security'
-              ? ['KB-SEC-001: SOC2 Compliance Overview', 'KB-SEC-003: Cyber Insurance', 'KB-SEC-005: Vulnerability Assessment']
-              : category === 'technical'
-              ? ['KB-TECH-001: Managed IT Services', 'KB-TECH-004: Email Migration', 'KB-TECH-008: SaaS Migration']
-              : [`KB-${category.toUpperCase()}-001: Getting Started`, `KB-${category.toUpperCase()}-002: Best Practices`];
+        const knowledgeBase =
+          category === 'security'
+            ? [
+                'KB-SEC-001: SOC2 Compliance Overview',
+                'KB-SEC-003: Cyber Insurance',
+                'KB-SEC-005: Vulnerability Assessment',
+              ]
+            : category === 'technical'
+              ? [
+                  'KB-TECH-001: Managed IT Services',
+                  'KB-TECH-004: Email Migration',
+                  'KB-TECH-008: SaaS Migration',
+                ]
+              : [
+                  `KB-${category.toUpperCase()}-001: Getting Started`,
+                  `KB-${category.toUpperCase()}-002: Best Practices`,
+                ];
 
-          return {
-              success: true,
-              priority,
-              confidence: `${confidence}%`,
-              department,
-              responseApproach: `${department} will address this ${priority} priority issue with ${customerTone} customer approach.`,
-              talkingPoints,
-              knowledgeBase,
-              reportId: `TR-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-              timestamp: new Date().toISOString()
-          };
+        return {
+          success: true,
+          priority,
+          confidence: `${confidence}%`,
+          department,
+          responseApproach: `${department} will address this ${priority} priority issue with ${customerTone} customer approach.`,
+          talkingPoints,
+          knowledgeBase,
+          reportId: `TR-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+          timestamp: new Date().toISOString(),
+        };
       }
 
       // Check system health on page load
-      document.addEventListener('DOMContentLoaded', function() {
-          checkSystemHealth();
-          initializeAdvancedFeatures();
+      document.addEventListener('DOMContentLoaded', function () {
+        checkSystemHealth();
+        initializeAdvancedFeatures();
       });
 
       function initializeAdvancedFeatures() {
-          // Initialize real-time presence tracking
-          const csrName = 'CSR_USER'; // In production, get from auth
-          realtimeService.trackPresence(csrName, 'online');
+        // Initialize real-time presence tracking
+        const csrName = 'CSR_USER'; // In production, get from auth
+        realtimeService.trackPresence(csrName, 'online');
 
-          // Subscribe to real-time ticket updates
-          realtimeService.subscribeToReports((change) => {
-              console.log('Real-time ticket update:', change);
-              showNotification('Ticket updated in real-time!');
-          });
+        // Subscribe to real-time ticket updates
+        realtimeService.subscribeToReports((change) => {
+          console.log('Real-time ticket update:', change);
+          showNotification('Ticket updated in real-time!');
+        });
 
-          // Register service worker for PWA
-          if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/public/sw.js')
-                  .then(reg => console.log('Service Worker registered:', reg))
-                  .catch(err => console.log('Service Worker registration failed:', err));
-          }
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker
+            .register('/public/sw.js')
+            .then((reg) => console.log('Service Worker registered:', reg))
+            .catch((err) =>
+              console.log('Service Worker registration failed:', err)
+            );
+        }
       }
 
       function showNotification(message) {
-          if ('Notification' in window && Notification.permission === 'granted') {
-              new Notification('INT Smart Triage AI', { body: message });
-          }
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('INT Smart Triage AI', { body: message });
+        }
       }
 
       async function checkSystemHealth() {
-          const statusIndicator = document.getElementById('statusIndicator');
+        const statusIndicator = document.getElementById('statusIndicator');
 
-          try {
-              // Client-side check - always shows online on bolt.new
-              // In production, this would call /api/health-check
-              statusIndicator.innerHTML = '<span class="status-online">● System Online (Client Mode)</span>';
-          } catch (error) {
-              console.error('Health check failed:', error);
-              statusIndicator.innerHTML = '<span class="status-offline">● System Offline</span>';
-          }
+        try {
+          // Client-side check - always shows online on bolt.new
+          // In production, this would call /api/health-check
+          statusIndicator.innerHTML =
+            '<span class="status-online">● System Online (Client Mode)</span>';
+        } catch (error) {
+          console.error('Health check failed:', error);
+          statusIndicator.innerHTML =
+            '<span class="status-offline">● System Offline</span>';
+        }
       }
 
       // Handle form submission
-      document.getElementById('triageForm').addEventListener('submit', async function(e) {
+      document
+        .getElementById('triageForm')
+        .addEventListener('submit', async function (e) {
           e.preventDefault();
 
           const submitBtn = document.getElementById('submitBtn');
@@ -466,119 +579,119 @@
           // Collect form data
           const formData = new FormData(e.target);
           const triageData = {
-              customerName: formData.get('customerName'),
-              ticketSubject: formData.get('ticketSubject'),
-              issueDescription: formData.get('issueDescription'),
-              customerTone: formData.get('customerTone'),
-              timestamp: new Date().toISOString(),
-              csrAgent: 'CSR_USER' // In production, this would be dynamic
+            customerName: formData.get('customerName'),
+            ticketSubject: formData.get('ticketSubject'),
+            issueDescription: formData.get('issueDescription'),
+            customerTone: formData.get('customerTone'),
+            timestamp: new Date().toISOString(),
+            csrAgent: 'CSR_USER', // In production, this would be dynamic
           };
 
           try {
-              // Use client-side triage logic (works on bolt.new without API)
-              const result = processTriageRequest(triageData);
+            // Use client-side triage logic (works on bolt.new without API)
+            const result = processTriageRequest(triageData);
 
-              // Perform sentiment analysis
-              const sentimentResult = sentimentAnalyzer.analyze(
-                  triageData.issueDescription,
-                  triageData.customerTone
-              );
-              result.sentiment = sentimentResult;
-              result.escalationRisk = sentimentResult.escalationProbability;
+            // Perform sentiment analysis
+            const sentimentResult = sentimentAnalyzer.analyze(
+              triageData.issueDescription,
+              triageData.customerTone
+            );
+            result.sentiment = sentimentResult;
+            result.escalationRisk = sentimentResult.escalationProbability;
 
-              // Auto-assign ticket
-              const assignment = await assignmentEngine.autoAssign({
+            // Auto-assign ticket
+            const assignment = await assignmentEngine.autoAssign({
+              reportId: result.reportId,
+              priority: result.priority,
+              issueDescription: triageData.issueDescription,
+              department: result.department,
+            });
+            if (assignment.success) {
+              result.assignedTo = assignment.assignedTo;
+              result.estimatedResponseTime = assignment.estimatedResponseTime;
+            }
+
+            // Simulate processing delay for realistic UX
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+
+            // Save to Supabase database
+            const saveResult = await saveTriageReport({
+              ...result,
+              ...triageData,
+            });
+
+            if (saveResult.success) {
+              console.log('Report saved to database:', saveResult.data);
+
+              // Send confirmation email
+              const emailResult = await emailService.sendTicketConfirmation({
+                customerName: triageData.customerName,
+                customerEmail:
+                  triageData.customerEmail || 'customer@example.com',
+                reportId: result.reportId,
+                priority: result.priority,
+                department: result.department,
+                ticketSubject: triageData.ticketSubject,
+                csrAgent: triageData.csrAgent,
+              });
+              console.log('Email confirmation sent:', emailResult);
+
+              // Notify via communication hub for high priority
+              if (result.priority === 'high') {
+                await communicationHub.notifyHighPriorityTicket({
                   reportId: result.reportId,
-                  priority: result.priority,
-                  issueDescription: triageData.issueDescription,
-                  department: result.department
-              });
-              if (assignment.success) {
-                  result.assignedTo = assignment.assignedTo;
-                  result.estimatedResponseTime = assignment.estimatedResponseTime;
+                  customerName: triageData.customerName,
+                  ticketSubject: triageData.ticketSubject,
+                  department: result.department,
+                });
               }
 
-              // Simulate processing delay for realistic UX
-              await new Promise(resolve => setTimeout(resolve, 1500));
-
-              // Save to Supabase database
-              const saveResult = await saveTriageReport({
-                  ...result,
-                  ...triageData
+              // Broadcast to team via real-time
+              realtimeService.broadcastTicketActivity(result.reportId, {
+                action: 'created',
+                priority: result.priority,
+                assignedTo: result.assignedTo,
               });
+            } else {
+              console.warn('Failed to save to database:', saveResult.error);
+            }
 
-              if (saveResult.success) {
-                  console.log('Report saved to database:', saveResult.data);
-
-                  // Send confirmation email
-                  const emailResult = await emailService.sendTicketConfirmation({
-                      customerName: triageData.customerName,
-                      customerEmail: triageData.customerEmail || 'customer@example.com',
-                      reportId: result.reportId,
-                      priority: result.priority,
-                      department: result.department,
-                      ticketSubject: triageData.ticketSubject,
-                      csrAgent: triageData.csrAgent
-                  });
-                  console.log('Email confirmation sent:', emailResult);
-
-                  // Notify via communication hub for high priority
-                  if (result.priority === 'high') {
-                      await communicationHub.notifyHighPriorityTicket({
-                          reportId: result.reportId,
-                          customerName: triageData.customerName,
-                          ticketSubject: triageData.ticketSubject,
-                          department: result.department
-                      });
-                  }
-
-                  // Broadcast to team via real-time
-                  realtimeService.broadcastTicketActivity(result.reportId, {
-                      action: 'created',
-                      priority: result.priority,
-                      assignedTo: result.assignedTo
-                  });
-              } else {
-                  console.warn('Failed to save to database:', saveResult.error);
-              }
-
-              // Display results
-              displayTriageResults(result, triageData.customerName);
-              resultsSection.classList.add('show');
-              resultsSection.scrollIntoView({ behavior: 'smooth' });
-
+            // Display results
+            displayTriageResults(result, triageData.customerName);
+            resultsSection.classList.add('show');
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
           } catch (error) {
-              console.error('Error submitting triage request:', error);
-              triageResults.innerHTML = `
+            console.error('Error submitting triage request:', error);
+            triageResults.innerHTML = `
                   <div class="result-card" style="border-left-color: #e74c3c;">
                       <h3>Error Processing Request</h3>
                       <p>There was an error processing your triage request. Please try again or contact system administrator.</p>
                       <p><strong>Error:</strong> ${error.message}</p>
                   </div>
               `;
-              resultsSection.classList.add('show');
+            resultsSection.classList.add('show');
           } finally {
-              // Reset button state
-              btnText.textContent = 'Analyze & Triage Ticket';
-              loading.style.display = 'none';
-              submitBtn.disabled = false;
+            // Reset button state
+            btnText.textContent = 'Analyze & Triage Ticket';
+            loading.style.display = 'none';
+            submitBtn.disabled = false;
           }
-      });
+        });
 
       // Helper function to escape HTML and prevent XSS
       function escapeHtml(text) {
-          const div = document.createElement('div');
-          div.textContent = text;
-          return div.innerHTML;
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
       }
 
       function displayTriageResults(result, customerName) {
-          const triageResults = document.getElementById('triageResults');
-          const priority = result.priority || 'medium';
-          const safeCustomerName = escapeHtml(customerName);
-          const safeReportId = escapeHtml(result.reportId || 'N/A');
+        const triageResults = document.getElementById('triageResults');
+        const priority = result.priority || 'medium';
+        const safeCustomerName = escapeHtml(customerName);
+        const safeReportId = escapeHtml(result.reportId || 'N/A');
 
-          triageResults.innerHTML = `
+        triageResults.innerHTML = `
               <div class="result-card">
                   <h3>Triage Priority</h3>
                   <span class="priority-badge priority-${priority}">${priority.toUpperCase()} PRIORITY</span>
@@ -594,23 +707,37 @@
               <div class="result-card">
                   <h3>Suggested Talking Points</h3>
                   <ul style="margin-left: 20px; margin-top: 10px;">
-                      ${(result.talkingPoints || [
-                          'Acknowledge the customer\'s concern with empathy',
+                      ${(
+                        result.talkingPoints || [
+                          "Acknowledge the customer's concern with empathy",
                           'Explain the technical steps being taken to resolve the issue',
                           'Provide a realistic timeline for resolution',
-                          'Offer additional support resources if needed'
-                      ]).map(point => `<li style="margin-bottom: 5px;">${escapeHtml(point)}</li>`).join('')}
+                          'Offer additional support resources if needed',
+                        ]
+                      )
+                        .map(
+                          (point) =>
+                            `<li style="margin-bottom: 5px;">${escapeHtml(point)}</li>`
+                        )
+                        .join('')}
                   </ul>
               </div>
 
               <div class="result-card">
                   <h3>Knowledge Base Articles</h3>
                   <ul style="margin-left: 20px; margin-top: 10px;">
-                      ${(result.knowledgeBase || [
+                      ${(
+                        result.knowledgeBase || [
                           'KB-001: Common Technical Issues Troubleshooting',
                           'KB-015: Customer Communication Best Practices',
-                          'KB-032: Escalation Procedures'
-                      ]).map(kb => `<li style="margin-bottom: 5px;"><a href="#" style="color: #667eea;">${escapeHtml(kb)}</a></li>`).join('')}
+                          'KB-032: Escalation Procedures',
+                        ]
+                      )
+                        .map(
+                          (kb) =>
+                            `<li style="margin-bottom: 5px;"><a href="#" style="color: #667eea;">${escapeHtml(kb)}</a></li>`
+                        )
+                        .join('')}
                   </ul>
               </div>
 

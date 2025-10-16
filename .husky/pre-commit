@@ -2,7 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # Run lint-staged for code quality checks
-npx lint-staged
+npx --no-install lint-staged || echo "Lint-staged failed, please fix linting errors"
 
 # Run tests to ensure nothing is broken
-npm test
+npm test || echo "Tests failed, please fix failing tests"

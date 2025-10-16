@@ -385,6 +385,7 @@ async getAvailableCSRs(department = null, priority = 'medium') {
 - Keyword extraction algorithm detailed
 
 **Key Features Documented:**
+
 - Full-text search with keyword indexing
 - Semantic matching using synonym dictionary
 - Related article suggestions
@@ -400,6 +401,7 @@ async getAvailableCSRs(department = null, priority = 'medium') {
 - Channel management documented
 
 **Key Features Documented:**
+
 - Real-time report updates
 - Live note collaboration
 - CSR presence/availability tracking

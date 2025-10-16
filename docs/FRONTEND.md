@@ -205,7 +205,7 @@ if (password !== confirmPassword) {
 
 ```javascript
 async function mockTriageAPI(payload) {
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   return {
     success: true,
@@ -215,7 +215,7 @@ async function mockTriageAPI(payload) {
     sentiment: determineMockSentiment(payload.ticket),
     suggested_response: generateMockResponse(payload),
     kb_articles: findRelevantKBArticles(payload.domain),
-    processing_time_ms: Math.floor(Math.random() * 500) + 100
+    processing_time_ms: Math.floor(Math.random() * 500) + 100,
   };
 }
 ```
@@ -265,11 +265,13 @@ new Chart(document.getElementById('priorityChart'), {
   type: 'doughnut',
   data: {
     labels: ['High', 'Medium', 'Low'],
-    datasets: [{
-      data: [highCount, mediumCount, lowCount],
-      backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
-    }]
-  }
+    datasets: [
+      {
+        data: [highCount, mediumCount, lowCount],
+        backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+      },
+    ],
+  },
 });
 ```
 
@@ -307,17 +309,17 @@ import {
   getDepartmentWorkload,
   getCSRPerformanceMetrics,
   getResponseTimeAnalysis,
-  exportAnalyticsData
+  exportAnalyticsData,
 } from '/src/analyticsService.js';
 ```
 
 #### Export Functionality
 
 ```javascript
-window.exportData = async function(format) {
+window.exportData = async function (format) {
   const filters = {
     priority: document.getElementById('priorityFilter').value,
-    department: document.getElementById('departmentFilter').value
+    department: document.getElementById('departmentFilter').value,
   };
 
   const result = await exportAnalyticsData(format, filters);
@@ -370,7 +372,7 @@ async function handleSearch(e) {
   const result = await searchReports(query, {
     priority: priority || undefined,
     customerTone: tone || undefined,
-    assignedTo: assigned || undefined
+    assignedTo: assigned || undefined,
   });
 
   displayReports(result.data);
@@ -380,13 +382,31 @@ async function handleSearch(e) {
 #### Badge System
 
 ```css
-.priority-high { background: #fee2e2; color: #dc2626; }
-.priority-medium { background: #fef3c7; color: #d97706; }
-.priority-low { background: #d1fae5; color: #059669; }
+.priority-high {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.priority-medium {
+  background: #fef3c7;
+  color: #d97706;
+}
+.priority-low {
+  background: #d1fae5;
+  color: #059669;
+}
 
-.tone-angry { background: #fecaca; color: #991b1b; }
-.tone-urgent { background: #fed7aa; color: #c2410c; }
-.tone-calm { background: #bfdbfe; color: #1e40af; }
+.tone-angry {
+  background: #fecaca;
+  color: #991b1b;
+}
+.tone-urgent {
+  background: #fed7aa;
+  color: #c2410c;
+}
+.tone-calm {
+  background: #bfdbfe;
+  color: #1e40af;
+}
 ```
 
 ---
@@ -414,16 +434,15 @@ function handleSearch() {
   let filtered = allArticles;
 
   if (currentCategory !== 'all') {
-    filtered = filtered.filter(a => a.category === currentCategory);
+    filtered = filtered.filter((a) => a.category === currentCategory);
   }
 
   if (query) {
-    filtered = filtered.filter(a =>
-      a.title.toLowerCase().includes(query) ||
-      a.content.toLowerCase().includes(query) ||
-      (a.keywords && a.keywords.some(k =>
-        k.toLowerCase().includes(query)
-      ))
+    filtered = filtered.filter(
+      (a) =>
+        a.title.toLowerCase().includes(query) ||
+        a.content.toLowerCase().includes(query) ||
+        (a.keywords && a.keywords.some((k) => k.toLowerCase().includes(query)))
     );
   }
 
@@ -485,7 +504,7 @@ function handleSearch() {
 async function updateStatusButtons(currentStatus) {
   const buttons = document.querySelectorAll('.status-btn');
 
-  buttons.forEach(btn => {
+  buttons.forEach((btn) => {
     btn.onclick = async () => {
       const newStatus = btn.dataset.status;
       const result = await updateReportStatus(reportId, newStatus);
@@ -524,7 +543,9 @@ async function loadNotes() {
     return;
   }
 
-  notesList.innerHTML = result.data.map(note => `
+  notesList.innerHTML = result.data
+    .map(
+      (note) => `
     <div class="note-item">
       <div class="note-header">
         <span class="note-author">${note.csr_agent}</span>
@@ -533,7 +554,9 @@ async function loadNotes() {
       </div>
       <div class="note-text">${escapeHtml(note.note_text)}</div>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 }
 ```
 
@@ -553,6 +576,7 @@ export function processTriageRequest(ticketData)
 ```
 
 **Parameters:**
+
 - `ticketData` (object):
   - `issueDescription` (string)
   - `customerTone` (string)
@@ -560,6 +584,7 @@ export function processTriageRequest(ticketData)
   - `customerName` (string)
 
 **Returns:**
+
 - `success` (boolean)
 - `priority` (string: high/medium/low)
 - `confidence` (string percentage)
@@ -575,43 +600,50 @@ export function processTriageRequest(ticketData)
 #### Priority Determination
 
 **High Priority Triggers:**
+
 - Keywords: down, outage, critical, urgent, broken, not working, crashed, hack, breach, security, data loss
 - Customer tone: angry, urgent
 
 **Medium Priority:**
+
 - Keywords: slow, issue, problem, error, bug, migration, update
 
 **Low Priority:**
+
 - Keywords: question, help, how to, feature, enhancement, inquiry
 - Customer tone: calm
 
 #### Department Routing
 
-| Department | Keywords |
-|------------|----------|
+| Department           | Keywords                                                                         |
+| -------------------- | -------------------------------------------------------------------------------- |
 | Information Security | security, compliance, soc2, gdpr, cyber, breach, vulnerability, insurance, audit |
-| Technology | server, network, email, cloud, backup, it, computer, software, saas, migration |
-| Website Design | website, web design, ecommerce, shopify, wordpress, landing page, hosting |
-| Branding | logo, brand, identity, design, visual, color, typography |
-| Content | content, writing, seo, blog, copy, ebook, article |
-| Marketing | marketing, hubspot, crm, automation, campaign, email marketing |
-| Operations | bookkeeping, accounting, process, workflow, ai, bi, analytics |
+| Technology           | server, network, email, cloud, backup, it, computer, software, saas, migration   |
+| Website Design       | website, web design, ecommerce, shopify, wordpress, landing page, hosting        |
+| Branding             | logo, brand, identity, design, visual, color, typography                         |
+| Content              | content, writing, seo, blog, copy, ebook, article                                |
+| Marketing            | marketing, hubspot, crm, automation, campaign, email marketing                   |
+| Operations           | bookkeeping, accounting, process, workflow, ai, bi, analytics                    |
 
 #### Helper Functions
 
 **generateResponseApproach(tone, priority, department)**
+
 - Returns customized response strategy based on customer tone
 - Adds escalation notes for high priority
 
 **generateTalkingPoints(tone, priority, category)**
+
 - Combines base talking points with category-specific points
 - Adds empathy points based on customer tone
 
 **generateKBArticles(category, priority)**
+
 - Returns 3-4 relevant KB articles
 - More articles for high priority tickets
 
 **estimateResolutionTime(priority)**
+
 - High: 1-4 hours
 - Medium: 4-24 hours
 - Low: 1-3 business days
@@ -624,8 +656,9 @@ import { processTriageRequest } from '/public/triage.js';
 const result = processTriageRequest({
   customerName: 'John Doe',
   ticketSubject: 'Email server down',
-  issueDescription: 'Our company email server is not working since this morning. This is critical.',
-  customerTone: 'urgent'
+  issueDescription:
+    'Our company email server is not working since this morning. This is critical.',
+  customerTone: 'urgent',
 });
 
 console.log(result.priority); // 'high'
@@ -643,17 +676,20 @@ console.log(result.confidence); // '90%'
 #### Functions
 
 **initTheme()**
+
 - Loads saved theme from localStorage
 - Defaults to 'light' if no preference
 - Updates DOM data-theme attribute
 - Updates theme icon
 
 **toggleTheme()**
+
 - Switches between dark and light modes
 - Saves preference to localStorage
 - Updates icon (🌙 for light mode, ☀️ for dark mode)
 
 **updateThemeIcon(theme)**
+
 - Internal helper to update button icon
 
 #### Implementation
@@ -723,6 +759,7 @@ window.toggleTheme = toggleTheme;
 **showNotification(message, type, duration)**
 
 **Parameters:**
+
 - `message` (string) - Notification text
 - `type` (string) - success, error, warning, info (default: success)
 - `duration` (number) - Display time in ms (default: 5000)
@@ -735,12 +772,12 @@ window.toggleTheme = toggleTheme;
 
 #### Notification Types
 
-| Type | Color | Icon |
-|------|-------|------|
-| success | Green (#10b981) | ✓ |
-| error | Red (#ef4444) | ✕ |
-| warning | Orange (#f59e0b) | ⚠ |
-| info | Blue (#3b82f6) | ℹ |
+| Type    | Color            | Icon |
+| ------- | ---------------- | ---- |
+| success | Green (#10b981)  | ✓    |
+| error   | Red (#ef4444)    | ✕    |
+| warning | Orange (#f59e0b) | ⚠   |
+| info    | Blue (#3b82f6)   | ℹ   |
 
 #### Helper Functions
 
@@ -760,7 +797,11 @@ window.toggleTheme = toggleTheme;
 #### Usage Example
 
 ```javascript
-import { showNotification, showSuccess, showError } from '/public/notifications.js';
+import {
+  showNotification,
+  showSuccess,
+  showError,
+} from '/public/notifications.js';
 
 // Standard notification
 showNotification('Report saved successfully!', 'success', 3000);
@@ -813,6 +854,7 @@ function displayNextNotification() {
 #### Core Function
 
 **initOnboarding()**
+
 - Checks if onboarding already completed (localStorage)
 - Only shows on main dashboard (/ or /index.html)
 - Waits 1 second before displaying
@@ -834,7 +876,7 @@ const steps = [
     title: 'Create Triage Reports',
     description: 'Fill out this form to log customer issues...',
     element: '.triage-form',
-    position: 'bottom'
+    position: 'bottom',
   },
   // ...
 ];
@@ -886,18 +928,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 #### Supported Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| Ctrl+K | Focus search input |
-| Ctrl+N | Navigate to new triage (/) |
-| Ctrl+H | Navigate to client history |
-| Ctrl+B | Navigate to knowledge base |
-| Ctrl+/ | Show shortcuts help modal |
-| Esc | Close all modals |
+| Shortcut | Action                     |
+| -------- | -------------------------- |
+| Ctrl+K   | Focus search input         |
+| Ctrl+N   | Navigate to new triage (/) |
+| Ctrl+H   | Navigate to client history |
+| Ctrl+B   | Navigate to knowledge base |
+| Ctrl+/   | Show shortcuts help modal  |
+| Esc      | Close all modals           |
 
 #### Core Function
 
 **initKeyboardShortcuts()**
+
 - Attaches global keydown listener
 - Prevents default browser actions
 - Supports both Ctrl and Cmd (Mac)
@@ -966,12 +1009,14 @@ initKeyboardShortcuts();
 #### Cache Strategy
 
 **Static Cache (CACHE_NAME: 'int-triage-v1.0.0')**
+
 - HTML pages
 - CSS files
 - JavaScript modules
 - Data files (kb.json, personas.json)
 
 **Runtime Cache (RUNTIME_CACHE)**
+
 - Dynamically cached resources
 - API responses
 - User-generated content
@@ -979,6 +1024,7 @@ initKeyboardShortcuts();
 #### Caching Strategies
 
 **Cache-First (Local Resources)**
+
 ```javascript
 async function cacheFirst(request) {
   const cached = await caches.match(request);
@@ -994,6 +1040,7 @@ async function cacheFirst(request) {
 ```
 
 **Network-First (External Resources)**
+
 ```javascript
 async function networkFirst(request) {
   try {
@@ -1014,14 +1061,17 @@ async function networkFirst(request) {
 #### Lifecycle Events
 
 **Install**
+
 - Pre-caches static assets
 - Calls skipWaiting() for immediate activation
 
 **Activate**
+
 - Removes old caches
 - Claims all clients immediately
 
 **Fetch**
+
 - Intercepts network requests
 - Routes to appropriate cache strategy
 - Only processes GET requests
@@ -1039,19 +1089,18 @@ self.addEventListener('push', (event) => {
     requireInteraction: data.priority === 'high',
     actions: [
       { action: 'view', title: 'View' },
-      { action: 'dismiss', title: 'Dismiss' }
-    ]
+      { action: 'dismiss', title: 'Dismiss' },
+    ],
   };
 
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });
 ```
 
 #### Background Sync
 
 **Sync Event (sync-reports)**
+
 - Retries failed API requests
 - Syncs offline-created reports
 - Cleans up cache after successful sync
@@ -1065,9 +1114,10 @@ self.addEventListener('push', (event) => {
 
 ```javascript
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/public/sw.js')
-    .then(reg => console.log('Service Worker registered'))
-    .catch(err => console.error('Registration failed:', err));
+  navigator.serviceWorker
+    .register('/public/sw.js')
+    .then((reg) => console.log('Service Worker registered'))
+    .catch((err) => console.error('Registration failed:', err));
 }
 ```
 
@@ -1083,6 +1133,7 @@ if ('serviceWorker' in navigator) {
 #### CSS Variables
 
 **Light Theme (:root)**
+
 ```css
 :root {
   --bg-primary: #ffffff;
@@ -1102,6 +1153,7 @@ if ('serviceWorker' in navigator) {
 ```
 
 **Dark Theme ([data-theme='dark'])**
+
 ```css
 [data-theme='dark'] {
   --bg-primary: #1a202c;
@@ -1126,9 +1178,10 @@ All color/background transitions animate:
 
 ```css
 * {
-  transition: background-color 0.3s ease,
-              color 0.3s ease,
-              border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 ```
 
@@ -1151,8 +1204,9 @@ All color/background transitions animate:
   font-size: 24px;
   box-shadow: 0 4px 12px var(--shadow);
   z-index: 1000;
-  transition: transform 0.2s ease,
-              box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .theme-toggle:hover {
@@ -1164,9 +1218,11 @@ All color/background transitions animate:
 #### Global Element Styling
 
 **Body Background**
+
 ```css
 body {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     var(--bg-gradient-start) 0%,
     var(--bg-gradient-end) 100%
   );
@@ -1175,21 +1231,28 @@ body {
 ```
 
 **Form Elements**
+
 ```css
-input, textarea, select {
+input,
+textarea,
+select {
   background: var(--input-bg);
   border-color: var(--input-border);
   color: var(--text-primary);
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   border-color: var(--bg-gradient-start);
 }
 ```
 
 **Cards and Containers**
+
 ```css
-.report-card, .kb-card {
+.report-card,
+.kb-card {
   background: var(--bg-secondary);
   color: var(--text-primary);
   border-color: var(--border-color);
@@ -1237,6 +1300,7 @@ input:focus, textarea:focus, select:focus {
 #### Icons
 
 Multiple sizes for various devices:
+
 - 72x72, 96x96, 128x128, 144x144
 - 152x152, 192x192, 384x384, 512x512
 - All PNG format
@@ -1293,18 +1357,21 @@ Quick actions from home screen/app drawer:
 #### Installation
 
 **Desktop (Chrome/Edge)**
+
 1. User visits site
 2. Browser shows install prompt
 3. User clicks "Install"
 4. App opens in standalone window
 
 **Mobile (Android)**
+
 1. User visits site
 2. "Add to Home Screen" prompt appears
 3. User adds icon to home screen
 4. App opens fullscreen
 
 **iOS (Safari)**
+
 1. User clicks share button
 2. Selects "Add to Home Screen"
 3. App icon added to home screen
@@ -1318,10 +1385,12 @@ Quick actions from home screen/app drawer:
 #### Primary Colors
 
 **Gradient (Brand)**
+
 - Start: `#667eea` (Purple-blue)
 - End: `#764ba2` (Deep purple)
 
 **Neutral Colors**
+
 - Dark: `#2c3e50` (Header background)
 - Gray: `#666666` (Secondary text)
 - Light Gray: `#999999` (Tertiary text)
@@ -1331,16 +1400,19 @@ Quick actions from home screen/app drawer:
 #### Status Colors
 
 **Priority Levels**
+
 - High: `#e74c3c` (Red)
 - Medium: `#f39c12` (Orange)
 - Low: `#27ae60` (Green)
 
 **Report Status**
+
 - New: `#1e40af` (Blue)
 - In Progress: `#92400e` (Brown-orange)
 - Resolved: `#065f46` (Dark green)
 
 **Tone Indicators**
+
 - Angry: `#991b1b` (Deep red)
 - Urgent: `#c2410c` (Orange-red)
 - Frustrated: `#92400e` (Brown)
@@ -1348,6 +1420,7 @@ Quick actions from home screen/app drawer:
 - Calm: `#1e40af` (Blue)
 
 **System Status**
+
 - Success: `#10b981` (Emerald)
 - Error: `#ef4444` (Red)
 - Warning: `#f59e0b` (Amber)
@@ -1356,10 +1429,12 @@ Quick actions from home screen/app drawer:
 ### Typography
 
 **Font Families**
+
 - Primary: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif`
 - Monospace: `'Monaco', 'Menlo', 'Ubuntu Mono', monospace` (Code/JSON display)
 
 **Font Sizes**
+
 - H1: 32px - 40px (Page titles)
 - H2: 20px - 28px (Section headings)
 - H3: 18px - 24px (Card titles)
@@ -1367,6 +1442,7 @@ Quick actions from home screen/app drawer:
 - Small: 12px - 13px (Meta text, labels)
 
 **Font Weights**
+
 - Light: 400 (Body text)
 - Medium: 500 (Labels)
 - Semibold: 600 (Buttons, headings)
@@ -1375,6 +1451,7 @@ Quick actions from home screen/app drawer:
 ### Spacing
 
 **Padding/Margin Scale**
+
 - xs: 5px
 - sm: 10px
 - md: 15px
@@ -1383,6 +1460,7 @@ Quick actions from home screen/app drawer:
 - 2xl: 40px
 
 **Common Patterns**
+
 - Card padding: 25px - 30px
 - Form group margin: 20px
 - Section margin: 20px - 30px
@@ -1391,6 +1469,7 @@ Quick actions from home screen/app drawer:
 ### Shadows
 
 **Elevation Levels**
+
 ```css
 /* Level 1 - Cards */
 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -1416,6 +1495,7 @@ box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 ### Animations
 
 **Common Transitions**
+
 ```css
 /* Standard */
 transition: all 0.3s ease;
@@ -1432,21 +1512,30 @@ transform: scale(1.1);
 ```
 
 **Loading Spinner**
+
 ```css
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 ```
 
 **Skeleton Loading**
+
 ```css
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 ```
 
 **Slide In (Notifications)**
+
 ```css
 /* Start off-screen */
 right: -400px;
@@ -1463,6 +1552,7 @@ right: 20px;
 ### ARIA Labels
 
 **Interactive Elements**
+
 ```html
 <button aria-label="Toggle dark mode" class="theme-toggle">
   <span id="themeIcon">🌙</span>
@@ -1474,6 +1564,7 @@ right: 20px;
 ### Semantic HTML
 
 **Proper Structure**
+
 ```html
 <nav role="navigation">
   <a href="/" class="nav-link">Home</a>
@@ -1493,14 +1584,18 @@ right: 20px;
 ### Keyboard Navigation
 
 **Focus Management**
+
 - All interactive elements keyboard-accessible
 - Tab order follows visual flow
 - Focus visible with outline/border change
 - Skip links for screen readers
 
 **Focus States**
+
 ```css
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -1515,11 +1610,13 @@ button:focus-visible {
 ### Color Contrast
 
 **WCAG AA Compliance**
+
 - Text contrast ratio: minimum 4.5:1
 - Large text: minimum 3:1
 - UI components: minimum 3:1
 
 **High Contrast Examples**
+
 ```css
 /* Good contrast */
 .priority-high {
@@ -1537,6 +1634,7 @@ button:focus-visible {
 ### Screen Reader Support
 
 **Descriptive Text**
+
 ```html
 <span class="sr-only">Loading reports...</span>
 
@@ -1547,6 +1645,7 @@ button:focus-visible {
 ```
 
 **Live Regions**
+
 ```html
 <div role="status" aria-live="polite" aria-atomic="true">
   <span id="resultsCount">42</span> reports found
@@ -1556,12 +1655,14 @@ button:focus-visible {
 ### Form Accessibility
 
 **Label Association**
+
 ```html
 <label for="customerName">Customer Name</label>
 <input type="text" id="customerName" name="customerName" required />
 ```
 
 **Error Messages**
+
 ```html
 <input
   type="email"
@@ -1569,16 +1670,13 @@ button:focus-visible {
   aria-describedby="email-error"
   aria-invalid="true"
 />
-<span id="email-error" role="alert">
-  Please enter a valid email address
-</span>
+<span id="email-error" role="alert"> Please enter a valid email address </span>
 ```
 
 **Required Fields**
+
 ```html
-<label for="subject">
-  Subject <span aria-label="required">*</span>
-</label>
+<label for="subject"> Subject <span aria-label="required">*</span> </label>
 <input type="text" id="subject" required aria-required="true" />
 ```
 
@@ -1596,27 +1694,36 @@ button:focus-visible {
 
 /* Medium devices (tablets, 768px+) */
 @media (min-width: 768px) {
-  .container { max-width: 720px; }
+  .container {
+    max-width: 720px;
+  }
 }
 
 /* Large devices (desktops, 1024px+) */
 @media (min-width: 1024px) {
-  .container { max-width: 960px; }
+  .container {
+    max-width: 960px;
+  }
 }
 
 /* Extra large devices (large desktops, 1280px+) */
 @media (min-width: 1280px) {
-  .container { max-width: 1200px; }
+  .container {
+    max-width: 1200px;
+  }
 }
 ```
 
 ### Mobile Optimizations
 
 **Touch-Friendly Targets**
+
 ```css
 @media (max-width: 768px) {
   /* Minimum 44px touch targets */
-  input, select, button {
+  input,
+  select,
+  button {
     font-size: 16px; /* Prevents zoom on iOS */
     min-height: 44px;
   }
@@ -1634,6 +1741,7 @@ button:focus-visible {
 ```
 
 **Flexible Grids**
+
 ```css
 .stats-grid {
   display: grid;
@@ -1649,17 +1757,30 @@ button:focus-visible {
 ```
 
 **Typography Scaling**
+
 ```css
 /* Desktop */
-h1 { font-size: 32px; }
-h2 { font-size: 24px; }
-p { font-size: 16px; }
+h1 {
+  font-size: 32px;
+}
+h2 {
+  font-size: 24px;
+}
+p {
+  font-size: 16px;
+}
 
 /* Mobile */
 @media (max-width: 768px) {
-  h1 { font-size: 24px; }
-  h2 { font-size: 20px; }
-  p { font-size: 14px; }
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  p {
+    font-size: 14px;
+  }
 }
 ```
 
@@ -1703,6 +1824,7 @@ img {
 ### Conditional Rendering
 
 **Hide on Mobile**
+
 ```css
 @media (max-width: 768px) {
   .desktop-only {
@@ -1712,6 +1834,7 @@ img {
 ```
 
 **Show Only on Mobile**
+
 ```css
 .mobile-only {
   display: none;
@@ -1731,6 +1854,7 @@ img {
 ### 1. Create New Triage Report
 
 **Steps:**
+
 1. User lands on main dashboard (index.html)
 2. (First visit) Sees onboarding tour
 3. Fills triage form:
@@ -1758,6 +1882,7 @@ img {
    - Create new triage
 
 **Success Criteria:**
+
 - Report saved to database
 - Notification shown
 - Results clearly displayed
@@ -1768,6 +1893,7 @@ img {
 ### 2. Search Customer History
 
 **Steps:**
+
 1. User clicks "Client History" link
 2. Arrives at client-history.html
 3. Sees quick stats dashboard
@@ -1785,6 +1911,7 @@ img {
 8. (Optional) Export selected to CSV
 
 **Success Criteria:**
+
 - Search is fast (<1s)
 - Results clearly organized
 - Filters work correctly
@@ -1795,6 +1922,7 @@ img {
 ### 3. View Report Details
 
 **Steps:**
+
 1. User clicks report card or "View Details"
 2. Arrives at report-detail.html?id={reportId}
 3. Views comprehensive information:
@@ -1810,6 +1938,7 @@ img {
 8. Returns to client history
 
 **Success Criteria:**
+
 - All data loads correctly
 - Status updates save
 - Notes persist
@@ -1820,6 +1949,7 @@ img {
 ### 4. Browse Knowledge Base
 
 **Steps:**
+
 1. User clicks "Knowledge Base" link
 2. Arrives at kb-search.html
 3. Sees article grid
@@ -1831,6 +1961,7 @@ img {
 9. Continues browsing
 
 **Success Criteria:**
+
 - Search finds relevant articles
 - Categories filter correctly
 - Modal displays full content
@@ -1841,6 +1972,7 @@ img {
 ### 5. View Analytics
 
 **Steps:**
+
 1. User clicks "Analytics" or "Advanced Analytics"
 2. Sees dashboard with charts
 3. Reviews key metrics
@@ -1850,6 +1982,7 @@ img {
 7. Returns to main dashboard
 
 **Success Criteria:**
+
 - Charts render correctly
 - Data is accurate
 - Filters work
@@ -1862,12 +1995,14 @@ img {
 ### Code Organization
 
 **Modular Structure**
+
 - Separate concerns (HTML, CSS, JS)
 - Reusable components
 - Single responsibility principle
 - DRY (Don't Repeat Yourself)
 
 **File Naming**
+
 - Kebab-case for files: `client-history.html`
 - camelCase for JS variables/functions
 - PascalCase for classes/components
@@ -1876,6 +2011,7 @@ img {
 ### Performance
 
 **Optimize Loading**
+
 ```javascript
 // Lazy load heavy dependencies
 const loadCharts = async () => {
@@ -1885,6 +2021,7 @@ const loadCharts = async () => {
 ```
 
 **Minimize Reflows**
+
 ```javascript
 // Bad: Multiple reflows
 element.style.width = '100px';
@@ -1895,6 +2032,7 @@ element.style.cssText = 'width: 100px; height: 100px;';
 ```
 
 **Debounce Search**
+
 ```javascript
 const debounce = (func, wait) => {
   let timeout;
@@ -1912,6 +2050,7 @@ const handleSearch = debounce((query) => {
 ### Security
 
 **Prevent XSS**
+
 ```javascript
 function escapeHtml(text) {
   const div = document.createElement('div');
@@ -1924,6 +2063,7 @@ element.innerHTML = `<p>${escapeHtml(userInput)}</p>`;
 ```
 
 **Validate Input**
+
 ```javascript
 // Client-side validation
 if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
@@ -1936,6 +2076,7 @@ const sanitized = input.trim().slice(0, 500);
 ```
 
 **CSRF Protection**
+
 ```javascript
 // All API calls include CSRF token
 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -1943,14 +2084,15 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 fetch('/api/endpoint', {
   method: 'POST',
   headers: {
-    'X-CSRF-Token': csrfToken
-  }
+    'X-CSRF-Token': csrfToken,
+  },
 });
 ```
 
 ### Error Handling
 
 **Graceful Degradation**
+
 ```javascript
 try {
   const result = await riskyOperation();
@@ -1965,6 +2107,7 @@ try {
 ```
 
 **User Feedback**
+
 ```javascript
 // Always inform users
 async function saveReport(data) {
@@ -1984,6 +2127,7 @@ async function saveReport(data) {
 ### Accessibility
 
 **Focus Management**
+
 ```javascript
 function openModal(content) {
   modal.innerHTML = content;
@@ -2000,6 +2144,7 @@ function openModal(content) {
 ```
 
 **Keyboard Support**
+
 ```javascript
 element.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' ') {
@@ -2012,16 +2157,19 @@ element.addEventListener('keydown', (e) => {
 ### Testing
 
 **Browser Compatibility**
+
 - Test in Chrome, Firefox, Safari, Edge
 - Mobile browsers (iOS Safari, Chrome Android)
 - Progressive enhancement for older browsers
 
 **Device Testing**
+
 - Desktop (1920x1080, 1366x768)
 - Tablet (768x1024, 1024x768)
 - Mobile (375x667, 414x896)
 
 **User Testing**
+
 - First-time user experience
 - Power user workflows
 - Edge cases (long text, no data, errors)

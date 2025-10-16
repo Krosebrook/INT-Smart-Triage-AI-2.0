@@ -13,13 +13,14 @@
  */
 
 import { supabase } from './supabaseClient.js';
+import { logger } from './logger.js';
 
 /**
  * Knowledge Base Service for intelligent article search and recommendations.
  *
  * @class KnowledgeBaseService
  */
-class KnowledgeBaseService {
+export class KnowledgeBaseService {
   /**
    * Initialize the Knowledge Base Service.
    *
@@ -74,7 +75,7 @@ class KnowledgeBaseService {
       this.buildSearchIndex();
       this.initialized = true;
     } catch (error) {
-      console.warn('Failed to load knowledge base:', error.message);
+      logger.warn('Failed to load knowledge base', { error: error.message });
       // Continue with empty knowledge base
     }
   }
