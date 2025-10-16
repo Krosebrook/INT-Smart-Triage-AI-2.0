@@ -104,6 +104,72 @@ export async function getReportById(reportId) {
   }
 }
 
+// Get notes for a report
+export async function getNotes(reportId) {
+  if (!supabase) {
+    return { success: false, error: 'Database not configured' };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('report_notes')
+      .select('*')
+      .eq('report_id', reportId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return { success: true, data: data || [] };
+  } catch (error) {
+    return { success: false, error: error.message, data: [] };
+  }
+}
+
+// Add a note to a report
+export async function addNote(reportId, noteText, addedBy = 'CSR_USER') {
+  if (!supabase) {
+    return { success: false, error: 'Database not configured' };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('report_notes')
+      .insert({
+        report_id: reportId,
+        note: noteText,
+        added_by: addedBy,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+// Delete a note
+export async function deleteNote(noteId) {
+  if (!supabase) {
+    return { success: false, error: 'Database not configured' };
+  }
+
+  try {
+    const { error } = await supabase
+      .from('report_notes')
+      .delete()
+      .eq('id', noteId);
+
+    if (error) throw error;
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
 // Search reports
 export async function searchReports(query, filters = {}) {
   if (!supabase) {
@@ -134,6 +200,9 @@ export async function searchReports(query, filters = {}) {
     }
     if (filters.customerTone) {
       queryBuilder = queryBuilder.eq('customer_tone', filters.customerTone);
+    }
+    if (filters.status) {
+      queryBuilder = queryBuilder.eq('status', filters.status);
     }
     if (filters.dateFrom) {
       queryBuilder = queryBuilder.gte('created_at', filters.dateFrom);

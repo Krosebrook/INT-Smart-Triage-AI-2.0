@@ -23,7 +23,8 @@
     "agents:status": "node scripts/agents-runtime.js status",
     "agents:activate": "node scripts/agents-runtime.js activate",
     "agents:deactivate": "node scripts/agents-runtime.js deactivate",
-    "agents:flag": "node scripts/agents-runtime.js flag"
+    "agents:flag": "node scripts/agents-runtime.js flag",
+    "agents:orchestrate": "node scripts/agents-orchestrator.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",

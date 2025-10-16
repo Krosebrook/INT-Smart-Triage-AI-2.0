@@ -19,11 +19,30 @@ const colors = {
 const envConfig = {
   production: {
     required: ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'NODE_ENV'],
-    optional: ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY'],
+    optional: [
+      'VITE_SUPABASE_URL',
+      'VITE_SUPABASE_ANON_KEY',
+      'AGENT_DASH_WEBHOOK',
+      'AGENT_DASH_TOKEN',
+      'AUTOMATION_API_URL',
+      'AUTOMATION_API_TOKEN',
+      'AUTOMATION_VALIDATE_COMMAND',
+      'AUTOMATION_VALIDATE_INTERVAL_MS',
+    ],
   },
   development: {
     required: ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'],
-    optional: ['NODE_ENV', 'VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY'],
+    optional: [
+      'NODE_ENV',
+      'VITE_SUPABASE_URL',
+      'VITE_SUPABASE_ANON_KEY',
+      'AGENT_DASH_WEBHOOK',
+      'AGENT_DASH_TOKEN',
+      'AUTOMATION_API_URL',
+      'AUTOMATION_API_TOKEN',
+      'AUTOMATION_VALIDATE_COMMAND',
+      'AUTOMATION_VALIDATE_INTERVAL_MS',
+    ],
   },
 };
 

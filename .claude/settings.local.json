@@ -16,7 +16,8 @@
       "Bash(npm run format:*)",
       "Bash(npx prettier:*)",
       "Bash(git add:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(npm ci:*)"
     ],
     "deny": [],
     "ask": []

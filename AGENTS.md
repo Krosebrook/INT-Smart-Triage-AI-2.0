@@ -15,6 +15,7 @@
 - `npm run validate` chains format, lint, tests, and build for pre-deploy confidence.
 - `npm run agents:status` lists runtime-registered agents; append `-- --json` for raw output.
 - `npm run agents:activate -- --agent <id>` (and `agents:deactivate` / `agents:flag`) update runtime state and notify external dashboards/automation hooks.
+- `npm run agents:orchestrate` boots the long-running orchestrator that reacts to agent activations and invokes handlers.
 
 ## Coding Style & Naming Conventions
 - JavaScript is ES modules with 2-space indentation and semicolons (lint enforced).
@@ -38,3 +39,4 @@
 - Keep Supabase migrations synchronized with production using the `supabase/migrations` directory.
 - Run `npm run predeploy` before Vercel releases to ensure environment validation passes.
 - Configure `AGENT_DASH_WEBHOOK` / `AGENT_DASH_TOKEN` and `AUTOMATION_API_URL` / `AUTOMATION_API_TOKEN` to sync runtime status with the external agent dashboard and automation apps.
+- Copy `.env.agent.example` to `.env.local` (or CI secret store) and adjust `AUTOMATION_VALIDATE_COMMAND` / `AUTOMATION_VALIDATE_INTERVAL_MS` so Autopilot runs the desired workflows.

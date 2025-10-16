@@ -18,7 +18,7 @@ AUTOMATION_API_URL=https://automation.example.com/api/agent-events
 AUTOMATION_API_TOKEN=automation-secret
 ```
 
-Set these locally (e.g., `.env.local`) and in CI/CD so every status change is relayed.
+Set these locally (e.g., `.env.local`) and in CI/CD so every status change is relayed. Use `.env.agent.example` as a starting template.
 
 ## Common Workflows
 
@@ -28,6 +28,13 @@ Set these locally (e.g., `.env.local`) and in CI/CD so every status change is re
 - Flag for attention: `npm run agents:flag -- --agent governance-auditor --notes "awaiting gate evidence"`
 
 Each command updates `runtime-state.json` and dispatches the payload to both connectors (if configured). Your external dashboard and automation apps can rely on this stream to know when agents should be considered live or paused.
+
+## Orchestrator Runtime
+
+- Start orchestrator: `npm run agents:orchestrate`
+- The orchestrator listens for status changes and starts/stops agent-specific handlers (`src/agents/orchestrator.js`).
+- Handlers live in `src/agents/handlers/`; customize them to connect planner loops, routing logic, or automation routines.
+- Automation handler reads `AUTOMATION_VALIDATE_COMMAND` and `AUTOMATION_VALIDATE_INTERVAL_MS` to schedule routine tasks (defaults provided in `.env.agent.example`).
 
 ## Next Steps
 
