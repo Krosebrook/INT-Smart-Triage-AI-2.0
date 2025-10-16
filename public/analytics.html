@@ -30,10 +30,99 @@
         margin: 0 auto;
       }
 
+      /* Navigation Header */
+      .nav-header {
+        background: #2c3e50;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+      }
+
+      .nav-brand {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-brand:hover {
+        opacity: 0.9;
+      }
+
+      .nav-menu {
+        display: flex;
+        gap: 5px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-link.active {
+        background: rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+      }
+
+      .nav-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .nav-header {
+          flex-wrap: wrap;
+        }
+
+        .nav-toggle {
+          display: block;
+        }
+
+        .nav-menu {
+          display: none;
+          width: 100%;
+          flex-direction: column;
+          margin-top: 15px;
+          gap: 0;
+        }
+
+        .nav-menu.active {
+          display: flex;
+        }
+
+        .nav-link {
+          padding: 15px;
+          border-radius: 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+      }
+
       .header {
         background: var(--card-bg);
         padding: 30px;
-        border-radius: 10px;
+        border-radius: 0 0 10px 10px;
         margin-bottom: 20px;
         box-shadow: 0 2px 10px var(--shadow);
       }
@@ -150,6 +239,22 @@
     </button>
 
     <div class="container">
+      <!-- Navigation Header -->
+      <nav class="nav-header">
+        <a href="/" class="nav-brand">
+          🎯 INT Triage AI
+        </a>
+        <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+          ☰
+        </button>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="/" class="nav-link">New Triage</a></li>
+          <li><a href="/public/client-history.html" class="nav-link">History</a></li>
+          <li><a href="/public/analytics.html" class="nav-link active">Analytics</a></li>
+          <li><a href="/public/demo.html" class="nav-link">Demo</a></li>
+        </ul>
+      </nav>
+
       <div class="header">
         <h1>📈 Analytics Dashboard</h1>
         <p style="color: var(--text-secondary)">
@@ -225,7 +330,14 @@
       import { initKeyboardShortcuts } from '/public/shortcuts.js';
       import { supabase } from '../src/supabaseClient.js';
 
+      // Mobile menu toggle
+      function toggleMobileMenu() {
+        const navMenu = document.getElementById('navMenu');
+        navMenu.classList.toggle('active');
+      }
+
       window.toggleTheme = toggleTheme;
+      window.toggleMobileMenu = toggleMobileMenu;
       initTheme();
       initKeyboardShortcuts();
 

@@ -13,6 +13,8 @@
 - `npm test` runs the Node test suite under the built-in `node:test` runner.
 - `npm run lint` and `npm run format:check` enforce ESLint/Prettier gates; use `lint:fix` or `format` before pushing.
 - `npm run validate` chains format, lint, tests, and build for pre-deploy confidence.
+- `npm run agents:status` lists runtime-registered agents; append `-- --json` for raw output.
+- `npm run agents:activate -- --agent <id>` (and `agents:deactivate` / `agents:flag`) update runtime state and notify external dashboards/automation hooks.
 
 ## Coding Style & Naming Conventions
 - JavaScript is ES modules with 2-space indentation and semicolons (lint enforced).
@@ -35,3 +37,4 @@
 - Never commit secrets; rely on `.env.local` and `scripts/validate-env.js` to confirm required keys.
 - Keep Supabase migrations synchronized with production using the `supabase/migrations` directory.
 - Run `npm run predeploy` before Vercel releases to ensure environment validation passes.
+- Configure `AGENT_DASH_WEBHOOK` / `AGENT_DASH_TOKEN` and `AUTOMATION_API_URL` / `AUTOMATION_API_TOKEN` to sync runtime status with the external agent dashboard and automation apps.

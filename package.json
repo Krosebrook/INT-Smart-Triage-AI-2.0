@@ -19,7 +19,11 @@
     "validate": "npm run format:check && npm run lint && npm test && npm run build",
     "validate:env": "node scripts/validate-env.js",
     "predeploy": "npm run validate:env",
-    "prepare": "husky"
+    "prepare": "husky",
+    "agents:status": "node scripts/agents-runtime.js status",
+    "agents:activate": "node scripts/agents-runtime.js activate",
+    "agents:deactivate": "node scripts/agents-runtime.js deactivate",
+    "agents:flag": "node scripts/agents-runtime.js flag"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",

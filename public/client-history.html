@@ -533,6 +533,22 @@
     </button>
 
     <div class="container">
+      <!-- Navigation Header -->
+      <nav class="nav-header">
+        <a href="/" class="nav-brand">
+          🎯 INT Triage AI
+        </a>
+        <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+          ☰
+        </button>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="/" class="nav-link">New Triage</a></li>
+          <li><a href="/public/client-history.html" class="nav-link active">History</a></li>
+          <li><a href="/public/analytics.html" class="nav-link">Analytics</a></li>
+          <li><a href="/public/demo.html" class="nav-link">Demo</a></li>
+        </ul>
+      </nav>
+
       <div class="header">
         <h1>📊 Client History</h1>
         <div class="header-actions">
@@ -683,6 +699,12 @@
       } from '../src/supabaseClient.js';
 
       // Get URL parameters
+      // Mobile menu toggle
+      function toggleMobileMenu() {
+        const navMenu = document.getElementById('navMenu');
+        navMenu.classList.toggle('active');
+      }
+
       const urlParams = new URLSearchParams(window.location.search);
       const customerName = urlParams.get('customer');
       const reportId = urlParams.get('report');
