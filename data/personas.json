@@ -4,7 +4,11 @@
     "name": "Sarah Johnson",
     "role": "Information Security Specialist",
     "department": "InfoSec",
-    "specialties": ["soc2_compliance", "cyber_insurance", "vulnerability_assessment"],
+    "specialties": [
+      "soc2_compliance",
+      "cyber_insurance",
+      "vulnerability_assessment"
+    ],
     "response_templates": {
       "greeting": "Thank you for reaching out about your security needs."
     }

@@ -1,309 +1,345 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Analytics Dashboard - INT Smart Triage AI 2.0</title>
-    <link rel="stylesheet" href="/public/theme.css">
+    <link rel="stylesheet" href="/public/theme.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start) 0%,
+          var(--bg-gradient-end) 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
 
-        .header {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px var(--shadow);
-        }
+      .header {
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px var(--shadow);
+      }
 
-        .header h1 {
-            color: var(--text-primary);
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+      .header h1 {
+        color: var(--text-primary);
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
 
-        .stat-card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px var(--shadow);
-        }
+      .stat-card {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px var(--shadow);
+      }
 
-        .stat-value {
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
+      .stat-value {
+        font-size: 40px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 5px;
+      }
 
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+      .stat-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-        .stat-change {
-            font-size: 13px;
-            margin-top: 8px;
-            font-weight: 600;
-        }
+      .stat-change {
+        font-size: 13px;
+        margin-top: 8px;
+        font-weight: 600;
+      }
 
-        .stat-change.positive {
-            color: #10b981;
-        }
+      .stat-change.positive {
+        color: #10b981;
+      }
 
-        .stat-change.negative {
-            color: #ef4444;
-        }
+      .stat-change.negative {
+        color: #ef4444;
+      }
 
+      .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .chart-card {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px var(--shadow);
+      }
+
+      .chart-card h3 {
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+
+      .table-card {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px var(--shadow);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-primary);
+      }
+
+      th {
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+
+      @media (max-width: 768px) {
         .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+          grid-template-columns: 1fr;
         }
-
-        .chart-card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px var(--shadow);
-        }
-
-        .chart-card h3 {
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .table-card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px var(--shadow);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-
-        th {
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
-
-        @media (max-width: 768px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-        <span id="themeIcon">🌙</span>
+  </head>
+  <body>
+    <button
+      class="theme-toggle"
+      onclick="toggleTheme()"
+      aria-label="Toggle dark mode"
+    >
+      <span id="themeIcon">🌙</span>
     </button>
 
     <div class="container">
-        <div class="header">
-            <h1>📈 Analytics Dashboard</h1>
-            <p style="color: var(--text-secondary);">Performance metrics and insights</p>
-        </div>
+      <div class="header">
+        <h1>📈 Analytics Dashboard</h1>
+        <p style="color: var(--text-secondary)">
+          Performance metrics and insights
+        </p>
+      </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="totalReports">-</div>
-                <div class="stat-label">Total Reports</div>
-                <div class="stat-change positive" id="totalChange">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="avgResolutionTime">-</div>
-                <div class="stat-label">Avg Resolution Time</div>
-                <div class="stat-change positive" id="timeChange">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="highPriorityCount">-</div>
-                <div class="stat-label">High Priority</div>
-                <div class="stat-change negative" id="highChange">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="resolvedCount">-</div>
-                <div class="stat-label">Resolved This Week</div>
-                <div class="stat-change positive" id="resolvedChange">-</div>
-            </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalReports">-</div>
+          <div class="stat-label">Total Reports</div>
+          <div class="stat-change positive" id="totalChange">-</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avgResolutionTime">-</div>
+          <div class="stat-label">Avg Resolution Time</div>
+          <div class="stat-change positive" id="timeChange">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="highPriorityCount">-</div>
+          <div class="stat-label">High Priority</div>
+          <div class="stat-change negative" id="highChange">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="resolvedCount">-</div>
+          <div class="stat-label">Resolved This Week</div>
+          <div class="stat-change positive" id="resolvedChange">-</div>
+        </div>
+      </div>
 
-        <div class="charts-grid">
-            <div class="chart-card">
-                <h3>Reports by Priority</h3>
-                <canvas id="priorityChart"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3>Reports by Status</h3>
-                <canvas id="statusChart"></canvas>
-            </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Reports by Priority</h3>
+          <canvas id="priorityChart"></canvas>
         </div>
+        <div class="chart-card">
+          <h3>Reports by Status</h3>
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
 
-        <div class="charts-grid">
-            <div class="chart-card" style="grid-column: 1 / -1;">
-                <h3>Trend Over Last 30 Days</h3>
-                <canvas id="trendChart"></canvas>
-            </div>
+      <div class="charts-grid">
+        <div class="chart-card" style="grid-column: 1 / -1">
+          <h3>Trend Over Last 30 Days</h3>
+          <canvas id="trendChart"></canvas>
         </div>
+      </div>
 
-        <div class="table-card">
-            <h3 style="margin-bottom: 20px; color: var(--text-primary);">CSR Performance</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>CSR Agent</th>
-                        <th>Reports Handled</th>
-                        <th>Avg Resolution Time</th>
-                        <th>Performance</th>
-                    </tr>
-                </thead>
-                <tbody id="csrTable">
-                    <tr><td colspan="4" style="text-align: center;">Loading...</td></tr>
-                </tbody>
-            </table>
-        </div>
+      <div class="table-card">
+        <h3 style="margin-bottom: 20px; color: var(--text-primary)">
+          CSR Performance
+        </h3>
+        <table>
+          <thead>
+            <tr>
+              <th>CSR Agent</th>
+              <th>Reports Handled</th>
+              <th>Avg Resolution Time</th>
+              <th>Performance</th>
+            </tr>
+          </thead>
+          <tbody id="csrTable">
+            <tr>
+              <td colspan="4" style="text-align: center">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <script type="module">
-        import { initTheme, toggleTheme } from '/public/theme.js';
-        import { initKeyboardShortcuts } from '/public/shortcuts.js';
-        import { supabase } from '../src/supabaseClient.js';
+      import { initTheme, toggleTheme } from '/public/theme.js';
+      import { initKeyboardShortcuts } from '/public/shortcuts.js';
+      import { supabase } from '../src/supabaseClient.js';
 
-        window.toggleTheme = toggleTheme;
-        initTheme();
-        initKeyboardShortcuts();
+      window.toggleTheme = toggleTheme;
+      initTheme();
+      initKeyboardShortcuts();
 
-        async function loadAnalytics() {
-            const { data: reports } = await supabase
-                .from('reports')
-                .select('*')
-                .order('created_at', { ascending: false });
+      async function loadAnalytics() {
+        const { data: reports } = await supabase
+          .from('reports')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-            if (!reports) return;
+        if (!reports) return;
 
-            document.getElementById('totalReports').textContent = reports.length;
-            document.getElementById('totalChange').textContent = '+12% vs last month';
+        document.getElementById('totalReports').textContent = reports.length;
+        document.getElementById('totalChange').textContent =
+          '+12% vs last month';
 
-            const highPriority = reports.filter(r => r.priority === 'high').length;
-            document.getElementById('highPriorityCount').textContent = highPriority;
+        const highPriority = reports.filter(
+          (r) => r.priority === 'high'
+        ).length;
+        document.getElementById('highPriorityCount').textContent = highPriority;
 
-            const resolved = reports.filter(r => r.status === 'resolved').length;
-            document.getElementById('resolvedCount').textContent = resolved;
+        const resolved = reports.filter((r) => r.status === 'resolved').length;
+        document.getElementById('resolvedCount').textContent = resolved;
 
-            document.getElementById('avgResolutionTime').textContent = '4.2h';
-            document.getElementById('timeChange').textContent = '-15% improvement';
+        document.getElementById('avgResolutionTime').textContent = '4.2h';
+        document.getElementById('timeChange').textContent = '-15% improvement';
 
-            const priorityData = {
-                high: reports.filter(r => r.priority === 'high').length,
-                medium: reports.filter(r => r.priority === 'medium').length,
-                low: reports.filter(r => r.priority === 'low').length
-            };
+        const priorityData = {
+          high: reports.filter((r) => r.priority === 'high').length,
+          medium: reports.filter((r) => r.priority === 'medium').length,
+          low: reports.filter((r) => r.priority === 'low').length,
+        };
 
-            new Chart(document.getElementById('priorityChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['High', 'Medium', 'Low'],
-                    datasets: [{
-                        data: [priorityData.high, priorityData.medium, priorityData.low],
-                        backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
-                    }]
-                }
-            });
+        new Chart(document.getElementById('priorityChart'), {
+          type: 'doughnut',
+          data: {
+            labels: ['High', 'Medium', 'Low'],
+            datasets: [
+              {
+                data: [
+                  priorityData.high,
+                  priorityData.medium,
+                  priorityData.low,
+                ],
+                backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+              },
+            ],
+          },
+        });
 
-            const statusData = {
-                new: reports.filter(r => r.status === 'new').length,
-                in_progress: reports.filter(r => r.status === 'in_progress').length,
-                resolved: reports.filter(r => r.status === 'resolved').length
-            };
+        const statusData = {
+          new: reports.filter((r) => r.status === 'new').length,
+          in_progress: reports.filter((r) => r.status === 'in_progress').length,
+          resolved: reports.filter((r) => r.status === 'resolved').length,
+        };
 
-            new Chart(document.getElementById('statusChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['New', 'In Progress', 'Resolved'],
-                    datasets: [{
-                        label: 'Reports',
-                        data: [statusData.new, statusData.in_progress, statusData.resolved],
-                        backgroundColor: ['#3b82f6', '#f59e0b', '#10b981']
-                    }]
-                }
-            });
+        new Chart(document.getElementById('statusChart'), {
+          type: 'bar',
+          data: {
+            labels: ['New', 'In Progress', 'Resolved'],
+            datasets: [
+              {
+                label: 'Reports',
+                data: [
+                  statusData.new,
+                  statusData.in_progress,
+                  statusData.resolved,
+                ],
+                backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
+              },
+            ],
+          },
+        });
 
-            new Chart(document.getElementById('trendChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    datasets: [{
-                        label: 'Total Reports',
-                        data: [45, 52, 48, 61],
-                        borderColor: '#667eea',
-                        tension: 0.4
-                    }]
-                }
-            });
+        new Chart(document.getElementById('trendChart'), {
+          type: 'line',
+          data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [
+              {
+                label: 'Total Reports',
+                data: [45, 52, 48, 61],
+                borderColor: '#667eea',
+                tension: 0.4,
+              },
+            ],
+          },
+        });
 
-            const csrStats = {};
-            reports.forEach(r => {
-                const csr = r.csr_agent || 'Unassigned';
-                if (!csrStats[csr]) {
-                    csrStats[csr] = { count: 0, resolved: 0 };
-                }
-                csrStats[csr].count++;
-                if (r.status === 'resolved') csrStats[csr].resolved++;
-            });
+        const csrStats = {};
+        reports.forEach((r) => {
+          const csr = r.csr_agent || 'Unassigned';
+          if (!csrStats[csr]) {
+            csrStats[csr] = { count: 0, resolved: 0 };
+          }
+          csrStats[csr].count++;
+          if (r.status === 'resolved') csrStats[csr].resolved++;
+        });
 
-            const csrTable = document.getElementById('csrTable');
-            csrTable.innerHTML = Object.entries(csrStats)
-                .map(([csr, stats]) => `
+        const csrTable = document.getElementById('csrTable');
+        csrTable.innerHTML = Object.entries(csrStats)
+          .map(
+            ([csr, stats]) => `
                     <tr>
                         <td>${csr}</td>
                         <td>${stats.count}</td>
                         <td>3.8h</td>
-                        <td><span style="color: #10b981; font-weight: 600;">${Math.round(stats.resolved / stats.count * 100)}%</span></td>
+                        <td><span style="color: #10b981; font-weight: 600;">${Math.round((stats.resolved / stats.count) * 100)}%</span></td>
                     </tr>
-                `).join('');
-        }
+                `
+          )
+          .join('');
+      }
 
-        loadAnalytics();
+      loadAnalytics();
     </script>
-</body>
+  </body>
 </html>

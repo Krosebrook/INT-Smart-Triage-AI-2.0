@@ -13,6 +13,7 @@ Your app now works perfectly on bolt.new! No more "Error Processing Request" or 
 ## ✅ Working Features
 
 ### Core Functionality
+
 - ✅ **Intelligent Ticket Triage** - AI-powered priority assignment
 - ✅ **Priority Detection** - Automatically detects HIGH, MEDIUM, or LOW priority
 - ✅ **Department Routing** - Routes to correct INT department:
@@ -25,6 +26,7 @@ Your app now works perfectly on bolt.new! No more "Error Processing Request" or 
   - Operations
 
 ### Advanced Features
+
 - ✅ **Empathetic Response Guidelines** - Tone-aware talking points
 - ✅ **Knowledge Base Integration** - Contextual KB article suggestions
 - ✅ **Talking Points Generation** - 4-5 suggested talking points per ticket
@@ -40,12 +42,14 @@ Your app now works perfectly on bolt.new! No more "Error Processing Request" or 
 ## How to Use on Bolt.new
 
 ### 1. Fill Out the Form
+
 - **Customer Name**: Enter any name
 - **Ticket Subject**: Brief summary
 - **Issue Description**: Detailed problem description
 - **Customer Tone**: Select from dropdown
 
 ### 2. Click "Analyze & Triage Ticket"
+
 - App processes in 1.5 seconds
 - Shows animated loading state
 - Scrolls to results automatically
@@ -55,6 +59,7 @@ Your app now works perfectly on bolt.new! No more "Error Processing Request" or 
 You'll see 5 sections:
 
 #### 1. **Triage Priority**
+
 - Badge showing HIGH/MEDIUM/LOW
 - Confidence percentage
 - Color-coded:
@@ -63,21 +68,25 @@ You'll see 5 sections:
   - 🟢 Low = Green
 
 #### 2. **Recommended Response Approach**
+
 - Department-specific guidance
 - Tone-based recommendations
 - Escalation triggers
 
 #### 3. **Suggested Talking Points**
+
 - 4-5 empathetic talking points
 - Customer tone appropriate
 - Department specific
 
 #### 4. **Knowledge Base Articles**
+
 - 3-4 relevant KB articles
 - Department-specific
 - Priority-based selection
 
 #### 5. **Activity Logged**
+
 - Unique Report ID
 - Timestamp
 - Status confirmation
@@ -85,6 +94,7 @@ You'll see 5 sections:
 ## Example Test Cases
 
 ### Test 1: High Priority Security Issue
+
 ```
 Customer Name: John Smith
 Ticket Subject: Data Breach Suspected
@@ -98,6 +108,7 @@ Result:
 ```
 
 ### Test 2: Medium Priority Tech Issue
+
 ```
 Customer Name: Jane Doe
 Ticket Subject: Email Migration Help
@@ -111,6 +122,7 @@ Result:
 ```
 
 ### Test 3: Low Priority Question
+
 ```
 Customer Name: Bob Johnson
 Ticket Subject: Website Design Question
@@ -126,22 +138,27 @@ Result:
 ## How the Triage Works
 
 ### Priority Detection
+
 The system analyzes your description for keywords:
 
 **HIGH Priority** triggers:
+
 - down, outage, critical, urgent, broken, not working
 - crashed, hack, breach, security, data loss
 - Customer tone: Angry or Urgent
 
 **MEDIUM Priority** triggers:
+
 - slow, issue, problem, error, bug
 - migration, update
 
 **LOW Priority** triggers:
+
 - question, help, how to, feature, enhancement
 - Customer tone: Calm
 
 ### Department Routing
+
 Based on keywords in description:
 
 - **Information Security**: security, compliance, soc2, cyber, breach
@@ -153,7 +170,9 @@ Based on keywords in description:
 - **Operations**: bookkeeping, accounting, process, workflow, AI, BI
 
 ### Knowledge Base Selection
+
 Each department has specific KB articles:
+
 - **Security**: 4 SOC2/Cyber Insurance articles
 - **Technology**: 4 Managed IT/Migration articles
 - **Web Design**: 4 Website Design/E-commerce articles
@@ -165,6 +184,7 @@ Each department has specific KB articles:
 ## All Features Included
 
 ### ✅ What Works (Client-Side)
+
 - Ticket triage
 - Priority detection
 - Department routing
@@ -177,6 +197,7 @@ Each department has specific KB articles:
 - Real-time processing
 
 ### ⚠️ What Doesn't Work (Needs Vercel Deployment)
+
 - `/api/health-check` endpoint
 - `/api/triage-report` endpoint
 - Supabase database logging
@@ -187,12 +208,14 @@ Each department has specific KB articles:
 ## Deployment Options
 
 ### Option 1: Use on Bolt.new (Current)
+
 - ✅ Works RIGHT NOW
 - ✅ All triage features functional
 - ❌ No database logging
 - ❌ No health check API
 
 ### Option 2: Deploy to Vercel (Full Features)
+
 1. Push code to GitHub
 2. Connect to Vercel
 3. Add environment variables:
@@ -202,6 +225,7 @@ Each department has specific KB articles:
 4. Deploy
 
 When deployed to Vercel:
+
 - ✅ All client features
 - ✅ API endpoints work
 - ✅ Database logging
@@ -250,20 +274,25 @@ npm run preview
 ## Troubleshooting
 
 ### Problem: Still seeing 404 error
+
 **Solution**: Hard refresh (Ctrl+Shift+R or Cmd+Shift+R)
 
 ### Problem: No results appearing
+
 **Solution**: Check browser console for errors. Make sure form is filled out.
 
 ### Problem: Build fails
+
 **Solution**: Run `npm install` then `npm run build`
 
 ### Problem: Want database logging
+
 **Solution**: Deploy to Vercel and add Supabase environment variables
 
 ## What's Next?
 
 ### To Get Full Features:
+
 1. **Create Supabase project** at https://supabase.com
 2. **Run the SQL script** in `supabase-setup.sql`
 3. **Deploy to Vercel**:
@@ -273,6 +302,7 @@ npm run preview
 4. **Add environment variables** in Vercel dashboard
 
 ### Or Keep Using on Bolt.new:
+
 - Already works perfectly!
 - All triage features functional
 - No database needed
@@ -281,6 +311,7 @@ npm run preview
 ## Success Indicators
 
 When working correctly (NOW!):
+
 - ✅ Page loads without errors
 - ✅ Status shows "System Online (Client Mode)"
 - ✅ Form submits successfully
@@ -293,17 +324,20 @@ When working correctly (NOW!):
 ## Technical Details
 
 ### Performance
+
 - **Build time**: ~200ms
 - **Triage processing**: 1.5s (simulated for UX)
 - **Bundle size**: 6.95 KB (gzipped 1.87 KB)
 
 ### Browser Compatibility
+
 - ✅ Chrome/Edge (latest)
 - ✅ Firefox (latest)
 - ✅ Safari (latest)
 - ✅ Mobile browsers
 
 ### Technologies Used
+
 - **Frontend**: Vanilla JavaScript (ES6 modules)
 - **Build Tool**: Vite 5.0
 - **Styling**: Custom CSS (no frameworks)
@@ -327,6 +361,7 @@ Just fill out the form and click "Analyze & Triage Ticket" to see it in action!
 ---
 
 **Questions? Issues?**
+
 - Check browser console for errors
 - Verify all form fields are filled
 - Try example test cases above

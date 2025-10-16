@@ -1,337 +1,357 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Knowledge Base - INT Smart Triage AI 2.0</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 0;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 0;
+      }
 
-        .global-nav {
-            background: #1a202c;
-            color: white;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
+      .global-nav {
+        background: #1a202c;
+        color: white;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
 
-        .nav-brand {
-            font-size: 18px;
-            font-weight: 700;
-        }
+      .nav-brand {
+        font-size: 18px;
+        font-weight: 700;
+      }
 
-        .nav-links {
-            display: flex;
-            gap: 5px;
-        }
+      .nav-links {
+        display: flex;
+        gap: 5px;
+      }
 
-        .nav-link {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
+      .nav-link {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        font-weight: 500;
+      }
 
-        .nav-link:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
 
-        .nav-link.active {
-            background: #667eea;
-            color: white;
-        }
+      .nav-link.active {
+        background: #667eea;
+        color: white;
+      }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
 
-        .header {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+      .header {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .header h1 {
-            color: #2c3e50;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+      .header h1 {
+        color: #2c3e50;
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
 
-        .search-box {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+      .search-box {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .search-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-        }
+      .search-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+      }
 
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+      .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
 
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+      .filters {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
 
-        .filter-btn {
-            padding: 8px 16px;
-            border: 2px solid #e0e0e0;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+      .filter-btn {
+        padding: 8px 16px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
 
-        .filter-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
+      .filter-btn.active {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+      }
 
+      .kb-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+      }
+
+      .kb-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .kb-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .kb-card h3 {
+        color: #2c3e50;
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      .kb-category {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #e0e7ff;
+        color: #667eea;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .kb-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      .kb-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #f0f0f0;
+        font-size: 13px;
+        color: #999;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: white;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 40px;
+        border-radius: 10px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 20px;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 30px;
+        cursor: pointer;
+        color: #999;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+        background: white;
+        border-radius: 10px;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: white;
+      }
+
+      @media (max-width: 768px) {
         .kb-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
+          grid-template-columns: 1fr;
         }
-
-        .kb-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .kb-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
-        .kb-card h3 {
-            color: #2c3e50;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .kb-category {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #e0e7ff;
-            color: #667eea;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .kb-description {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .kb-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid #f0f0f0;
-            font-size: 13px;
-            color: #999;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 40px;
-            border-radius: 10px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 20px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 30px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-            background: white;
-            border-radius: 10px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .kb-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <nav class="global-nav">
-        <div class="nav-brand">INT Smart Triage AI 2.0</div>
-        <div class="nav-links">
-            <a href="/" class="nav-link">New Triage</a>
-            <a href="/client-history.html" class="nav-link">Client History</a>
-            <a href="/kb-search.html" class="nav-link active">Knowledge Base</a>
-            <a href="/demo.html" class="nav-link">Demo</a>
-        </div>
+      <div class="nav-brand">INT Smart Triage AI 2.0</div>
+      <div class="nav-links">
+        <a href="/" class="nav-link">New Triage</a>
+        <a href="/client-history.html" class="nav-link">Client History</a>
+        <a href="/kb-search.html" class="nav-link active">Knowledge Base</a>
+        <a href="/demo.html" class="nav-link">Demo</a>
+      </div>
     </nav>
 
     <div class="container">
-        <div class="header">
-            <h1>📚 Knowledge Base</h1>
-            <p>Browse and search support articles</p>
-        </div>
+      <div class="header">
+        <h1>📚 Knowledge Base</h1>
+        <p>Browse and search support articles</p>
+      </div>
 
-        <div class="search-box">
-            <input type="text" id="searchInput" class="search-input" placeholder="Search articles by title, content, or keywords...">
-            <div class="filters">
-                <button class="filter-btn active" data-category="all">All Categories</button>
-                <button class="filter-btn" data-category="technical">Technical</button>
-                <button class="filter-btn" data-category="billing">Billing</button>
-                <button class="filter-btn" data-category="account">Account</button>
-                <button class="filter-btn" data-category="general">General</button>
-            </div>
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search articles by title, content, or keywords..."
+        />
+        <div class="filters">
+          <button class="filter-btn active" data-category="all">
+            All Categories
+          </button>
+          <button class="filter-btn" data-category="technical">
+            Technical
+          </button>
+          <button class="filter-btn" data-category="billing">Billing</button>
+          <button class="filter-btn" data-category="account">Account</button>
+          <button class="filter-btn" data-category="general">General</button>
         </div>
+      </div>
 
-        <div id="loadingMessage" class="loading">Loading knowledge base...</div>
-        <div id="kbGrid" class="kb-grid" style="display: none;"></div>
-        <div id="emptyState" class="empty-state" style="display: none;">
-            No articles found matching your search.
-        </div>
+      <div id="loadingMessage" class="loading">Loading knowledge base...</div>
+      <div id="kbGrid" class="kb-grid" style="display: none"></div>
+      <div id="emptyState" class="empty-state" style="display: none">
+        No articles found matching your search.
+      </div>
     </div>
 
     <div id="kbModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle"></h2>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div id="modalCategory" class="kb-category"></div>
-            <div id="modalContent" style="line-height: 1.8; color: #333;"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle"></h2>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
+        <div id="modalCategory" class="kb-category"></div>
+        <div id="modalContent" style="line-height: 1.8; color: #333"></div>
+      </div>
     </div>
 
     <script type="module">
-        import { supabase } from '/src/supabaseClient.js';
+      import { supabase } from '/src/supabaseClient.js';
 
-        let allArticles = [];
-        let currentCategory = 'all';
+      let allArticles = [];
+      let currentCategory = 'all';
 
-        const kbData = await fetch('/data/kb.json').then(r => r.json());
-        allArticles = kbData.articles;
+      const kbData = await fetch('/data/kb.json').then((r) => r.json());
+      allArticles = kbData.articles;
 
-        displayArticles(allArticles);
+      displayArticles(allArticles);
 
-        document.getElementById('searchInput').addEventListener('input', handleSearch);
+      document
+        .getElementById('searchInput')
+        .addEventListener('input', handleSearch);
 
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.dataset.category;
-                handleSearch();
-            });
+      document.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document
+            .querySelectorAll('.filter-btn')
+            .forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.dataset.category;
+          handleSearch();
         });
+      });
 
-        function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = allArticles;
+      function handleSearch() {
+        const query = document
+          .getElementById('searchInput')
+          .value.toLowerCase();
+        let filtered = allArticles;
 
-            if (currentCategory !== 'all') {
-                filtered = filtered.filter(a => a.category === currentCategory);
-            }
-
-            if (query) {
-                filtered = filtered.filter(a =>
-                    a.title.toLowerCase().includes(query) ||
-                    a.content.toLowerCase().includes(query) ||
-                    (a.keywords && a.keywords.some(k => k.toLowerCase().includes(query)))
-                );
-            }
-
-            displayArticles(filtered);
+        if (currentCategory !== 'all') {
+          filtered = filtered.filter((a) => a.category === currentCategory);
         }
 
-        function displayArticles(articles) {
-            document.getElementById('loadingMessage').style.display = 'none';
-            const grid = document.getElementById('kbGrid');
-            const empty = document.getElementById('emptyState');
+        if (query) {
+          filtered = filtered.filter(
+            (a) =>
+              a.title.toLowerCase().includes(query) ||
+              a.content.toLowerCase().includes(query) ||
+              (a.keywords &&
+                a.keywords.some((k) => k.toLowerCase().includes(query)))
+          );
+        }
 
-            if (articles.length === 0) {
-                grid.style.display = 'none';
-                empty.style.display = 'block';
-                return;
-            }
+        displayArticles(filtered);
+      }
 
-            empty.style.display = 'none';
-            grid.style.display = 'grid';
+      function displayArticles(articles) {
+        document.getElementById('loadingMessage').style.display = 'none';
+        const grid = document.getElementById('kbGrid');
+        const empty = document.getElementById('emptyState');
 
-            grid.innerHTML = articles.map(article => `
+        if (articles.length === 0) {
+          grid.style.display = 'none';
+          empty.style.display = 'block';
+          return;
+        }
+
+        empty.style.display = 'none';
+        grid.style.display = 'grid';
+
+        grid.innerHTML = articles
+          .map(
+            (article) => `
                 <div class="kb-card" onclick="openArticle('${article.id}')">
                     <div class="kb-category">${article.category}</div>
                     <h3>${article.title}</h3>
@@ -341,29 +361,32 @@
                         <span>👍 ${article.helpful || 0} helpful</span>
                     </div>
                 </div>
-            `).join('');
+            `
+          )
+          .join('');
+      }
+
+      window.openArticle = function (id) {
+        const article = allArticles.find((a) => a.id === id);
+        if (!article) return;
+
+        document.getElementById('modalTitle').textContent = article.title;
+        document.getElementById('modalCategory').textContent = article.category;
+        document.getElementById('modalContent').innerHTML =
+          article.content.replace(/\n/g, '<br><br>');
+        document.getElementById('kbModal').style.display = 'block';
+      };
+
+      window.closeModal = function () {
+        document.getElementById('kbModal').style.display = 'none';
+      };
+
+      window.onclick = function (event) {
+        const modal = document.getElementById('kbModal');
+        if (event.target === modal) {
+          modal.style.display = 'none';
         }
-
-        window.openArticle = function(id) {
-            const article = allArticles.find(a => a.id === id);
-            if (!article) return;
-
-            document.getElementById('modalTitle').textContent = article.title;
-            document.getElementById('modalCategory').textContent = article.category;
-            document.getElementById('modalContent').innerHTML = article.content.replace(/\n/g, '<br><br>');
-            document.getElementById('kbModal').style.display = 'block';
-        };
-
-        window.closeModal = function() {
-            document.getElementById('kbModal').style.display = 'none';
-        };
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('kbModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        };
+      };
     </script>
-</body>
+  </body>
 </html>

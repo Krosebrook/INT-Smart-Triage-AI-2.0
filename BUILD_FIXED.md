@@ -12,6 +12,7 @@
 ## The Fix (Applied)
 
 ### 1. Fixed package.json
+
 ```json
 "scripts": {
   "dev": "vite",
@@ -21,6 +22,7 @@
 ```
 
 ### 2. Added Vite dependency
+
 ```json
 "devDependencies": {
   "vite": "^5.0.0"
@@ -28,23 +30,25 @@
 ```
 
 ### 3. Created vite.config.js
+
 ```javascript
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  publicDir: 'public',           // Serves public/data/* files
+  publicDir: 'public', // Serves public/data/* files
   build: {
     rollupOptions: {
       input: {
         main: './index.html',
-        demo: './public/demo.html'
-      }
-    }
-  }
+        demo: './public/demo.html',
+      },
+    },
+  },
 });
 ```
 
 ### 4. Fixed data file structure
+
 ```
 public/
   data/
@@ -54,10 +58,11 @@ public/
 ```
 
 ### 5. Fixed file paths in demo.html
+
 ```javascript
 // Changed from: fetch('../data/kb.json')
-fetch('/data/kb.json')          // Now works in production
-fetch('/data/personas.json')    // Now works in production
+fetch('/data/kb.json'); // Now works in production
+fetch('/data/personas.json'); // Now works in production
 ```
 
 ## Build Now Works
@@ -78,6 +83,7 @@ dist/
 ## How to Deploy to bolt.new
 
 ### Option 1: Direct Deploy
+
 1. Copy ALL files from your project
 2. Paste into bolt.new
 3. Run `npm install`
@@ -85,7 +91,9 @@ dist/
 5. **It will work!**
 
 ### Option 2: GitHub → Vercel
+
 1. Push to GitHub:
+
 ```bash
 git init
 git add -A
@@ -106,6 +114,7 @@ git push -u origin main
 ## What's Included
 
 ### INT Business Data
+
 - **7 INT Service Specialists:**
   - Sarah Johnson (InfoSec)
   - Mike Chen (Technology)
@@ -125,6 +134,7 @@ git push -u origin main
   - Operations (5)
 
 ### Working Features
+
 ✅ Triage form with AI categorization
 ✅ Health check API endpoint
 ✅ Triage report API endpoint
@@ -137,6 +147,7 @@ git push -u origin main
 ## Test It Works
 
 ### 1. Test Build Locally
+
 ```bash
 npm install
 npm run build
@@ -144,6 +155,7 @@ npm run build
 ```
 
 ### 2. Test Development Server
+
 ```bash
 npm run dev
 # Opens on http://localhost:5173
@@ -152,6 +164,7 @@ npm run dev
 ```
 
 ### 3. Check Files Exist
+
 ```bash
 ls -la dist/data/
 # Should show:
@@ -162,6 +175,7 @@ ls -la dist/data/
 ## Environment Variables Needed
 
 Create `.env` file:
+
 ```env
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
@@ -197,6 +211,7 @@ project/
 **The "no such file or directory" error is FIXED.**
 
 All you need to do now is:
+
 1. Run `npm install` (one time)
 2. Run `npm run build` (builds successfully)
 3. Deploy to Vercel or bolt.new

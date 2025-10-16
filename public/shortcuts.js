@@ -1,64 +1,64 @@
 export function initKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey || e.metaKey) {
-            switch (e.key.toLowerCase()) {
-                case 'k':
-                    e.preventDefault();
-                    focusSearch();
-                    break;
-                case 'n':
-                    e.preventDefault();
-                    window.location.href = '/';
-                    break;
-                case 'h':
-                    e.preventDefault();
-                    window.location.href = '/client-history.html';
-                    break;
-                case 'b':
-                    e.preventDefault();
-                    window.location.href = '/kb-search.html';
-                    break;
-                case '/':
-                    e.preventDefault();
-                    showShortcutsHelp();
-                    break;
-            }
-        } else if (e.key === 'Escape') {
-            closeAllModals();
-        }
-    });
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key.toLowerCase()) {
+        case 'k':
+          e.preventDefault();
+          focusSearch();
+          break;
+        case 'n':
+          e.preventDefault();
+          window.location.href = '/';
+          break;
+        case 'h':
+          e.preventDefault();
+          window.location.href = '/client-history.html';
+          break;
+        case 'b':
+          e.preventDefault();
+          window.location.href = '/kb-search.html';
+          break;
+        case '/':
+          e.preventDefault();
+          showShortcutsHelp();
+          break;
+      }
+    } else if (e.key === 'Escape') {
+      closeAllModals();
+    }
+  });
 }
 
 function focusSearch() {
-    const searchInputs = ['searchQuery', 'searchInput', 'customerName'];
-    for (const id of searchInputs) {
-        const input = document.getElementById(id);
-        if (input) {
-            input.focus();
-            input.select();
-            break;
-        }
+  const searchInputs = ['searchQuery', 'searchInput', 'customerName'];
+  for (const id of searchInputs) {
+    const input = document.getElementById(id);
+    if (input) {
+      input.focus();
+      input.select();
+      break;
     }
+  }
 }
 
 function closeAllModals() {
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.style.display = 'none';
-    });
+  document.querySelectorAll('.modal').forEach((modal) => {
+    modal.style.display = 'none';
+  });
 }
 
 function showShortcutsHelp() {
-    const modal = document.getElementById('shortcutsModal');
-    if (modal) {
-        modal.style.display = 'block';
-        return;
-    }
+  const modal = document.getElementById('shortcutsModal');
+  if (modal) {
+    modal.style.display = 'block';
+    return;
+  }
 
-    const helpModal = document.createElement('div');
-    helpModal.id = 'shortcutsModal';
-    helpModal.className = 'modal';
-    helpModal.style.display = 'block';
-    helpModal.innerHTML = `
+  const helpModal = document.createElement('div');
+  helpModal.id = 'shortcutsModal';
+  helpModal.className = 'modal';
+  helpModal.style.display = 'block';
+  helpModal.innerHTML = `
         <div class="modal-content" style="max-width: 500px; margin: 100px auto; padding: 30px; background: var(--card-bg); border-radius: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="color: var(--text-primary);">Keyboard Shortcuts</h2>
@@ -93,11 +93,11 @@ function showShortcutsHelp() {
         </div>
     `;
 
-    document.body.appendChild(helpModal);
+  document.body.appendChild(helpModal);
 
-    helpModal.addEventListener('click', (e) => {
-        if (e.target === helpModal) {
-            helpModal.remove();
-        }
-    });
+  helpModal.addEventListener('click', (e) => {
+    if (e.target === helpModal) {
+      helpModal.remove();
+    }
+  });
 }

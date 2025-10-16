@@ -11,6 +11,7 @@ This document details the 10 advanced features, functions, and tools added to IN
 **File:** `/src/realtimeService.js`
 
 ### Capabilities
+
 - WebSocket-based real-time updates using Supabase Realtime
 - Live ticket status changes broadcast to all connected CSRs
 - Presence tracking showing which CSRs are online
@@ -19,6 +20,7 @@ This document details the 10 advanced features, functions, and tools added to IN
 - Activity broadcasting for team awareness
 
 ### Key Functions
+
 - `subscribeToReports()` - Listen for ticket changes
 - `subscribeToNotes()` - Real-time note updates
 - `trackPresence()` - CSR online/offline status
@@ -26,6 +28,7 @@ This document details the 10 advanced features, functions, and tools added to IN
 - `notifyCSRs()` - Send instant notifications
 
 ### Usage Example
+
 ```javascript
 import { realtimeService } from '/src/realtimeService.js';
 
@@ -34,7 +37,7 @@ realtimeService.trackPresence('John Doe', 'online');
 
 // Subscribe to ticket changes
 realtimeService.subscribeToReports((change) => {
-    console.log('Ticket updated:', change);
+  console.log('Ticket updated:', change);
 });
 
 // Get online CSRs
@@ -48,6 +51,7 @@ const onlineTeam = realtimeService.getOnlineCSRs();
 **Files:** `/src/analyticsService.js`, `/public/advanced-analytics.html`
 
 ### Capabilities
+
 - Interactive charts using Chart.js (line, bar, pie, doughnut)
 - Ticket volume trends over time
 - Priority distribution analysis
@@ -60,6 +64,7 @@ const onlineTeam = realtimeService.getOnlineCSRs();
 - Real-time stat cards with trend indicators
 
 ### Key Functions
+
 - `getTicketVolumeByDay()` - Daily ticket counts
 - `getPriorityDistribution()` - Priority breakdown
 - `getDepartmentWorkload()` - Department statistics
@@ -69,6 +74,7 @@ const onlineTeam = realtimeService.getOnlineCSRs();
 - `exportAnalyticsData()` - CSV/JSON export
 
 ### Access
+
 Navigate to `/public/advanced-analytics.html` from the main dashboard
 
 ---
@@ -78,6 +84,7 @@ Navigate to `/public/advanced-analytics.html` from the main dashboard
 **File:** `/src/knowledgeBaseService.js`
 
 ### Capabilities
+
 - Full-text search with relevance scoring
 - Semantic search understanding synonyms and context
 - Keyword extraction from issue descriptions
@@ -89,6 +96,7 @@ Navigate to `/public/advanced-analytics.html` from the main dashboard
 - Related articles suggestions
 
 ### Key Functions
+
 - `search()` - Intelligent search with relevance scoring
 - `getArticleById()` - Retrieve specific article
 - `getRelatedArticles()` - Find similar content
@@ -98,24 +106,26 @@ Navigate to `/public/advanced-analytics.html` from the main dashboard
 - `trackView()` - Analytics tracking
 
 ### Semantic Search Features
+
 - Synonym matching (e.g., "hack" matches "breach", "attack")
 - Context understanding (e.g., "slow" matches "performance", "speed")
 - Stop word filtering for better results
 - Frequency-based keyword extraction
 
 ### Usage Example
+
 ```javascript
 import { knowledgeBaseService } from '/src/knowledgeBaseService.js';
 
 // Search knowledge base
 const results = await knowledgeBaseService.search('security compliance', {
-    category: 'security',
-    limit: 5
+  category: 'security',
+  limit: 5,
 });
 
 // Get suggested articles for a ticket
 const suggestions = await knowledgeBaseService.getSuggestedArticles(
-    'We need help with SOC2 compliance audit preparation'
+  'We need help with SOC2 compliance audit preparation'
 );
 ```
 
@@ -126,6 +136,7 @@ const suggestions = await knowledgeBaseService.getSuggestedArticles(
 **File:** `/src/emailService.js`
 
 ### Capabilities
+
 - 6 pre-built email templates for all scenarios
 - Dynamic variable injection
 - HTML email layout with branding
@@ -137,6 +148,7 @@ const suggestions = await knowledgeBaseService.getSuggestedArticles(
 - Email open and click tracking
 
 ### Email Templates
+
 1. **Ticket Received** - Confirmation with details
 2. **Ticket Assigned** - Specialist assignment notification
 3. **High Priority Alert** - Urgent ticket notification
@@ -145,6 +157,7 @@ const suggestions = await knowledgeBaseService.getSuggestedArticles(
 6. **Knowledge Base Articles** - Helpful resources
 
 ### Key Functions
+
 - `sendEmail()` - Send any template
 - `sendTicketConfirmation()` - Auto-confirm receipt
 - `sendAssignmentNotification()` - Notify assignment
@@ -154,16 +167,17 @@ const suggestions = await knowledgeBaseService.getSuggestedArticles(
 - `trackEmailOpen()` - Analytics tracking
 
 ### Usage Example
+
 ```javascript
 import { emailService } from '/src/emailService.js';
 
 // Send ticket confirmation
 await emailService.sendTicketConfirmation({
-    customerName: 'John Doe',
-    customerEmail: 'john@example.com',
-    reportId: 'TR-12345',
-    priority: 'high',
-    department: 'Technology'
+  customerName: 'John Doe',
+  customerEmail: 'john@example.com',
+  reportId: 'TR-12345',
+  priority: 'high',
+  department: 'Technology',
 });
 
 // Schedule follow-up
@@ -177,6 +191,7 @@ await emailService.scheduleFollowUp('TR-12345', 'john@example.com', 3);
 **File:** `/src/communicationHub.js`
 
 ### Capabilities
+
 - Unified interface for 6 communication channels
 - Email, SMS, Slack, Microsoft Teams, Phone, Chat
 - Priority-based notifications
@@ -187,6 +202,7 @@ await emailService.scheduleFollowUp('TR-12345', 'john@example.com', 3);
 - Message templating per channel
 
 ### Supported Channels
+
 1. **Email** - Full HTML email support
 2. **SMS** - Text message notifications (160 char segments)
 3. **Slack** - Channel messages with attachments
@@ -195,6 +211,7 @@ await emailService.scheduleFollowUp('TR-12345', 'john@example.com', 3);
 6. **Chat** - Real-time in-app messaging
 
 ### Key Functions
+
 - `sendNotification()` - Universal send method
 - `sendSlack()` - Slack webhook integration
 - `sendTeams()` - Teams connector
@@ -204,22 +221,29 @@ await emailService.scheduleFollowUp('TR-12345', 'john@example.com', 3);
 - `getConversationHistory()` - Full communication log
 
 ### Usage Example
+
 ```javascript
 import { communicationHub } from '/src/communicationHub.js';
 
 // Send Slack notification
-await communicationHub.sendSlack('#urgent-tickets', 'High priority ticket assigned!', {
+await communicationHub.sendSlack(
+  '#urgent-tickets',
+  'High priority ticket assigned!',
+  {
     priority: 'high',
-    attachments: [{
+    attachments: [
+      {
         title: 'View Ticket',
-        title_link: '/report-detail.html?id=TR-12345'
-    }]
-});
+        title_link: '/report-detail.html?id=TR-12345',
+      },
+    ],
+  }
+);
 
 // Broadcast to entire team
 await communicationHub.broadcastToTeam(
-    'New high-priority security issue requires immediate attention',
-    'high'
+  'New high-priority security issue requires immediate attention',
+  'high'
 );
 ```
 
@@ -230,6 +254,7 @@ await communicationHub.broadcastToTeam(
 **File:** `/src/assignmentEngine.js`
 
 ### Capabilities
+
 - Intelligent auto-assignment based on workload
 - Skill-based routing to specialists
 - Department expertise matching
@@ -241,7 +266,9 @@ await communicationHub.broadcastToTeam(
 - Supervisor routing for escalations
 
 ### Assignment Algorithm
+
 Scores CSRs based on:
+
 - Current workload (lower is better)
 - Skill level (expert > senior > junior)
 - Satisfaction rating (higher is better)
@@ -250,6 +277,7 @@ Scores CSRs based on:
 - Priority handling capability
 
 ### Key Functions
+
 - `autoAssign()` - Intelligent auto-assignment
 - `determineDepartment()` - Route to correct team
 - `selectBestCSR()` - Scoring algorithm
@@ -259,25 +287,29 @@ Scores CSRs based on:
 - `estimateResponseTime()` - SLA predictions
 
 ### Usage Example
+
 ```javascript
 import { assignmentEngine } from '/src/assignmentEngine.js';
 
 // Auto-assign ticket
 const assignment = await assignmentEngine.autoAssign({
-    reportId: 'TR-12345',
-    priority: 'high',
-    issueDescription: 'Security vulnerability discovered'
+  reportId: 'TR-12345',
+  priority: 'high',
+  issueDescription: 'Security vulnerability discovered',
 });
 
 // Reassign ticket
 await assignmentEngine.reassignTicket(
-    'TR-12345',
-    'Sarah Johnson',
-    'Requires security expertise'
+  'TR-12345',
+  'Sarah Johnson',
+  'Requires security expertise'
 );
 
 // Escalate ticket
-await assignmentEngine.escalateTicket('TR-12345', 'Customer escalation requested');
+await assignmentEngine.escalateTicket(
+  'TR-12345',
+  'Customer escalation requested'
+);
 ```
 
 ---
@@ -287,6 +319,7 @@ await assignmentEngine.escalateTicket('TR-12345', 'Customer escalation requested
 **File:** `/src/customerProfileService.js`
 
 ### Capabilities
+
 - Comprehensive customer profiles with full history
 - Ticket history aggregation
 - Sentiment analysis over time
@@ -298,6 +331,7 @@ await assignmentEngine.escalateTicket('TR-12345', 'Customer escalation requested
 - Interaction timeline
 
 ### Churn Risk Factors
+
 - Unresolved tickets in last 30 days
 - Negative sentiment interactions
 - Average resolution time
@@ -305,6 +339,7 @@ await assignmentEngine.escalateTicket('TR-12345', 'Customer escalation requested
 - Historical escalations
 
 ### Key Functions
+
 - `getCustomerProfile()` - Complete profile data
 - `getTicketHistory()` - All customer tickets
 - `calculateOverallSentiment()` - Sentiment trends
@@ -315,6 +350,7 @@ await assignmentEngine.escalateTicket('TR-12345', 'Customer escalation requested
 - `addCustomerNote()` - Notes and tags
 
 ### Usage Example
+
 ```javascript
 import { customerProfileService } from '/src/customerProfileService.js';
 
@@ -328,9 +364,9 @@ console.log('Recommendations:', profile.riskScore.recommendations);
 
 // Add note
 await customerProfileService.addCustomerNote(
-    'CUST-12345',
-    'Customer prefers morning calls',
-    'John CSR'
+  'CUST-12345',
+  'Customer prefers morning calls',
+  'John CSR'
 );
 
 // Find similar customers
@@ -344,6 +380,7 @@ const similar = await customerProfileService.findSimilarCustomers('CUST-12345');
 **Files:** `/public/manifest.json`, `/public/sw.js`
 
 ### Capabilities
+
 - Installable on iOS, Android, and desktop
 - Offline functionality with service worker
 - Push notifications for urgent tickets
@@ -354,6 +391,7 @@ const similar = await customerProfileService.findSimilarCustomers('CUST-12345');
 - Cached assets for fast loading
 
 ### PWA Features
+
 - **Install Prompt** - Add to home screen
 - **Offline Mode** - Work without internet
 - **Push Notifications** - Real-time alerts
@@ -361,6 +399,7 @@ const similar = await customerProfileService.findSimilarCustomers('CUST-12345');
 - **App Shortcuts** - Quick access to features
 
 ### Service Worker Caching
+
 - Static assets cached on install
 - Runtime caching for API responses
 - Cache-first strategy for assets
@@ -368,12 +407,14 @@ const similar = await customerProfileService.findSimilarCustomers('CUST-12345');
 - Automatic cache updates
 
 ### Installation
+
 1. Visit the app in Chrome/Edge/Safari
 2. Click "Install" prompt or menu option
 3. App appears on home screen/desktop
 4. Works like a native app
 
 ### Usage
+
 The PWA automatically registers when you visit the site. No additional code needed - it just works!
 
 ---
@@ -383,6 +424,7 @@ The PWA automatically registers when you visit the site. No additional code need
 **File:** `/src/sentimentAnalysis.js`
 
 ### Capabilities
+
 - Real-time emotional tone detection
 - Escalation probability prediction (0-100%)
 - De-escalation tactic recommendations
@@ -393,6 +435,7 @@ The PWA automatically registers when you visit the site. No additional code need
 - Urgency level assessment
 
 ### Analysis Factors
+
 - **Positive/Negative Keywords** - Word sentiment scoring
 - **Urgency Indicators** - Time-sensitive language
 - **Frustration Markers** - Repeated issues, waiting
@@ -401,6 +444,7 @@ The PWA automatically registers when you visit the site. No additional code need
 - **Punctuation Analysis** - Excessive exclamation marks
 
 ### Sentiment Levels
+
 - `positive` - Happy, satisfied customer
 - `slightly_positive` - Generally positive
 - `neutral` - Balanced tone
@@ -408,12 +452,14 @@ The PWA automatically registers when you visit the site. No additional code need
 - `negative` - Frustrated, unhappy
 
 ### Escalation Risk Levels
+
 - **0-30%** - Low risk, standard response
 - **31-50%** - Medium risk, empathetic handling
 - **51-70%** - High risk, priority with compensation
 - **71-100%** - Critical risk, supervisor involvement
 
 ### Key Functions
+
 - `analyze()` - Complete sentiment analysis
 - `predictEscalation()` - Escalation probability
 - `getDeEscalationTactics()` - Recommended approaches
@@ -421,13 +467,14 @@ The PWA automatically registers when you visit the site. No additional code need
 - `generateResponseSuggestion()` - AI response guidance
 
 ### Usage Example
+
 ```javascript
 import { sentimentAnalyzer } from '/src/sentimentAnalysis.js';
 
 // Analyze customer message
 const analysis = sentimentAnalyzer.analyze(
-    'I have been waiting for THREE WEEKS! This is completely unacceptable!',
-    'angry'
+  'I have been waiting for THREE WEEKS! This is completely unacceptable!',
+  'angry'
 );
 
 console.log('Sentiment:', analysis.sentiment); // 'negative'
@@ -436,9 +483,9 @@ console.log('Recommended Action:', analysis.recommendedAction);
 // 'immediate_supervisor_involvement'
 
 // Get de-escalation tactics
-analysis.deEscalationTactics.forEach(tactic => {
-    console.log(`${tactic.priority}: ${tactic.tactic}`);
-    console.log(`Script: ${tactic.script}`);
+analysis.deEscalationTactics.forEach((tactic) => {
+  console.log(`${tactic.priority}: ${tactic.tactic}`);
+  console.log(`Script: ${tactic.script}`);
 });
 ```
 
@@ -449,6 +496,7 @@ analysis.deEscalationTactics.forEach(tactic => {
 **File:** `/src/reportingService.js`
 
 ### Capabilities
+
 - 5 pre-built report templates
 - Custom report builder
 - Multiple export formats (JSON, CSV, PDF, Excel)
@@ -460,6 +508,7 @@ analysis.deEscalationTactics.forEach(tactic => {
 - Operational metrics
 
 ### Report Templates
+
 1. **Executive Summary** - High-level overview for leadership
 2. **CSR Performance** - Individual and team metrics
 3. **Customer Satisfaction** - CSAT scores and sentiment
@@ -467,6 +516,7 @@ analysis.deEscalationTactics.forEach(tactic => {
 5. **Department Analysis** - Department-specific insights
 
 ### Report Sections
+
 - **Overview** - Total tickets, resolution rates
 - **Priorities** - Priority distribution
 - **Performance** - CSR metrics
@@ -480,6 +530,7 @@ analysis.deEscalationTactics.forEach(tactic => {
 - **Escalations** - Escalation analysis
 
 ### Key Functions
+
 - `generateReport()` - Create full report
 - `generateCustomReport()` - Build custom sections
 - `exportToCSV()` - CSV export
@@ -489,28 +540,28 @@ analysis.deEscalationTactics.forEach(tactic => {
 - `getAvailableTemplates()` - Template list
 
 ### Usage Example
+
 ```javascript
 import { reportingService } from '/src/reportingService.js';
 
 // Generate executive summary
 const report = await reportingService.generateReport('executive_summary', {
-    startDate: new Date('2025-01-01'),
-    endDate: new Date('2025-01-31'),
-    format: 'csv',
-    csrAgent: 'Manager'
+  startDate: new Date('2025-01-01'),
+  endDate: new Date('2025-01-31'),
+  format: 'csv',
+  csrAgent: 'Manager',
 });
 
 // Schedule monthly report
-await reportingService.scheduleReport(
-    'csr_performance',
-    'monthly',
-    ['manager@intinc.com', 'director@intinc.com']
-);
+await reportingService.scheduleReport('csr_performance', 'monthly', [
+  'manager@intinc.com',
+  'director@intinc.com',
+]);
 
 // Build custom report
 const custom = await reportingService.generateCustomReport(
-    ['overview', 'priorities', 'sentiment'],
-    { startDate: new Date('2025-01-01') }
+  ['overview', 'priorities', 'sentiment'],
+  { startDate: new Date('2025-01-01') }
 );
 ```
 
@@ -521,6 +572,7 @@ const custom = await reportingService.generateCustomReport(
 **File:** `/supabase/migrations/20251015050000_add_advanced_features.sql`
 
 ### New Tables Created
+
 1. **customer_profiles** - Customer profile data
 2. **customer_notes** - Customer notes and tags
 3. **csr_profiles** - CSR availability and workload
@@ -532,7 +584,9 @@ const custom = await reportingService.generateCustomReport(
 9. **user_preferences** - User settings
 
 ### Enhanced Reports Table
+
 Added fields:
+
 - `customer_id` - Link to customer profile
 - `category` - Ticket categorization
 - `metadata` - JSON flexible data
@@ -540,6 +594,7 @@ Added fields:
 - `escalation_reason` - Escalation notes
 
 ### Database Functions
+
 - `increment_article_views()` - Track KB views
 - `auto_assign_report()` - Automatic assignment
 
@@ -585,6 +640,7 @@ All features integrate seamlessly:
 ## Next Steps for Deployment
 
 1. **Database Migration**
+
    ```bash
    # Run the migration SQL in Supabase dashboard
    supabase/migrations/20251015050000_add_advanced_features.sql
@@ -597,6 +653,7 @@ All features integrate seamlessly:
    - `SUPABASE_SERVICE_ROLE_KEY`
 
 3. **Build and Deploy**
+
    ```bash
    npm run build
    npm run deploy
@@ -618,12 +675,14 @@ All features integrate seamlessly:
 ## Testing
 
 All features include:
+
 - Mock data fallbacks for testing without database
 - Console logging for debugging
 - Error handling and graceful degradation
 - TypeScript-ready interfaces
 
 Test each feature:
+
 ```javascript
 // Test analytics
 import { getTicketVolumeByDay } from '/src/analyticsService.js';
@@ -652,6 +711,7 @@ const assigned = await assignmentEngine.autoAssign(ticketData);
 ## Support
 
 For questions or issues with these features:
+
 1. Check console logs for detailed error messages
 2. Verify Supabase connection and environment variables
 3. Review the specific service file documentation

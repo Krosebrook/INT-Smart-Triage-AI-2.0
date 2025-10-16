@@ -478,9 +478,17 @@
             }
         });
 
+        // Helper function to escape HTML and prevent XS              function escapeHtml(text) {
+            const di            ment.createElement('div');
+                 iv.textContent = text;
+            return d                ;
+        }
+
         function displayTriageResults(result, customerName) {
             const triageResults = document.getElementById('triageResults');
             const priority = result.priority || 'medium';
+            const safeCustomerName = escapeHtml(customerName);
+            const safeReportId = escapeHtml(result.reportId || 'N/A');
 
             triageResults.innerHTML = `
                 <div class="result-card">
@@ -492,7 +500,7 @@
 
                 <div class="result-card">
                     <h3>Recommended Response Approach</h3>
-                    <p>${result.responseApproach || 'Standard empathetic response with technical focus. Acknowledge customer concern and provide clear next steps.'}</p>
+                    <p>${escapeHtml(result.responseApproach || 'Standard empathetic response with technical focus. Acknowledge customer concern and provide clear next steps.')}</p>
                 </div>
 
                 <div class="result-card">
@@ -503,7 +511,7 @@
                             'Explain the technical steps being taken to resolve the issue',
                             'Provide a realistic timeline for resolution',
                             'Offer additional support resources if needed'
-                        ]).map(point => `<li style="margin-bottom: 5px;">${point}</li>`).join('')}
+                        ]).map(point => `<li style="marg            eHtml(point)}</li>`).join('')}
                     </ul>
                 </div>
 
@@ -514,14 +522,14 @@
                             'KB-001: Common Technical Issues Troubleshooting',
                             'KB-015: Customer Communication Best Practices',
                             'KB-032: Escalation Procedures'
-                        ]).map(kb => `<li style="margin-bottom: 5px;"><a href="#" style="color: #667eea;">${kb}</a></li>`).join('')}
+                        ]).map(kb => `<li style="margin-            " style="color: #667eea;">${escapeHtml(kb)}</a></li>`).join('')}
                     </ul>
                 </div>
 
                 <div class="result-card">
                     <h3>Activity Logged</h3>
-                    <p><strong>Report ID:</strong> ${result.reportId || 'N/A'}</p>
-                    <p><strong>Customer:</strong> ${customerName}</p>
+                    <p><strong>Report ID:</strong> ${safeReportId}</p>
+                    <p><strong>Customer:</strong> ${safeCustomerName}</p>
                     <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
                     <p><strong>Status:</strong> <span style="color: #27ae60; font-weight: 600;">✓ Successfully saved to database</span></p>
                 </div>
@@ -530,7 +538,7 @@
                     <h3 style="color: #667eea;">📊 Next Actions</h3>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
                         <button onclick="window.location.href='/client-history.html?customer=${encodeURIComponent(customerName)}'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
-                            View All Reports for ${customerName}
+                            View All Reports for ${safeCustomerName}
                         </button>
                         <button onclick="window.location.href='/client-history.html'" class="action-btn" style="flex: 1; min-width: 200px; padding: 12px 20px; background: #764ba2; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">
                             Browse All Reports

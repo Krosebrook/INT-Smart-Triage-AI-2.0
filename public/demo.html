@@ -1,31 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>INT Smart Triage AI 2.0 - Demo</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for JSON formatting */
-        .json-output {
-            background-color: #1f2937;
-            color: #e5e7eb;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
+      /* Custom styles for JSON formatting */
+      .json-output {
+        background-color: #1f2937;
+        color: #e5e7eb;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
     </style>
-</head>
-<body class="bg-gray-100 min-h-screen">
+  </head>
+  <body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">INT Smart Triage AI 2.0</h1>
-                <p class="text-gray-600">Demo Interface for AI-Powered Ticket Triage</p>
-                <!-- API Contract Documentation Link -->
-                <!-- 
+      <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            INT Smart Triage AI 2.0
+          </h1>
+          <p class="text-gray-600">
+            Demo Interface for AI-Powered Ticket Triage
+          </p>
+          <!-- API Contract Documentation Link -->
+          <!-- 
                 API Contract: This demo interfaces with the INT Smart Triage AI 2.0 API
                 Expected API Endpoints:
                 - POST /api/triage - Main triage endpoint
@@ -34,297 +38,357 @@
                 
                 For full API documentation, see: /docs/api-contract.md
                 -->
-            </div>
-
-            <!-- Input Form -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Triage Request</h2>
-                
-                <!-- Domain Selection -->
-                <div class="mb-4">
-                    <label for="domain" class="block text-sm font-medium text-gray-700 mb-2">Domain</label>
-                    <select id="domain" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Domain...</option>
-                        <option value="technical">Technical Support</option>
-                        <option value="billing">Billing & Payments</option>
-                        <option value="general">General Inquiry</option>
-                        <option value="sales">Sales & Pre-sales</option>
-                    </select>
-                </div>
-
-                <!-- Persona Selection -->
-                <div class="mb-4">
-                    <label for="persona" class="block text-sm font-medium text-gray-700 mb-2">Persona</label>
-                    <select id="persona" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Select Persona...</option>
-                        <!-- Personas will be loaded dynamically from /data/personas.json -->
-                    </select>
-                </div>
-
-                <!-- Ticket Content -->
-                <div class="mb-4">
-                    <label for="ticket" class="block text-sm font-medium text-gray-700 mb-2">Ticket Content</label>
-                    <textarea 
-                        id="ticket" 
-                        rows="4" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter the customer ticket content here..."
-                    ></textarea>
-                </div>
-
-                <!-- Submit Button -->
-                <button 
-                    id="submitBtn" 
-                    onclick="submitTriage()" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
-                >
-                    Submit for Triage
-                </button>
-            </div>
-
-            <!-- Loading Indicator -->
-            <div id="loading" class="hidden bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                <div class="flex items-center">
-                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-600 mr-3"></div>
-                    <span class="text-yellow-800">Processing triage request...</span>
-                </div>
-            </div>
-
-            <!-- Results Section -->
-            <div id="results" class="hidden">
-                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Triage Results</h2>
-                    <div id="resultsContent" class="json-output bg-gray-900 rounded-md p-4 text-sm overflow-x-auto"></div>
-                </div>
-            </div>
-
-            <!-- Error Section -->
-            <div id="error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <h3 class="text-lg font-medium text-red-800 mb-2">Error</h3>
-                <p id="errorMessage" class="text-red-700"></p>
-            </div>
         </div>
+
+        <!-- Input Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            Triage Request
+          </h2>
+
+          <!-- Domain Selection -->
+          <div class="mb-4">
+            <label
+              for="domain"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Domain</label
+            >
+            <select
+              id="domain"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Domain...</option>
+              <option value="technical">Technical Support</option>
+              <option value="billing">Billing & Payments</option>
+              <option value="general">General Inquiry</option>
+              <option value="sales">Sales & Pre-sales</option>
+            </select>
+          </div>
+
+          <!-- Persona Selection -->
+          <div class="mb-4">
+            <label
+              for="persona"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Persona</label
+            >
+            <select
+              id="persona"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Persona...</option>
+              <!-- Personas will be loaded dynamically from /data/personas.json -->
+            </select>
+          </div>
+
+          <!-- Ticket Content -->
+          <div class="mb-4">
+            <label
+              for="ticket"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Ticket Content</label
+            >
+            <textarea
+              id="ticket"
+              rows="4"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter the customer ticket content here..."
+            ></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            id="submitBtn"
+            onclick="submitTriage()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+          >
+            Submit for Triage
+          </button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div
+          id="loading"
+          class="hidden bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6"
+        >
+          <div class="flex items-center">
+            <div
+              class="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-600 mr-3"
+            ></div>
+            <span class="text-yellow-800">Processing triage request...</span>
+          </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden">
+          <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+              Triage Results
+            </h2>
+            <div
+              id="resultsContent"
+              class="json-output bg-gray-900 rounded-md p-4 text-sm overflow-x-auto"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Error Section -->
+        <div
+          id="error"
+          class="hidden bg-red-50 border border-red-200 rounded-lg p-4 mb-6"
+        >
+          <h3 class="text-lg font-medium text-red-800 mb-2">Error</h3>
+          <p id="errorMessage" class="text-red-700"></p>
+        </div>
+      </div>
     </div>
 
     <script>
-        // Global data storage
-        let personas = [];
-        let knowledgeBase = [];
+      // Global data storage
+      let personas = [];
+      let knowledgeBase = [];
 
-        // Load initial data
-        document.addEventListener('DOMContentLoaded', function() {
-            loadPersonas();
-            loadKnowledgeBase();
-        });
+      // Load initial data
+      document.addEventListener('DOMContentLoaded', function () {
+        loadPersonas();
+        loadKnowledgeBase();
+      });
 
-        // Load personas from /data/personas.json
-        async function loadPersonas() {
-            try {
-                const response = await fetch('/data/personas.json');
-                if (!response.ok) throw new Error('Failed to load personas');
-                
-                personas = await response.json();
-                const personaSelect = document.getElementById('persona');
-                
-                // Clear existing options (except the first placeholder)
-                personaSelect.innerHTML = '<option value="">Select Persona...</option>';
-                
-                // Add persona options
-                personas.forEach(persona => {
-                    const option = document.createElement('option');
-                    option.value = persona.id;
-                    option.textContent = `${persona.name} - ${persona.role}`;
-                    personaSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error loading personas:', error);
-                showError('Failed to load persona data: ' + error.message);
-            }
+      // Load personas from /data/personas.json
+      async function loadPersonas() {
+        try {
+          const response = await fetch('/data/personas.json');
+          if (!response.ok) throw new Error('Failed to load personas');
+
+          personas = await response.json();
+          const personaSelect = document.getElementById('persona');
+
+          // Clear existing options (except the first placeholder)
+          personaSelect.innerHTML =
+            '<option value="">Select Persona...</option>';
+
+          // Add persona options
+          personas.forEach((persona) => {
+            const option = document.createElement('option');
+            option.value = persona.id;
+            option.textContent = `${persona.name} - ${persona.role}`;
+            personaSelect.appendChild(option);
+          });
+        } catch (error) {
+          console.error('Error loading personas:', error);
+          showError('Failed to load persona data: ' + error.message);
+        }
+      }
+
+      // Load knowledge base from /data/kb.json
+      async function loadKnowledgeBase() {
+        try {
+          const response = await fetch('/data/kb.json');
+          if (!response.ok) throw new Error('Failed to load knowledge base');
+
+          knowledgeBase = await response.json();
+          console.log(
+            'Knowledge base loaded:',
+            knowledgeBase.length,
+            'articles'
+          );
+        } catch (error) {
+          console.error('Error loading knowledge base:', error);
+          showError('Failed to load knowledge base: ' + error.message);
+        }
+      }
+
+      // Submit triage request
+      async function submitTriage() {
+        const domain = document.getElementById('domain').value;
+        const personaId = document.getElementById('persona').value;
+        const ticket = document.getElementById('ticket').value;
+
+        // Validation
+        if (!domain) {
+          showError('Please select a domain');
+          return;
+        }
+        if (!personaId) {
+          showError('Please select a persona');
+          return;
+        }
+        if (!ticket.trim()) {
+          showError('Please enter ticket content');
+          return;
         }
 
-        // Load knowledge base from /data/kb.json
-        async function loadKnowledgeBase() {
-            try {
-                const response = await fetch('/data/kb.json');
-                if (!response.ok) throw new Error('Failed to load knowledge base');
-                
-                knowledgeBase = await response.json();
-                console.log('Knowledge base loaded:', knowledgeBase.length, 'articles');
-            } catch (error) {
-                console.error('Error loading knowledge base:', error);
-                showError('Failed to load knowledge base: ' + error.message);
-            }
+        // Find selected persona
+        const selectedPersona = personas.find((p) => p.id === personaId);
+        if (!selectedPersona) {
+          showError('Invalid persona selection');
+          return;
         }
 
-        // Submit triage request
-        async function submitTriage() {
-            const domain = document.getElementById('domain').value;
-            const personaId = document.getElementById('persona').value;
-            const ticket = document.getElementById('ticket').value;
+        // Show loading state
+        showLoading();
 
-            // Validation
-            if (!domain) {
-                showError('Please select a domain');
-                return;
-            }
-            if (!personaId) {
-                showError('Please select a persona');
-                return;
-            }
-            if (!ticket.trim()) {
-                showError('Please enter ticket content');
-                return;
-            }
+        try {
+          // Prepare request payload
+          const payload = {
+            ticket: ticket.trim(),
+            domain: domain,
+            persona: selectedPersona,
+          };
 
-            // Find selected persona
-            const selectedPersona = personas.find(p => p.id === personaId);
-            if (!selectedPersona) {
-                showError('Invalid persona selection');
-                return;
-            }
+          // POST to triage API
+          // NOTE: Since this is a demo and the API endpoint may not exist,
+          // we'll simulate the API call with a mock response
+          const response = await mockTriageAPI(payload);
 
-            // Show loading state
-            showLoading();
-
-            try {
-                // Prepare request payload
-                const payload = {
-                    ticket: ticket.trim(),
-                    domain: domain,
-                    persona: selectedPersona
-                };
-
-                // POST to triage API
-                // NOTE: Since this is a demo and the API endpoint may not exist,
-                // we'll simulate the API call with a mock response
-                const response = await mockTriageAPI(payload);
-                
-                // Display results
-                showResults(response);
-                
-            } catch (error) {
-                console.error('Triage API error:', error);
-                showError('Triage request failed: ' + error.message);
-            } finally {
-                hideLoading();
-            }
+          // Display results
+          showResults(response);
+        } catch (error) {
+          console.error('Triage API error:', error);
+          showError('Triage request failed: ' + error.message);
+        } finally {
+          hideLoading();
         }
+      }
 
-        // Mock API function for demonstration
-        // In production, this would be: fetch('/api/triage', { method: 'POST', ... })
-        const MOCK_API_DELAY_MS = 2000;
-        async function mockTriageAPI(payload) {
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, MOCK_API_DELAY_MS));
-            
-            // Mock response based on input
-            const mockResponse = {
-                success: true,
-                ticket_id: `TKT-${Date.now()}`,
-                priority: determineMockPriority(payload.ticket),
-                category: determineMockCategory(payload.domain),
-                sentiment: determineMockSentiment(payload.ticket),
-                suggested_response: generateMockResponse(payload),
-                kb_articles: findRelevantKBArticles(payload.domain),
-                persona_context: payload.persona,
-                processing_time_ms: Math.floor(Math.random() * 500) + 100,
-                timestamp: new Date().toISOString()
-            };
-            
-            return mockResponse;
-        }
+      // Mock API function for demonstration
+      // In production, this would be: fetch('/api/triage', { method: 'POST', ... })
+      const MOCK_API_DELAY_MS = 2000;
+      async function mockTriageAPI(payload) {
+        // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, MOCK_API_DELAY_MS));
 
-        // Helper functions for mock API
-        function determineMockPriority(ticket) {
-            const lowercaseTicket = ticket.toLowerCase();
-            if (lowercaseTicket.includes('urgent') || lowercaseTicket.includes('critical') || lowercaseTicket.includes('down')) {
-                return 'high';
-            } else if (lowercaseTicket.includes('issue') || lowercaseTicket.includes('problem')) {
-                return 'medium';
-            }
-            return 'low';
-        }
+        // Mock response based on input
+        const mockResponse = {
+          success: true,
+          ticket_id: `TKT-${Date.now()}`,
+          priority: determineMockPriority(payload.ticket),
+          category: determineMockCategory(payload.domain),
+          sentiment: determineMockSentiment(payload.ticket),
+          suggested_response: generateMockResponse(payload),
+          kb_articles: findRelevantKBArticles(payload.domain),
+          persona_context: payload.persona,
+          processing_time_ms: Math.floor(Math.random() * 500) + 100,
+          timestamp: new Date().toISOString(),
+        };
 
-        function determineMockCategory(domain) {
-            const categories = {
-                'technical': 'Technical Issue',
-                'billing': 'Billing Inquiry',
-                'general': 'General Support',
-                'sales': 'Sales Question'
-            };
-            return categories[domain] || 'Uncategorized';
-        }
+        return mockResponse;
+      }
 
-        function determineMockSentiment(ticket) {
-            const lowercaseTicket = ticket.toLowerCase();
-            if (lowercaseTicket.includes('frustrated') || lowercaseTicket.includes('angry') || lowercaseTicket.includes('terrible')) {
-                return 'negative';
-            } else if (lowercaseTicket.includes('thank') || lowercaseTicket.includes('great') || lowercaseTicket.includes('happy')) {
-                return 'positive';
-            }
-            return 'neutral';
+      // Helper functions for mock API
+      function determineMockPriority(ticket) {
+        const lowercaseTicket = ticket.toLowerCase();
+        if (
+          lowercaseTicket.includes('urgent') ||
+          lowercaseTicket.includes('critical') ||
+          lowercaseTicket.includes('down')
+        ) {
+          return 'high';
+        } else if (
+          lowercaseTicket.includes('issue') ||
+          lowercaseTicket.includes('problem')
+        ) {
+          return 'medium';
         }
+        return 'low';
+      }
 
-        function generateMockResponse(payload) {
-            const persona = payload.persona;
-            const salutation = getSalutation(payload.ticket);
-            const body = getContentBody(payload.domain, persona);
-            const signature = getSignature();
-            return `${salutation}\n\n${body}\n\n${signature}`;
-        }
+      function determineMockCategory(domain) {
+        const categories = {
+          technical: 'Technical Issue',
+          billing: 'Billing Inquiry',
+          general: 'General Support',
+          sales: 'Sales Question',
+        };
+        return categories[domain] || 'Uncategorized';
+      }
 
-        function getSalutation(ticket) {
-            if (ticket.includes('Mr.')) {
-                return 'Dear Mr.';
-            } else if (ticket.includes('Ms.')) {
-                return 'Dear Ms.';
-            }
-            return 'Dear Valued Customer';
+      function determineMockSentiment(ticket) {
+        const lowercaseTicket = ticket.toLowerCase();
+        if (
+          lowercaseTicket.includes('frustrated') ||
+          lowercaseTicket.includes('angry') ||
+          lowercaseTicket.includes('terrible')
+        ) {
+          return 'negative';
+        } else if (
+          lowercaseTicket.includes('thank') ||
+          lowercaseTicket.includes('great') ||
+          lowercaseTicket.includes('happy')
+        ) {
+          return 'positive';
         }
+        return 'neutral';
+      }
 
-        function getContentBody(domain, persona) {
-            const intro = `Thank you for contacting us regarding your ${domain} inquiry.`;
-            const roleStatement = `As a ${persona.role}, I understand your ${domain} needs are important to you.`;
-            const reviewStatement = persona.communication_style === 'formal'
-                ? 'We have reviewed your request and'
-                : "I've looked into your issue and";
-            return `${intro} ${roleStatement}\n\n${reviewStatement} will provide you with the appropriate assistance.`;
-        }
+      function generateMockResponse(payload) {
+        const persona = payload.persona;
+        const salutation = getSalutation(payload.ticket);
+        const body = getContentBody(payload.domain, persona);
+        const signature = getSignature();
+        return `${salutation}\n\n${body}\n\n${signature}`;
+      }
 
-        function getSignature() {
-            return 'Best regards,\nINT Customer Success Team';
+      function getSalutation(ticket) {
+        if (ticket.includes('Mr.')) {
+          return 'Dear Mr.';
+        } else if (ticket.includes('Ms.')) {
+          return 'Dear Ms.';
         }
-        const MAX_KB_ARTICLES = 3;
-        function findRelevantKBArticles(domain) {
-            return knowledgeBase.filter(article => 
-                article.category === domain || article.tags.includes(domain)
-            ).slice(0, MAX_KB_ARTICLES); // Return top N relevant articles
-        }
+        return 'Dear Valued Customer';
+      }
 
-        // UI Helper Functions
-        function showLoading() {
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('results').classList.add('hidden');
-            document.getElementById('error').classList.add('hidden');
-            document.getElementById('submitBtn').disabled = true;
-        }
+      function getContentBody(domain, persona) {
+        const intro = `Thank you for contacting us regarding your ${domain} inquiry.`;
+        const roleStatement = `As a ${persona.role}, I understand your ${domain} needs are important to you.`;
+        const reviewStatement =
+          persona.communication_style === 'formal'
+            ? 'We have reviewed your request and'
+            : "I've looked into your issue and";
+        return `${intro} ${roleStatement}\n\n${reviewStatement} will provide you with the appropriate assistance.`;
+      }
 
-        function hideLoading() {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('submitBtn').disabled = false;
-        }
+      function getSignature() {
+        return 'Best regards,\nINT Customer Success Team';
+      }
+      const MAX_KB_ARTICLES = 3;
+      function findRelevantKBArticles(domain) {
+        return knowledgeBase
+          .filter(
+            (article) =>
+              article.category === domain || article.tags.includes(domain)
+          )
+          .slice(0, MAX_KB_ARTICLES); // Return top N relevant articles
+      }
 
-        function showResults(data) {
-            document.getElementById('results').classList.remove('hidden');
-            document.getElementById('error').classList.add('hidden');
-            document.getElementById('resultsContent').textContent = JSON.stringify(data, null, 2);
-        }
+      // UI Helper Functions
+      function showLoading() {
+        document.getElementById('loading').classList.remove('hidden');
+        document.getElementById('results').classList.add('hidden');
+        document.getElementById('error').classList.add('hidden');
+        document.getElementById('submitBtn').disabled = true;
+      }
 
-        function showError(message) {
-            document.getElementById('error').classList.remove('hidden');
-            document.getElementById('results').classList.add('hidden');
-            document.getElementById('errorMessage').textContent = message;
-        }
+      function hideLoading() {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('submitBtn').disabled = false;
+      }
+
+      function showResults(data) {
+        document.getElementById('results').classList.remove('hidden');
+        document.getElementById('error').classList.add('hidden');
+        document.getElementById('resultsContent').textContent = JSON.stringify(
+          data,
+          null,
+          2
+        );
+      }
+
+      function showError(message) {
+        document.getElementById('error').classList.remove('hidden');
+        document.getElementById('results').classList.add('hidden');
+        document.getElementById('errorMessage').textContent = message;
+      }
     </script>
-</body>
+  </body>
 </html>

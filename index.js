@@ -9,7 +9,7 @@ export default function main() {
     name: 'INT Smart Triage AI 2.0',
     version: '1.0.0',
     status: 'operational',
-    mode: process.env.NODE_ENV || 'production'
+    mode: process.env.NODE_ENV || 'production',
   };
 }
 

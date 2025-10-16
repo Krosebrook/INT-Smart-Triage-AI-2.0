@@ -46,6 +46,7 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 ## 🚀 Quick Start
 
 1. **Deploy to Vercel**:
+
    ```bash
    git clone https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0.git
    cd INT-Smart-Triage-AI-2.0
@@ -64,9 +65,11 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 ## 📋 API Endpoints
 
 ### GET `/api/health-check`
+
 System health verification with RLS status confirmation
 
 ### POST `/api/triage-report`
+
 Secure triage processing with database logging
 
 ## 🔒 Security Compliance
@@ -76,7 +79,7 @@ Secure triage processing with database logging
 ✅ **HTTPS Enforcement** - All communications encrypted  
 ✅ **Input Validation** - Comprehensive sanitization  
 ✅ **Audit Logging** - Complete request tracking  
-✅ **Security Headers** - XSS, CSRF, and clickjacking protection  
+✅ **Security Headers** - XSS, CSRF, and clickjacking protection
 
 ## 📖 Documentation
 
@@ -86,6 +89,7 @@ Secure triage processing with database logging
 ## 🎯 For CSR Teams
 
 This tool is designed specifically for Customer Success Representatives to:
+
 - Quickly assess ticket priority and urgency
 - Receive tone-appropriate response guidance
 - Access relevant Knowledge Base articles
