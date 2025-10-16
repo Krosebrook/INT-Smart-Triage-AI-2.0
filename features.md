@@ -15,12 +15,13 @@ As a Client Success Representative, you are a key connector for our clients and 
 ### Insights and Analytics
 
 - **Pattern Detection:** Identify recurring issues and trends across multiple clients to proactively address underlying problems.
+    - **Proactive Alerts:** Get notified about potential issues before they escalate, allowing you to proactively communicate with clients and internal teams.
 - **Sentiment Analysis:** Analyze customer sentiment to identify at-risk clients and prioritize high-impact issues.
--- **Reporting and Analytics:** Gain insights into support volume, team performance, and common issue types.
+- **Reporting and Analytics:** Gain insights into support volume, team performance, and common issue types.
 
 ### Communication
 
-- **Translation Support:** (Future) Seamlessly translate conversations with clients in multiple languages.
+- **Communication Assistance:** (Future) Get help translating technical jargon into client-friendly language, and vice-versa, to ensure clear communication between clients and internal teams.
 
 ## Future Features
 

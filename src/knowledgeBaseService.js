@@ -568,6 +568,7 @@ export class KnowledgeBaseService {
       'that',
       'these',
       'those',
+      'over',
       'i',
       'you',
       'he',

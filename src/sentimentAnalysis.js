@@ -95,7 +95,8 @@ export class SentimentAnalyzer {
 
   analyze(text, customerTone = null) {
     const lowerText = text.toLowerCase();
-    const words = lowerText.split(/\s+/);
+    // Remove punctuation and split into words
+    const words = lowerText.replace(/[^\w\s]/g, ' ').split(/\s+/).filter(w => w.length > 0);
 
     let positiveScore = 0;
     let negativeScore = 0;
@@ -156,10 +157,10 @@ export class SentimentAnalyzer {
 
     const escalationProbability = Math.min(
       100,
-      escalationRisk * 20 +
+      escalationRisk * 30 +
         negativeScore * 5 +
         frustrationScore * 10 +
-        urgencyScore * 3
+        urgencyScore * 5
     );
 
     let recommendedAction = 'standard_response';
