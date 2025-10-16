@@ -48,12 +48,38 @@ Modern agentic systems combine reasoning-capable models, dynamic tool chains, an
 - Offer shareable templates or starter workflows to accelerate onboarding and community feedback.[5]
 
 ## Implementation Checklist
-- [ ] Document the agent’s model, tools, guardrails, and memory stores in the repo.
+
+### Architecture & Prompts
+- [ ] Document the agent’s model, tools, guardrails, and memory stores in the repo, along with owners for each component.[1]
+- [ ] Capture every system prompt and few-shot example in version control with change history and rollout notes.[2]
+- [ ] Define fallback behaviors when the primary model or toolset is unavailable (e.g., degraded prompt or backup model selection).[1][3]
+
+### Planning & Control Flow
 - [ ] Provide a system prompt with clear objectives, tool usage guidance, and safety constraints.[2]
-- [ ] Register planning and evaluation hooks (middleware, sub-agents, or planners) before adding new features.[2][3]
-- [ ] Configure persistent memory (vector store, file workspace) with retention and cleanup routines.[1][2]
+- [ ] Register planning middleware, sub-agents, or explicit planner nodes before adding new features so long-horizon work stays organized.[2][3]
+- [ ] Script smoke tests that assert the planner produces bounded task lists and avoids infinite loops on representative prompts.[2]
+- [ ] Publish operator procedures for pausing, resuming, or force-completing agent runs during incidents.[3]
+
+### Memory & Knowledge
+- [ ] Configure persistent memory (vector store, file workspace) with retention and cleanup routines keyed to task lifecycle.[1][2]
+- [ ] Gate memory writes behind validation so agents do not store sensitive or redundant records.[2][4]
+- [ ] Monitor embedding drift and re-index vector stores on a fixed cadence or when models change.[4]
+
+### Tooling & Guardrails
+- [ ] Maintain a catalog describing tool purpose, required inputs, expected outputs, and failure modes.[2][5]
+- [ ] Add automated validation or sandbox execution for tool calls before they hit production systems.[1][3]
+- [ ] Configure circuit breakers, rate limits, or budget caps for costly or risky tools.[1]
+- [ ] Include human approval steps for privileged operations (finance, PII access, deployments).[3]
+
+### Evaluation & Observability
 - [ ] Add automated eval runs plus trace grading or leaderboard-style benchmarks where available.[1][5]
-- [ ] Establish human override paths for high-risk actions and regularly review sampled traces.[3][4]
+- [ ] Stream traces, metrics, and tool call logs to a centralized dashboard for real-time monitoring.[1]
+- [ ] Schedule recurring spot checks of decision traces and hallucination reviews with domain experts.[4][5]
+
+### Deployment & UX
+- [ ] Embed the agent behind a hardened chat surface or API with authentication, rate limits, and audit logging.[1]
+- [ ] Publish a runbook covering launch criteria, rollback steps, and customer comms expectations.[1][3]
+- [ ] Package starter workflows or templates so other teams can reuse the agent safely without duplicating prompts.[5]
 
 ## References
 1. [OpenAI Platform: Agents Guide](https://platform.openai.com/docs/guides/agents)

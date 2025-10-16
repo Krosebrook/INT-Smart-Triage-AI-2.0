@@ -21,7 +21,7 @@ export class CommunicationHub {
   }
 
   async sendEmail(recipient, message, options = {}) {
-    console.log('Sending email to:', recipient);
+    
 
     return {
       success: true,
@@ -33,7 +33,7 @@ export class CommunicationHub {
   }
 
   async sendSms(phoneNumber, message, options = {}) {
-    console.log('Sending SMS to:', phoneNumber);
+    
 
     if (!this.isValidPhoneNumber(phoneNumber)) {
       return {
@@ -53,7 +53,7 @@ export class CommunicationHub {
   }
 
   async sendSlack(channel, message, options = {}) {
-    console.log('Sending Slack message to:', channel);
+    
 
     const payload = {
       channel: channel,
@@ -82,7 +82,7 @@ export class CommunicationHub {
   }
 
   async sendTeams(channelId, message, options = {}) {
-    console.log('Sending Teams message to:', channelId);
+    
 
     const card = {
       '@type': 'MessageCard',
@@ -105,7 +105,7 @@ export class CommunicationHub {
   }
 
   async sendPhone(phoneNumber, message, options = {}) {
-    console.log('Initiating phone call to:', phoneNumber);
+    
 
     return {
       success: true,
@@ -119,7 +119,7 @@ export class CommunicationHub {
   }
 
   async sendChat(userId, message, options = {}) {
-    console.log('Sending chat message to:', userId);
+    
 
     if (supabase) {
       try {
@@ -145,7 +145,7 @@ export class CommunicationHub {
           sentAt: data[0].sent_at,
         };
       } catch (error) {
-        console.error('Chat send failed:', error);
+        
         return { success: false, error: error.message };
       }
     }

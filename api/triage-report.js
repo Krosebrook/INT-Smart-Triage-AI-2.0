@@ -174,7 +174,7 @@ export default async function handler(req, res) {
 
   // Verify Supabase configuration
   if (!supabase) {
-    console.error('Supabase not configured - missing environment variables');
+    
     return res.status(500).json({
       error: 'Service Configuration Error',
       message: 'Database service not properly configured',
@@ -286,7 +286,7 @@ export default async function handler(req, res) {
       .single();
 
     if (insertError) {
-      console.error('Database insert error:', insertError);
+      
 
       // Check for RLS policy violations (expected behavior for security)
       if (
@@ -295,9 +295,7 @@ export default async function handler(req, res) {
         insertError.code === '42501'
       ) {
         // This is actually good - it means RLS is working!
-        console.log(
-          'RLS policy correctly blocking insert - using service role override'
-        );
+        
 
         // Use service role with RLS bypass for legitimate server operations
         const { data: serviceInsert, error: serviceError } = await supabase
@@ -347,7 +345,7 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error('Triage report processing error:', error);
+    
 
     return res.status(500).json({
       error: 'Internal Server Error',

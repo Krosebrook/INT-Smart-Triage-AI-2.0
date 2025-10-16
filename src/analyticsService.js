@@ -32,7 +32,7 @@ export async function getTicketVolumeByDay(days = 30) {
       })),
     };
   } catch (error) {
-    console.error('Error fetching ticket volume:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -73,7 +73,7 @@ export async function getPriorityDistribution() {
       },
     };
   } catch (error) {
-    console.error('Error fetching priority distribution:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -120,7 +120,7 @@ export async function getDepartmentWorkload() {
       })),
     };
   } catch (error) {
-    console.error('Error fetching department workload:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -190,7 +190,7 @@ export async function getCSRPerformanceMetrics() {
       })),
     };
   } catch (error) {
-    console.error('Error fetching CSR performance:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -251,7 +251,7 @@ export async function getResponseTimeAnalysis() {
       },
     };
   } catch (error) {
-    console.error('Error fetching response time analysis:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -304,7 +304,7 @@ export async function getPredictiveTicketVolume() {
       data: predictions,
     };
   } catch (error) {
-    console.error('Error calculating predictive volume:', error);
+    
     return { success: false, error: error.message };
   }
 }
@@ -341,7 +341,7 @@ export async function exportAnalyticsData(format = 'json', filters = {}) {
 
     return { success: true, data, format: 'json' };
   } catch (error) {
-    console.error('Error exporting analytics:', error);
+    
     return { success: false, error: error.message };
   }
 }

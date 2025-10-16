@@ -60,7 +60,7 @@ export class AssignmentEngine {
         ),
       };
     } catch (error) {
-      console.error('Auto-assignment failed:', error);
+      
       return {
         success: false,
         error: error.message,
@@ -107,7 +107,7 @@ export class AssignmentEngine {
 
       return data || [];
     } catch (error) {
-      console.error('Error fetching CSRs:', error);
+      
       return this.getMockCSRs(department);
     }
   }
@@ -211,7 +211,7 @@ export class AssignmentEngine {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Assignment failed:', error);
+      
       throw error;
     }
   }
@@ -229,7 +229,7 @@ export class AssignmentEngine {
         },
       ]);
     } catch (error) {
-      console.error('Failed to log assignment:', error);
+      
     }
   }
 
@@ -292,7 +292,7 @@ export class AssignmentEngine {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Reassignment failed:', error);
+      
       return { success: false, error: error.message };
     }
   }
@@ -319,7 +319,7 @@ export class AssignmentEngine {
         })),
       };
     } catch (error) {
-      console.error('Error fetching workload distribution:', error);
+      
       return { success: false, error: error.message };
     }
   }
@@ -373,7 +373,7 @@ export class AssignmentEngine {
 
       return { success: true, data };
     } catch (error) {
-      console.error('Escalation failed:', error);
+      
       return { success: false, error: error.message };
     }
   }
@@ -392,7 +392,7 @@ export class AssignmentEngine {
 
       return data || [];
     } catch (error) {
-      console.error('Error fetching supervisors:', error);
+      
       return [];
     }
   }

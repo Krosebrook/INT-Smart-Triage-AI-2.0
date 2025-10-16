@@ -6,7 +6,12 @@
       "Bash(ssh-keygen:*)",
       "Bash(cat:*)",
       "Bash(ssh-add:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(ssh:*)",
+      "Bash(git config:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []
