@@ -135,7 +135,6 @@ export class AssignmentEngine {
         ),
       };
     } catch (error) {
-      
       return {
         success: false,
         error: error.message,
@@ -194,7 +193,7 @@ export class AssignmentEngine {
    * @example
    * const csrs = await engine.getAvailableCSRs('Technology', 'high');
    */
-  async getAvailableCSRs(department = null, priority = 'medium') {
+  async getAvailableCSRs(department = null, _priority = 'medium') {
     if (!supabase) {
       return this.getMockCSRs(department);
     }
@@ -217,7 +216,6 @@ export class AssignmentEngine {
 
       return data || [];
     } catch (error) {
-      
       return this.getMockCSRs(department);
     }
   }
@@ -388,7 +386,7 @@ export class AssignmentEngine {
         },
       ]);
     } catch (error) {
-      
+      // Silent fail - logging assignment failure is non-critical
     }
   }
 
@@ -493,7 +491,6 @@ export class AssignmentEngine {
 
       return { success: true, data };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
@@ -538,7 +535,6 @@ export class AssignmentEngine {
         })),
       };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
@@ -613,7 +609,6 @@ export class AssignmentEngine {
 
       return { success: true, data };
     } catch (error) {
-      
       return { success: false, error: error.message };
     }
   }
@@ -639,7 +634,6 @@ export class AssignmentEngine {
 
       return data || [];
     } catch (error) {
-      console.error('Error fetching supervisors:', error.message);
       return [];
     }
   }

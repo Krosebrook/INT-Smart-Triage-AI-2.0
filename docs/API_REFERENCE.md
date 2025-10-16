@@ -1,6 +1,7 @@
 # API Reference Documentation
 
 ## Table of Contents
+
 1. [Overview](#overview)
 2. [Base URL](#base-url)
 3. [Authentication](#authentication)
@@ -19,6 +20,7 @@
 INT Smart Triage AI 2.0 provides a RESTful API for intelligent ticket triage and system health monitoring. The API is built on Vercel serverless functions with Supabase backend, implementing strict security measures including Row Level Security (RLS).
 
 ### API Characteristics
+
 - **Protocol**: HTTPS only
 - **Data Format**: JSON
 - **Character Encoding**: UTF-8
@@ -41,6 +43,7 @@ Development: http://localhost:3000/api
 ## Authentication
 
 ### Server-Side (Service Role)
+
 API endpoints use Supabase service role keys for secure database operations. These keys bypass RLS policies for legitimate server operations.
 
 ```bash
@@ -51,7 +54,9 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 **Important**: Service role keys must NEVER be exposed to client-side code.
 
 ### Client-Side Authentication (Future)
+
 Optional JWT-based authentication for CSR login functionality:
+
 - Login endpoint (planned)
 - Session management (planned)
 - Role-based access control (prepared in RLS policies)
@@ -62,14 +67,14 @@ Optional JWT-based authentication for CSR login functionality:
 
 All API responses include comprehensive security headers:
 
-| Header | Value | Purpose |
-|--------|-------|---------|
-| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Force HTTPS for 1 year |
-| `X-Content-Type-Options` | `nosniff` | Prevent MIME-type sniffing |
-| `X-Frame-Options` | `DENY` | Prevent clickjacking |
-| `X-XSS-Protection` | `1; mode=block` | Enable XSS filter |
-| `Content-Security-Policy` | `default-src 'self'` | Restrict content sources |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | Control referrer information |
+| Header                      | Value                                 | Purpose                      |
+| --------------------------- | ------------------------------------- | ---------------------------- |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Force HTTPS for 1 year       |
+| `X-Content-Type-Options`    | `nosniff`                             | Prevent MIME-type sniffing   |
+| `X-Frame-Options`           | `DENY`                                | Prevent clickjacking         |
+| `X-XSS-Protection`          | `1; mode=block`                       | Enable XSS filter            |
+| `Content-Security-Policy`   | `default-src 'self'`                  | Restrict content sources     |
+| `Referrer-Policy`           | `strict-origin-when-cross-origin`     | Control referrer information |
 
 ---
 
@@ -86,6 +91,7 @@ All API responses include comprehensive security headers:
 **Method**: `POST`
 
 **Headers**:
+
 ```http
 Content-Type: application/json
 User-Agent: YourApp/1.0
@@ -94,16 +100,17 @@ X-Session-ID: optional-session-identifier
 
 **Body Parameters**:
 
-| Parameter | Type | Required | Max Length | Description |
-|-----------|------|----------|------------|-------------|
-| `customerName` | string | Yes | 100 chars | Customer's full name |
-| `ticketSubject` | string | Yes | 200 chars | Ticket subject/title |
-| `issueDescription` | string | Yes | 2000 chars | Detailed issue description |
-| `customerTone` | string | Yes | - | Customer's emotional tone |
-| `csrAgent` | string | No | 50 chars | Assigned CSR agent name |
-| `timestamp` | string (ISO 8601) | No | - | Ticket creation timestamp |
+| Parameter          | Type              | Required | Max Length | Description                |
+| ------------------ | ----------------- | -------- | ---------- | -------------------------- |
+| `customerName`     | string            | Yes      | 100 chars  | Customer's full name       |
+| `ticketSubject`    | string            | Yes      | 200 chars  | Ticket subject/title       |
+| `issueDescription` | string            | Yes      | 2000 chars | Detailed issue description |
+| `customerTone`     | string            | Yes      | -          | Customer's emotional tone  |
+| `csrAgent`         | string            | No       | 50 chars   | Assigned CSR agent name    |
+| `timestamp`        | string (ISO 8601) | No       | -          | Ticket creation timestamp  |
 
 **Valid Customer Tones**:
+
 - `calm` - Neutral, patient tone
 - `frustrated` - Showing signs of frustration
 - `angry` - Upset or angry customer
@@ -111,6 +118,7 @@ X-Session-ID: optional-session-identifier
 - `urgent` - Time-sensitive request
 
 **Example Request**:
+
 ```json
 POST /api/triage-report
 Content-Type: application/json
@@ -159,61 +167,65 @@ Content-Type: application/json
 
 **Response Fields**:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `success` | boolean | Operation success status |
-| `reportId` | string | Unique report identifier (format: TR-timestamp-random) |
-| `timestamp` | string | Server processing timestamp (ISO 8601) |
-| `priority` | string | Ticket priority: `low`, `medium`, or `high` |
-| `confidence` | string | AI confidence level (0-100%) |
-| `responseApproach` | string | Recommended response strategy |
-| `talkingPoints` | array[string] | Key points to address with customer |
-| `knowledgeBase` | array[string] | Relevant KB article IDs |
-| `security` | object | Security verification details |
+| Field              | Type          | Description                                            |
+| ------------------ | ------------- | ------------------------------------------------------ |
+| `success`          | boolean       | Operation success status                               |
+| `reportId`         | string        | Unique report identifier (format: TR-timestamp-random) |
+| `timestamp`        | string        | Server processing timestamp (ISO 8601)                 |
+| `priority`         | string        | Ticket priority: `low`, `medium`, or `high`            |
+| `confidence`       | string        | AI confidence level (0-100%)                           |
+| `responseApproach` | string        | Recommended response strategy                          |
+| `talkingPoints`    | array[string] | Key points to address with customer                    |
+| `knowledgeBase`    | array[string] | Relevant KB article IDs                                |
+| `security`         | object        | Security verification details                          |
 
 #### Priority Determination Logic
 
 The API analyzes ticket content and customer tone to determine priority:
 
 **High Priority Triggers** (90% confidence):
+
 - Keywords: down, outage, critical, urgent, broken, not working, crashed
 - Customer tone: angry, urgent
 - Response time: Immediate (< 2 hours)
 
 **Medium Priority** (80% confidence):
+
 - Keywords: slow, issue, problem, error, bug
 - Customer tone: frustrated, confused
 - Response time: Same day (< 8 hours)
 
 **Low Priority** (85% confidence):
+
 - Keywords: question, help, how to, feature, enhancement
 - Customer tone: calm
 - Response time: Next business day (< 24 hours)
 
 #### Response Approach by Customer Tone
 
-| Tone | Approach | Key Actions |
-|------|----------|-------------|
-| **Angry** | De-escalation | Apologize, take ownership, offer compensation |
-| **Frustrated** | Clear action plan | Validate concerns, provide timeline, offer alternatives |
-| **Confused** | Educational | Step-by-step guidance, non-technical language, visual aids |
-| **Urgent** | Immediate escalation | Acknowledge urgency, escalate to tech team, direct contact |
-| **Calm** | Standard empathetic | Technical focus, realistic timeline, clear steps |
+| Tone           | Approach             | Key Actions                                                |
+| -------------- | -------------------- | ---------------------------------------------------------- |
+| **Angry**      | De-escalation        | Apologize, take ownership, offer compensation              |
+| **Frustrated** | Clear action plan    | Validate concerns, provide timeline, offer alternatives    |
+| **Confused**   | Educational          | Step-by-step guidance, non-technical language, visual aids |
+| **Urgent**     | Immediate escalation | Acknowledge urgency, escalate to tech team, direct contact |
+| **Calm**       | Standard empathetic  | Technical focus, realistic timeline, clear steps           |
 
 #### Knowledge Base Suggestions
 
 The API automatically suggests relevant KB articles based on issue type:
 
-| Issue Keywords | Suggested Articles |
-|----------------|-------------------|
+| Issue Keywords                  | Suggested Articles                           |
+| ------------------------------- | -------------------------------------------- |
 | login, password, authentication | KB-AUTH-01: Authentication Issues Resolution |
-| slow, performance, lag | KB-PERF-01: Performance Optimization Guide |
-| payment, billing, invoice | KB-BILL-01: Billing and Payment Support |
-| All tickets | KB-001, KB-015, KB-032 (default articles) |
+| slow, performance, lag          | KB-PERF-01: Performance Optimization Guide   |
+| payment, billing, invoice       | KB-BILL-01: Billing and Payment Support      |
+| All tickets                     | KB-001, KB-015, KB-032 (default articles)    |
 
 #### Error Responses
 
 **Validation Error** (HTTP 400):
+
 ```json
 {
   "error": "Validation Error",
@@ -222,6 +234,7 @@ The API automatically suggests relevant KB articles based on issue type:
 ```
 
 **Invalid Tone** (HTTP 400):
+
 ```json
 {
   "error": "Validation Error",
@@ -230,6 +243,7 @@ The API automatically suggests relevant KB articles based on issue type:
 ```
 
 **Method Not Allowed** (HTTP 405):
+
 ```json
 {
   "error": "Method Not Allowed",
@@ -238,6 +252,7 @@ The API automatically suggests relevant KB articles based on issue type:
 ```
 
 **Service Configuration Error** (HTTP 500):
+
 ```json
 {
   "error": "Service Configuration Error",
@@ -246,6 +261,7 @@ The API automatically suggests relevant KB articles based on issue type:
 ```
 
 **Internal Server Error** (HTTP 500):
+
 ```json
 {
   "error": "Internal Server Error",
@@ -326,6 +342,7 @@ Data is stored in the `reports` table with the following structure:
 **Query Parameters**: None
 
 **Example Request**:
+
 ```http
 GET /api/health-check
 ```
@@ -352,6 +369,7 @@ GET /api/health-check
 ```
 
 **Cached Response** (HTTP 200):
+
 ```json
 {
   "status": "healthy",
@@ -372,35 +390,38 @@ GET /api/health-check
 
 **Response Fields**:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `status` | string | Overall health: `healthy`, `degraded`, `unhealthy` |
-| `timestamp` | string | Health check timestamp (ISO 8601) |
-| `service` | string | Service name |
-| `version` | string | API version |
-| `environment` | string | Deployment environment |
-| `checks` | object | Individual component health checks |
-| `checks.api` | string | API endpoint status |
-| `checks.database` | string | Database connectivity status |
-| `checks.rls` | string | Row Level Security status |
-| `security` | string | Security verification message (optional) |
-| `warnings` | array[string] | Warning messages (optional) |
-| `cached` | boolean | Whether response is from cache |
-| `cacheAge` | number | Cache age in seconds (if cached) |
+| Field             | Type          | Description                                        |
+| ----------------- | ------------- | -------------------------------------------------- |
+| `status`          | string        | Overall health: `healthy`, `degraded`, `unhealthy` |
+| `timestamp`       | string        | Health check timestamp (ISO 8601)                  |
+| `service`         | string        | Service name                                       |
+| `version`         | string        | API version                                        |
+| `environment`     | string        | Deployment environment                             |
+| `checks`          | object        | Individual component health checks                 |
+| `checks.api`      | string        | API endpoint status                                |
+| `checks.database` | string        | Database connectivity status                       |
+| `checks.rls`      | string        | Row Level Security status                          |
+| `security`        | string        | Security verification message (optional)           |
+| `warnings`        | array[string] | Warning messages (optional)                        |
+| `cached`          | boolean       | Whether response is from cache                     |
+| `cacheAge`        | number        | Cache age in seconds (if cached)                   |
 
 #### Health Check Status Values
 
 **API Check** (`checks.api`):
+
 - `healthy` - API endpoint operational
 - `error` - API endpoint error
 
 **Database Check** (`checks.database`):
+
 - `healthy` - Database connected and operational
 - `table_missing` - Reports table doesn't exist (run setup)
 - `error` - Connection error
 - `not_configured` - Environment variables missing
 
 **RLS Check** (`checks.rls`):
+
 - `enforced` - RLS properly blocking public access (GOOD!)
 - `enabled` - RLS enabled but needs verification
 - `disabled` - RLS not enabled (SECURITY RISK!)
@@ -414,11 +435,13 @@ GET /api/health-check
 **Cache Duration**: 10 seconds (`api/health-check.js:14`)
 
 **Cache Logic** (`api/health-check.js:43-54`):
+
 - First request: Performs full health check, caches result
 - Subsequent requests: Returns cached data with `cached: true` and `cacheAge`
 - After 10 seconds: Cache expires, new health check performed
 
 **Benefits**:
+
 - Reduces database load
 - Faster response times for frequent checks
 - Prevents thundering herd problem
@@ -450,6 +473,7 @@ If the health check exceeds 3 seconds, returns timeout error:
 #### Warning Messages
 
 **Table Missing**:
+
 ```json
 {
   "warnings": ["Reports table does not exist. Run database setup."],
@@ -461,6 +485,7 @@ If the health check exceeds 3 seconds, returns timeout error:
 ```
 
 **RLS Verification Needed**:
+
 ```json
 {
   "warnings": ["Database accessible - verify RLS is properly configured"],
@@ -472,6 +497,7 @@ If the health check exceeds 3 seconds, returns timeout error:
 ```
 
 **Configuration Missing**:
+
 ```json
 {
   "warnings": ["Supabase environment variables not configured"],
@@ -485,6 +511,7 @@ If the health check exceeds 3 seconds, returns timeout error:
 #### Error Responses
 
 **Method Not Allowed** (HTTP 405):
+
 ```json
 {
   "error": "Method Not Allowed",
@@ -493,6 +520,7 @@ If the health check exceeds 3 seconds, returns timeout error:
 ```
 
 **Internal Server Error** (HTTP 500):
+
 ```json
 {
   "status": "unhealthy",
@@ -538,41 +566,46 @@ All errors follow a consistent JSON structure:
 
 ### HTTP Status Codes
 
-| Code | Meaning | Common Causes |
-|------|---------|---------------|
-| **200** | Success | Request processed successfully |
-| **400** | Bad Request | Missing required fields, invalid input |
-| **405** | Method Not Allowed | Wrong HTTP method (e.g., GET instead of POST) |
-| **500** | Internal Server Error | Database error, processing failure |
-| **503** | Service Unavailable | Database timeout, service down |
+| Code    | Meaning               | Common Causes                                 |
+| ------- | --------------------- | --------------------------------------------- |
+| **200** | Success               | Request processed successfully                |
+| **400** | Bad Request           | Missing required fields, invalid input        |
+| **405** | Method Not Allowed    | Wrong HTTP method (e.g., GET instead of POST) |
+| **500** | Internal Server Error | Database error, processing failure            |
+| **503** | Service Unavailable   | Database timeout, service down                |
 
 ### Error Types
 
 #### Client Errors (4xx)
 
 **Validation Error** (400):
+
 - Missing required fields
 - Invalid field format
 - Invalid enum values
 - Field exceeds maximum length
 
 **Method Not Allowed** (405):
+
 - Using GET on POST-only endpoint
 - Using POST on GET-only endpoint
 
 #### Server Errors (5xx)
 
 **Service Configuration Error** (500):
+
 - Environment variables not set
 - Database credentials invalid
 - Supabase client initialization failed
 
 **Internal Server Error** (500):
+
 - Unexpected exceptions
 - Database query failures
 - JSON parsing errors
 
 **Service Unavailable** (503):
+
 - Database timeout
 - External service failure
 
@@ -611,14 +644,14 @@ async function callAPIWithRetry(url, options, maxRetries = 3) {
       if (response.status === 429) {
         // Rate limited - wait and retry
         const delay = Math.pow(2, i) * 1000;
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
         continue;
       }
 
       return response;
     } catch (error) {
       if (i === maxRetries - 1) throw error;
-      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+      await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
     }
   }
 }
@@ -642,21 +675,24 @@ async function callAPIWithRetry(url, options, maxRetries = 3) {
 ```javascript
 async function submitTriageReport(ticketData) {
   try {
-    const response = await fetch('https://your-domain.vercel.app/api/triage-report', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Session-ID': generateSessionId(), // Optional
-      },
-      body: JSON.stringify({
-        customerName: ticketData.name,
-        ticketSubject: ticketData.subject,
-        issueDescription: ticketData.description,
-        customerTone: ticketData.tone, // calm|frustrated|angry|confused|urgent
-        csrAgent: ticketData.assignedTo, // Optional
-        timestamp: new Date().toISOString(),
-      }),
-    });
+    const response = await fetch(
+      'https://your-domain.vercel.app/api/triage-report',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Session-ID': generateSessionId(), // Optional
+        },
+        body: JSON.stringify({
+          customerName: ticketData.name,
+          ticketSubject: ticketData.subject,
+          issueDescription: ticketData.description,
+          customerTone: ticketData.tone, // calm|frustrated|angry|confused|urgent
+          csrAgent: ticketData.assignedTo, // Optional
+          timestamp: new Date().toISOString(),
+        }),
+      }
+    );
 
     if (!response.ok) {
       const error = await response.json();
@@ -680,7 +716,8 @@ async function submitTriageReport(ticketData) {
 const ticket = {
   name: 'Jane Doe',
   subject: 'Cannot access my account',
-  description: 'I have been locked out of my account after multiple failed login attempts.',
+  description:
+    'I have been locked out of my account after multiple failed login attempts.',
   tone: 'frustrated',
   assignedTo: 'Sarah Johnson',
 };
@@ -693,7 +730,9 @@ const report = await submitTriageReport(ticket);
 ```javascript
 async function checkSystemHealth() {
   try {
-    const response = await fetch('https://your-domain.vercel.app/api/health-check');
+    const response = await fetch(
+      'https://your-domain.vercel.app/api/health-check'
+    );
 
     if (!response.ok) {
       throw new Error('Health check failed');
@@ -836,6 +875,7 @@ while True:
 ## API Changelog
 
 ### Version 1.0.0 (2025-10-16)
+
 - Initial API release
 - POST /api/triage-report endpoint
 - GET /api/health-check endpoint
@@ -845,6 +885,7 @@ while True:
 - Security headers on all responses
 
 ### Planned Enhancements
+
 - **v1.1.0**: Rate limiting headers
 - **v1.2.0**: JWT authentication for CSR login
 - **v1.3.0**: WebSocket real-time notifications
@@ -855,14 +896,17 @@ while True:
 ## Support
 
 ### API Issues
+
 - GitHub Issues: https://github.com/your-org/int-smart-triage/issues
 - Email: api-support@your-domain.com
 
 ### Status Page
+
 - System Status: https://status.your-domain.com
 - Incident History: https://status.your-domain.com/history
 
 ### Documentation
+
 - Architecture: `/docs/ARCHITECTURE.md`
 - Service Modules: `/docs/SERVICES.md`
 - Data Models: `/docs/DATA_MODELS.md`

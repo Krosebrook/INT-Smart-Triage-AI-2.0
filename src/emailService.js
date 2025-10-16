@@ -1,32 +1,32 @@
 /**
  * Automated Email Integration Service
- * 
+ *
  * Professional email template system with support for:
  * - Multiple email templates (confirmations, assignments, alerts, etc.)
  * - HTML email generation with responsive layout
  * - Dynamic content injection
  * - Email tracking
  * - Scheduled follow-ups
- * 
+ *
  * @module EmailService
  * @since 1.0.0
  */
 
 /**
  * Email service for automated customer communications.
- * 
+ *
  * @class EmailService
  */
 export class EmailService {
   /**
    * Initialize email service with templates.
-   * 
+   *
    * @constructor
    */
   constructor() {
     /**
      * Email templates library.
-     * 
+     *
      * @type {Object}
      * @private
      */
@@ -35,7 +35,7 @@ export class EmailService {
 
   /**
    * Initialize all email templates.
-   * 
+   *
    * Templates include:
    * - ticket_received: Confirmation email when ticket is created
    * - ticket_assigned: Notification when ticket is assigned to CSR
@@ -43,7 +43,7 @@ export class EmailService {
    * - resolution_confirmation: Notification when ticket is resolved
    * - follow_up_reminder: Follow-up check after resolution
    * - knowledge_base_articles: Helpful resource suggestions
-   * 
+   *
    * @private
    * @returns {Object} Template definitions
    */
@@ -157,18 +157,18 @@ export class EmailService {
 
   /**
    * Generate email from template with data injection.
-   * 
+   *
    * Replaces all {placeholder} variables in template with actual values.
-   * 
+   *
    * @param {string} templateName - Name of template to use
    * @param {Object} data - Data object with values for placeholders
    * @returns {Object} Generated email
    * @returns {string} return.subject - Email subject line
    * @returns {string} return.body - Email HTML body
    * @returns {string} return.templateUsed - Template name used
-   * 
+   *
    * @throws {Error} If template not found
-   * 
+   *
    * @example
    * const email = emailService.generateEmail('ticket_received', {
    *   customerName: 'John Doe',
@@ -200,11 +200,11 @@ export class EmailService {
 
   /**
    * Send email using template.
-   * 
+   *
    * Generates email from template, wraps in layout, and sends (simulated).
    * In production, this would integrate with an email service like SendGrid,
    * Amazon SES, or Postmark.
-   * 
+   *
    * @async
    * @param {string} to - Recipient email address
    * @param {string} templateName - Template to use
@@ -217,7 +217,7 @@ export class EmailService {
    * @returns {boolean} return.success - Whether email sent successfully
    * @returns {Object} return.emailData - Complete email data
    * @returns {string} return.trackingId - Unique tracking identifier
-   * 
+   *
    * @example
    * const result = await emailService.sendEmail(
    *   'customer@example.com',
@@ -307,7 +307,7 @@ export class EmailService {
 
   /**
    * Strip HTML tags from content for plain text version.
-   * 
+   *
    * @param {string} html - HTML content
    * @returns {string} Plain text version
    */
@@ -320,9 +320,9 @@ export class EmailService {
 
   /**
    * Generate unique tracking ID for email.
-   * 
+   *
    * Format: TRACK-[timestamp]-[random]
-   * 
+   *
    * @returns {string} Unique tracking ID
    */
   generateTrackingId() {
@@ -331,9 +331,9 @@ export class EmailService {
 
   /**
    * Send ticket confirmation email to customer.
-   * 
+   *
    * Automatically sends when a new ticket is created.
-   * 
+   *
    * @async
    * @param {Object} reportData - Ticket/report data
    * @param {string} reportData.customerName - Customer name
@@ -344,7 +344,7 @@ export class EmailService {
    * @param {string} [reportData.customerEmail] - Customer email
    * @param {string} [reportData.csrAgent] - CSR agent name
    * @returns {Promise<Object>} Send result
-   * 
+   *
    * @example
    * await emailService.sendTicketConfirmation({
    *   customerName: 'John Doe',
@@ -376,7 +376,7 @@ export class EmailService {
 
   /**
    * Send notification when ticket is assigned to CSR.
-   * 
+   *
    * @async
    * @param {Object} reportData - Ticket data
    * @param {Object} assignedTo - CSR information
@@ -401,9 +401,9 @@ export class EmailService {
 
   /**
    * Send high-priority alert notification.
-   * 
+   *
    * Sent immediately for high-priority tickets to ensure rapid response.
-   * 
+   *
    * @async
    * @param {Object} reportData - Ticket data
    * @param {Object} csrContact - CSR contact information
@@ -431,9 +431,9 @@ export class EmailService {
 
   /**
    * Send knowledge base article suggestions to customer.
-   * 
+   *
    * Helps customers find answers quickly and reduces support load.
-   * 
+   *
    * @async
    * @param {Object} reportData - Ticket data
    * @param {Array<Object>} articles - Array of article objects
@@ -470,7 +470,7 @@ export class EmailService {
 
   /**
    * Get next steps text based on priority.
-   * 
+   *
    * @param {string} priority - Priority level
    * @returns {string} Next steps description
    */
@@ -486,7 +486,7 @@ export class EmailService {
 
   /**
    * Get estimated response time based on priority.
-   * 
+   *
    * @param {string} priority - Priority level
    * @returns {string} Estimated time string
    */
@@ -501,13 +501,13 @@ export class EmailService {
 
   /**
    * Schedule follow-up email after resolution.
-   * 
+   *
    * @async
    * @param {string} reportId - Report ID
    * @param {string} customerEmail - Customer email
    * @param {number} [daysFromNow=3] - Days to wait before follow-up
    * @returns {Promise<Object>} Schedule result
-   * 
+   *
    * @example
    * await emailService.scheduleFollowUp('TR-12345', 'customer@example.com', 3);
    */
@@ -524,9 +524,9 @@ export class EmailService {
 
   /**
    * Track email open event.
-   * 
+   *
    * Would integrate with email service provider's tracking in production.
-   * 
+   *
    * @async
    * @param {string} trackingId - Email tracking ID
    * @returns {Promise<Object>} Tracking result
@@ -541,9 +541,9 @@ export class EmailService {
 
   /**
    * Track email link click event.
-   * 
+   *
    * Tracks which links customers click in emails for analytics.
-   * 
+   *
    * @async
    * @param {string} trackingId - Email tracking ID
    * @param {string} linkUrl - URL that was clicked
@@ -559,5 +559,14 @@ export class EmailService {
   }
 }
 
+/**
+ * Singleton instance of the Email Service.
+ *
+ * @type {EmailService}
+ * @example
+ * import { emailService } from './emailService.js';
+ * await emailService.sendTicketConfirmation(reportData);
+ */
 export const emailService = new EmailService();
+
 export default emailService;

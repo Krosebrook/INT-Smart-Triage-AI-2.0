@@ -1,13 +1,13 @@
 /**
  * Customer Profile and History Management Service
- * 
+ *
  * Comprehensive customer intelligence system providing:
  * - Complete ticket and interaction history
  * - Sentiment analysis and trends
  * - Customer lifetime value calculations
  * - Churn risk assessment
  * - Relationship management tools
- * 
+ *
  * @module CustomerProfileService
  * @since 1.0.0
  */
@@ -17,13 +17,13 @@ import { sentimentAnalyzer } from './sentimentAnalysis.js';
 
 /**
  * Service for managing customer profiles, history, and relationship intelligence.
- * 
+ *
  * @class CustomerProfileService
  */
 export class CustomerProfileService {
   /**
    * Get complete customer profile with analytics.
-   * 
+   *
    * Aggregates customer data from multiple sources:
    * - Basic profile information
    * - Ticket history
@@ -31,14 +31,14 @@ export class CustomerProfileService {
    * - Sentiment analysis
    * - Lifetime value calculations
    * - Churn risk assessment
-   * 
+   *
    * @async
    * @param {string} customerId - Customer unique identifier
    * @returns {Promise<Object>} Customer profile result
    * @returns {boolean} return.success - Whether profile fetch succeeded
    * @returns {Object} [return.profile] - Complete customer profile
    * @returns {string} [return.error] - Error message if fetch failed
-   * 
+   *
    * @example
    * const profile = await customerProfileService.getCustomerProfile('cust-123');
    * console.log(profile.profile.sentiment.overall); // 'positive'
@@ -90,7 +90,7 @@ export class CustomerProfileService {
 
   /**
    * Get basic customer profile information.
-   * 
+   *
    * @async
    * @private
    * @param {string} customerId - Customer ID
@@ -138,7 +138,7 @@ export class CustomerProfileService {
 
   /**
    * Get customer's ticket history.
-   * 
+   *
    * @async
    * @private
    * @param {string} customerId - Customer ID
@@ -170,7 +170,7 @@ export class CustomerProfileService {
 
   /**
    * Get customer's interaction history across all channels.
-   * 
+   *
    * @async
    * @private
    * @param {string} customerId - Customer ID
@@ -203,9 +203,9 @@ export class CustomerProfileService {
 
   /**
    * Calculate overall sentiment based on ticket history.
-   * 
+   *
    * Analyzes recent tickets to determine customer sentiment trend.
-   * 
+   *
    * @param {Array<Object>} tickets - Array of ticket objects
    * @returns {Object} Sentiment analysis
    * @returns {string} return.overall - Overall sentiment (positive/neutral/negative)
@@ -261,7 +261,7 @@ export class CustomerProfileService {
 
   /**
    * Calculate customer lifetime value based on ticket history.
-   * 
+   *
    * @param {Array<Object>} tickets - Array of ticket objects
    * @returns {Object} Lifetime value analysis
    * @returns {number} return.ticketsResolved - Number of resolved tickets
@@ -274,10 +274,10 @@ export class CustomerProfileService {
     const resolvedTickets = tickets.filter(
       (t) => t.status === 'resolved'
     ).length;
-    
+
     // Estimate monthly ticket rate
     const avgTicketsPerMonth = tickets.length / 12; // Assume 12-month window
-    
+
     // Estimate value ($500 per resolved ticket)
     const estimatedValue = resolvedTickets * 500;
 
@@ -297,13 +297,13 @@ export class CustomerProfileService {
 
   /**
    * Calculate churn risk score based on multiple factors.
-   * 
+   *
    * Risk factors:
    * - Unresolved recent tickets (+15 points each)
    * - Negative sentiment tickets (+20 points each)
    * - Slow resolution times (+25 if > 48 hours avg)
    * - No recent contact (+30 if > 60 days)
-   * 
+   *
    * @param {Array<Object>} tickets - Array of ticket objects
    * @param {Array<Object>} interactions - Array of interaction objects
    * @returns {Object} Churn risk analysis
@@ -370,7 +370,7 @@ export class CustomerProfileService {
 
   /**
    * Calculate average resolution time for tickets.
-   * 
+   *
    * @private
    * @param {Array<Object>} tickets - Array of ticket objects
    * @returns {number} Average resolution time in hours
@@ -379,7 +379,7 @@ export class CustomerProfileService {
     const resolved = tickets.filter(
       (t) => t.status === 'resolved' && t.resolved_at
     );
-    
+
     if (resolved.length === 0) return 0;
 
     const totalTime = resolved.reduce((sum, t) => {
@@ -393,7 +393,7 @@ export class CustomerProfileService {
 
   /**
    * Get recommended actions to prevent customer churn.
-   * 
+   *
    * @private
    * @param {number} riskScore - Churn risk score (0-100)
    * @returns {Array<Object>} Array of recommended actions
@@ -436,12 +436,12 @@ export class CustomerProfileService {
 
   /**
    * Update customer profile information.
-   * 
+   *
    * @async
    * @param {string} customerId - Customer ID
    * @param {Object} updates - Fields to update
    * @returns {Promise<Object>} Update result
-   * 
+   *
    * @example
    * await service.updateCustomerProfile('cust-123', {
    *   name: 'John Doe',
@@ -483,13 +483,13 @@ export class CustomerProfileService {
 
   /**
    * Add note to customer profile.
-   * 
+   *
    * @async
    * @param {string} customerId - Customer ID
    * @param {string} noteText - Note content
    * @param {string} csrAgent - CSR who created the note
    * @returns {Promise<Object>} Note creation result
-   * 
+   *
    * @example
    * await service.addCustomerNote('cust-123', 'Customer prefers email contact', 'Sarah J.');
    */
@@ -529,14 +529,14 @@ export class CustomerProfileService {
 
   /**
    * Add tag to customer profile.
-   * 
+   *
    * Tags are useful for categorization and filtering.
-   * 
+   *
    * @async
    * @param {string} customerId - Customer ID
    * @param {string} tag - Tag to add (e.g., 'vip', 'enterprise', 'at-risk')
    * @returns {Promise<Object>} Tag addition result
-   * 
+   *
    * @example
    * await service.addCustomerTag('cust-123', 'vip');
    */
@@ -584,21 +584,21 @@ export class CustomerProfileService {
 
   /**
    * Find customers with similar profiles.
-   * 
+   *
    * Useful for understanding customer segments and applying
    * successful strategies from similar customers.
-   * 
+   *
    * Similarity factors:
    * - Common tags (+30%)
    * - Similar sentiment (+20%)
    * - Same tier (+30%)
    * - Similar risk score (+20%)
-   * 
+   *
    * @async
    * @param {string} customerId - Customer ID to compare against
    * @param {number} [limit=5] - Maximum number of similar customers to return
    * @returns {Promise<Object>} Similar customers result
-   * 
+   *
    * @example
    * const similar = await service.findSimilarCustomers('cust-123', 5);
    */
@@ -650,7 +650,7 @@ export class CustomerProfileService {
 
   /**
    * Calculate similarity score between two customers.
-   * 
+   *
    * @private
    * @param {Object} customer1 - First customer profile
    * @param {Object} customer2 - Second customer profile
@@ -687,11 +687,11 @@ export class CustomerProfileService {
 
   /**
    * Get customer's communication preferences.
-   * 
+   *
    * @async
    * @param {string} customerId - Customer ID
    * @returns {Promise<Object>} Preferences result
-   * 
+   *
    * @example
    * const prefs = await service.getCommunicationPreferences('cust-123');
    * console.log(prefs.preferences.email); // true
@@ -728,9 +728,13 @@ export class CustomerProfileService {
         preferences: data?.communication_preferences || defaultPreferences,
       };
     } catch (error) {
-      console.error('Error fetching communication preferences:', error.message, {
-        customerId,
-      });
+      console.error(
+        'Error fetching communication preferences:',
+        error.message,
+        {
+          customerId,
+        }
+      );
       return { success: false, error: error.message };
     }
   }
@@ -738,7 +742,7 @@ export class CustomerProfileService {
 
 /**
  * Singleton instance of the Customer Profile Service.
- * 
+ *
  * @type {CustomerProfileService}
  * @example
  * import { customerProfileService } from './customerProfileService.js';

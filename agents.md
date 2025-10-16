@@ -96,6 +96,18 @@ Modern agentic systems combine reasoning-capable models, dynamic tool chains, an
 - [ ] Publish a runbook covering launch criteria, rollback steps, and customer comms expectations.[1][3]
 - [ ] Package starter workflows or templates so other teams can reuse the agent safely without duplicating prompts.[5]
 
+## Lifecycle Governance & Owners
+
+- G0 Concept Intake — Product Lead, AI Program Manager (`docs/agent-change-management-playbook.md`).
+- G1 Architecture & Policy Review — AI Architect, Security Architect, Privacy Counsel.
+- G2 Planning & Control Design — AI Architect, Senior SWE.
+- G3 Tooling & Memory Readiness — MLOps Lead, Platform/SRE Lead.
+- G4 Build & Integration — Feature Squad Engineering Manager.
+- G5 Evaluation & Observability — AI Quality Lead, Observability Engineer.
+- G6 Governance & Risk Approval — Safety Review Board Chair (Legal, Compliance).
+- G7 Launch Readiness — DevOps Lead, Support Operations Manager.
+- G8 Monitoring & Improvement — AI Operations Manager, Compliance Officer.
+
 ## References
 
 1. [OpenAI Platform: Agents Guide](https://platform.openai.com/docs/guides/agents)
