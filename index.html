@@ -394,16 +394,22 @@
     <div class="container">
       <!-- Navigation Header -->
       <nav class="nav-header">
-        <a href="/" class="nav-brand">
-          🎯 INT Triage AI
-        </a>
-        <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+        <a href="/" class="nav-brand"> 🎯 INT Triage AI </a>
+        <button
+          class="nav-toggle"
+          onclick="toggleMobileMenu()"
+          aria-label="Toggle menu"
+        >
           ☰
         </button>
         <ul class="nav-menu" id="navMenu">
           <li><a href="/" class="nav-link active">New Triage</a></li>
-          <li><a href="/public/client-history.html" class="nav-link">History</a></li>
-          <li><a href="/public/analytics.html" class="nav-link">Analytics</a></li>
+          <li>
+            <a href="/public/client-history.html" class="nav-link">History</a>
+          </li>
+          <li>
+            <a href="/public/analytics.html" class="nav-link">Analytics</a>
+          </li>
           <li><a href="/public/demo.html" class="nav-link">Demo</a></li>
         </ul>
       </nav>
@@ -527,10 +533,20 @@
         </div>
 
         <!-- Recent Reports Widget -->
-        <div class="recent-reports-widget" id="recentReportsWidget" style="margin-top: 20px;">
+        <div
+          class="recent-reports-widget"
+          id="recentReportsWidget"
+          style="margin-top: 20px"
+        >
           <div class="widget-header">
-            <h2 style="margin: 0; color: #2c3e50; font-size: 20px;">📋 Recent Reports</h2>
-            <a href="/public/client-history.html" style="color: #667eea; text-decoration: none; font-weight: 600;">View All →</a>
+            <h2 style="margin: 0; color: #2c3e50; font-size: 20px">
+              📋 Recent Reports
+            </h2>
+            <a
+              href="/public/client-history.html"
+              style="color: #667eea; text-decoration: none; font-weight: 600"
+              >View All →</a
+            >
           </div>
           <div id="recentReportsList"></div>
         </div>
@@ -761,11 +777,12 @@
       // Load recent reports widget
       async function loadRecentReports() {
         const recentReportsList = document.getElementById('recentReportsList');
-        
+
         if (!recentReportsList) return;
 
         // Show loading
-        recentReportsList.innerHTML = '<div class="recent-reports-loading">Loading recent reports...</div>';
+        recentReportsList.innerHTML =
+          '<div class="recent-reports-loading">Loading recent reports...</div>';
 
         try {
           // Get today's date at midnight
@@ -828,14 +845,17 @@
         const now = new Date();
         const diffInMs = now - date;
         const diffInMins = Math.floor(diffInMs / 60000);
-        
+
         if (diffInMins < 1) return 'Just now';
         if (diffInMins < 60) return `${diffInMins} min ago`;
-        
+
         const diffInHours = Math.floor(diffInMins / 60);
         if (diffInHours < 24) return `${diffInHours}h ago`;
-        
-        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+        return date.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
       }
 
       function showNotification(message) {

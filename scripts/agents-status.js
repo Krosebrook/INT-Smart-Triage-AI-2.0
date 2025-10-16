@@ -61,7 +61,9 @@ async function main() {
     const rows = selected.map(formatAgent);
     console.table(rows);
     if (!options.agentId) {
-      console.log('\nTip: inspect a specific agent with `node scripts/agents-status.js --agent automation-ops`.');
+      console.log(
+        '\nTip: inspect a specific agent with `node scripts/agents-status.js --agent automation-ops`.'
+      );
     }
   } catch (error) {
     console.error('Unable to load agent registry:', error.message);
