@@ -312,7 +312,7 @@ export class CustomerProfileService {
    * @returns {Object} return.factors - Contributing risk factors
    * @returns {Array<Object>} return.recommendations - Recommended actions
    */
-  calculateChurnRisk(tickets, interactions) {
+  calculateChurnRisk(tickets, _interactions) {
     let riskScore = 0;
 
     // Filter tickets from last 30 days

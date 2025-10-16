@@ -329,6 +329,32 @@ export class EmailService {
     return `TRACK-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
   }
 
+  /**
+   * Send ticket confirmation email to customer.
+   * 
+   * Automatically sends when a new ticket is created.
+   * 
+   * @async
+   * @param {Object} reportData - Ticket/report data
+   * @param {string} reportData.customerName - Customer name
+   * @param {string} reportData.reportId - Report ID
+   * @param {string} reportData.priority - Priority level
+   * @param {string} reportData.department - Assigned department
+   * @param {string} reportData.ticketSubject - Ticket subject
+   * @param {string} [reportData.customerEmail] - Customer email
+   * @param {string} [reportData.csrAgent] - CSR agent name
+   * @returns {Promise<Object>} Send result
+   * 
+   * @example
+   * await emailService.sendTicketConfirmation({
+   *   customerName: 'John Doe',
+   *   reportId: 'TR-12345',
+   *   priority: 'high',
+   *   department: 'Technology',
+   *   ticketSubject: 'Server down',
+   *   customerEmail: 'john@example.com'
+   * });
+   */
   async sendTicketConfirmation(reportData) {
     const emailData = {
       customerName: reportData.customerName,
@@ -348,6 +374,15 @@ export class EmailService {
     );
   }
 
+  /**
+   * Send notification when ticket is assigned to CSR.
+   * 
+   * @async
+   * @param {Object} reportData - Ticket data
+   * @param {Object} assignedTo - CSR information
+   * @param {string} assignedTo.name - CSR name
+   * @returns {Promise<Object>} Send result
+   */
   async sendAssignmentNotification(reportData, assignedTo) {
     const emailData = {
       customerName: reportData.customerName,
@@ -364,6 +399,19 @@ export class EmailService {
     );
   }
 
+  /**
+   * Send high-priority alert notification.
+   * 
+   * Sent immediately for high-priority tickets to ensure rapid response.
+   * 
+   * @async
+   * @param {Object} reportData - Ticket data
+   * @param {Object} csrContact - CSR contact information
+   * @param {string} csrContact.name - CSR name
+   * @param {string} csrContact.email - CSR email
+   * @param {string} [csrContact.phone] - CSR phone number
+   * @returns {Promise<Object>} Send result
+   */
   async sendHighPriorityAlert(reportData, csrContact) {
     const emailData = {
       customerName: reportData.customerName,
@@ -381,6 +429,20 @@ export class EmailService {
     );
   }
 
+  /**
+   * Send knowledge base article suggestions to customer.
+   * 
+   * Helps customers find answers quickly and reduces support load.
+   * 
+   * @async
+   * @param {Object} reportData - Ticket data
+   * @param {Array<Object>} articles - Array of article objects
+   * @param {string} articles[].title - Article title
+   * @param {string} articles[].category - Article category
+   * @param {string} [articles[].readTime] - Estimated read time
+   * @param {string} [articles[].url] - Article URL
+   * @returns {Promise<Object>} Send result
+   */
   async sendKnowledgeBaseArticles(reportData, articles) {
     const articlesList = articles
       .map(
@@ -406,6 +468,12 @@ export class EmailService {
     );
   }
 
+  /**
+   * Get next steps text based on priority.
+   * 
+   * @param {string} priority - Priority level
+   * @returns {string} Next steps description
+   */
   getNextSteps(priority) {
     const steps = {
       high: 'A specialist will contact you within 30 minutes to begin resolving this issue immediately.',
@@ -416,6 +484,12 @@ export class EmailService {
     return steps[priority] || steps['medium'];
   }
 
+  /**
+   * Get estimated response time based on priority.
+   * 
+   * @param {string} priority - Priority level
+   * @returns {string} Estimated time string
+   */
   getEstimatedTime(priority) {
     const times = {
       high: '30 minutes',
@@ -425,6 +499,18 @@ export class EmailService {
     return times[priority] || times['medium'];
   }
 
+  /**
+   * Schedule follow-up email after resolution.
+   * 
+   * @async
+   * @param {string} reportId - Report ID
+   * @param {string} customerEmail - Customer email
+   * @param {number} [daysFromNow=3] - Days to wait before follow-up
+   * @returns {Promise<Object>} Schedule result
+   * 
+   * @example
+   * await emailService.scheduleFollowUp('TR-12345', 'customer@example.com', 3);
+   */
   async scheduleFollowUp(reportId, customerEmail, daysFromNow = 3) {
     return {
       success: true,
@@ -436,6 +522,15 @@ export class EmailService {
     };
   }
 
+  /**
+   * Track email open event.
+   * 
+   * Would integrate with email service provider's tracking in production.
+   * 
+   * @async
+   * @param {string} trackingId - Email tracking ID
+   * @returns {Promise<Object>} Tracking result
+   */
   async trackEmailOpen(trackingId) {
     return {
       success: true,
@@ -444,6 +539,16 @@ export class EmailService {
     };
   }
 
+  /**
+   * Track email link click event.
+   * 
+   * Tracks which links customers click in emails for analytics.
+   * 
+   * @async
+   * @param {string} trackingId - Email tracking ID
+   * @param {string} linkUrl - URL that was clicked
+   * @returns {Promise<Object>} Tracking result
+   */
   async trackEmailClick(trackingId, linkUrl) {
     return {
       success: true,
