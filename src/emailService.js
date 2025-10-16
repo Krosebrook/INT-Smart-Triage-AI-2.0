@@ -1,9 +1,52 @@
-// Automated Email Integration Service
+/**
+ * Automated Email Integration Service
+ * 
+ * Professional email template system with support for:
+ * - Multiple email templates (confirmations, assignments, alerts, etc.)
+ * - HTML email generation with responsive layout
+ * - Dynamic content injection
+ * - Email tracking
+ * - Scheduled follow-ups
+ * 
+ * @module EmailService
+ * @since 1.0.0
+ */
+
+/**
+ * Email service for automated customer communications.
+ * 
+ * @class EmailService
+ */
 export class EmailService {
+  /**
+   * Initialize email service with templates.
+   * 
+   * @constructor
+   */
   constructor() {
+    /**
+     * Email templates library.
+     * 
+     * @type {Object}
+     * @private
+     */
     this.templates = this.initializeTemplates();
   }
 
+  /**
+   * Initialize all email templates.
+   * 
+   * Templates include:
+   * - ticket_received: Confirmation email when ticket is created
+   * - ticket_assigned: Notification when ticket is assigned to CSR
+   * - high_priority_alert: Urgent notification for high-priority tickets
+   * - resolution_confirmation: Notification when ticket is resolved
+   * - follow_up_reminder: Follow-up check after resolution
+   * - knowledge_base_articles: Helpful resource suggestions
+   * 
+   * @private
+   * @returns {Object} Template definitions
+   */
   initializeTemplates() {
     return {
       ticket_received: {
@@ -112,6 +155,27 @@ export class EmailService {
     };
   }
 
+  /**
+   * Generate email from template with data injection.
+   * 
+   * Replaces all {placeholder} variables in template with actual values.
+   * 
+   * @param {string} templateName - Name of template to use
+   * @param {Object} data - Data object with values for placeholders
+   * @returns {Object} Generated email
+   * @returns {string} return.subject - Email subject line
+   * @returns {string} return.body - Email HTML body
+   * @returns {string} return.templateUsed - Template name used
+   * 
+   * @throws {Error} If template not found
+   * 
+   * @example
+   * const email = emailService.generateEmail('ticket_received', {
+   *   customerName: 'John Doe',
+   *   reportId: 'TR-12345',
+   *   priority: 'HIGH'
+   * });
+   */
   generateEmail(templateName, data) {
     const template = this.templates[templateName];
     if (!template) {
@@ -134,7 +198,34 @@ export class EmailService {
     };
   }
 
-async sendEmail(to, templateName, data, options = {}) {
+  /**
+   * Send email using template.
+   * 
+   * Generates email from template, wraps in layout, and sends (simulated).
+   * In production, this would integrate with an email service like SendGrid,
+   * Amazon SES, or Postmark.
+   * 
+   * @async
+   * @param {string} to - Recipient email address
+   * @param {string} templateName - Template to use
+   * @param {Object} data - Template data
+   * @param {Object} [options={}] - Additional email options
+   * @param {string} [options.from='support@intinc.com'] - Sender email
+   * @param {string} [options.replyTo] - Reply-to email
+   * @param {Array} [options.attachments] - Email attachments
+   * @returns {Promise<Object>} Send result
+   * @returns {boolean} return.success - Whether email sent successfully
+   * @returns {Object} return.emailData - Complete email data
+   * @returns {string} return.trackingId - Unique tracking identifier
+   * 
+   * @example
+   * const result = await emailService.sendEmail(
+   *   'customer@example.com',
+   *   'ticket_received',
+   *   { reportId: 'TR-12345', customerName: 'John Doe' }
+   * );
+   */
+  async sendEmail(to, templateName, data, options = {}) {
     const email = this.generateEmail(templateName, data);
 
     const emailData = {
@@ -154,7 +245,7 @@ async sendEmail(to, templateName, data, options = {}) {
     };
   }
 
-  wrapInLayout(content, options = {}) {
+  wrapInLayout(content, _options = {}) {
     return `
             <!DOCTYPE html>
             <html>
@@ -214,6 +305,12 @@ async sendEmail(to, templateName, data, options = {}) {
         `;
   }
 
+  /**
+   * Strip HTML tags from content for plain text version.
+   * 
+   * @param {string} html - HTML content
+   * @returns {string} Plain text version
+   */
   stripHTML(html) {
     return html
       .replace(/<[^>]*>/g, '')
@@ -221,6 +318,13 @@ async sendEmail(to, templateName, data, options = {}) {
       .trim();
   }
 
+  /**
+   * Generate unique tracking ID for email.
+   * 
+   * Format: TRACK-[timestamp]-[random]
+   * 
+   * @returns {string} Unique tracking ID
+   */
   generateTrackingId() {
     return `TRACK-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
   }

@@ -135,11 +135,7 @@ export class AssignmentEngine {
         ),
       };
     } catch (error) {
-      console.error('Error in autoAssign:', error.message, {
-        reportId: reportData.reportId,
-        department,
-        priority,
-      });
+      
       return {
         success: false,
         error: error.message,
