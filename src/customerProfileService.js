@@ -574,10 +574,7 @@ export class CustomerProfileService {
 
       return { success: true, message: 'Tag already exists' };
     } catch (error) {
-      console.error('Error adding customer tag:', error.message, {
-        customerId,
-        tag,
-      });
+      
       return { success: false, error: error.message };
     }
   }
@@ -641,9 +638,7 @@ export class CustomerProfileService {
         })),
       };
     } catch (error) {
-      console.error('Error finding similar customers:', error.message, {
-        customerId,
-      });
+      
       return { success: false, error: error.message };
     }
   }
@@ -728,13 +723,7 @@ export class CustomerProfileService {
         preferences: data?.communication_preferences || defaultPreferences,
       };
     } catch (error) {
-      console.error(
-        'Error fetching communication preferences:',
-        error.message,
-        {
-          customerId,
-        }
-      );
+      
       return { success: false, error: error.message };
     }
   }

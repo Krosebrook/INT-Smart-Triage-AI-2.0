@@ -135,6 +135,11 @@ export class AssignmentEngine {
         ),
       };
     } catch (error) {
+      console.error('Error in autoAssign:', error.message, {
+        reportId: reportData.reportId,
+        department,
+        priority,
+      });
       return {
         success: false,
         error: error.message,
@@ -193,7 +198,7 @@ export class AssignmentEngine {
    * @example
    * const csrs = await engine.getAvailableCSRs('Technology', 'high');
    */
-  async getAvailableCSRs(department = null, _priority = 'medium') {
+  async getAvailableCSRs(department = null, priority = 'medium') {
     if (!supabase) {
       return this.getMockCSRs(department);
     }
@@ -216,6 +221,10 @@ export class AssignmentEngine {
 
       return data || [];
     } catch (error) {
+      console.error('Error fetching CSRs from database:', error.message, {
+        department,
+        priority,
+      });
       return this.getMockCSRs(department);
     }
   }
@@ -386,7 +395,10 @@ export class AssignmentEngine {
         },
       ]);
     } catch (error) {
-      // Silent fail - logging assignment failure is non-critical
+      console.error('Error logging assignment:', error.message, {
+        reportId,
+        csrName,
+      });
     }
   }
 
@@ -491,6 +503,11 @@ export class AssignmentEngine {
 
       return { success: true, data };
     } catch (error) {
+      console.error('Error reassigning ticket:', error.message, {
+        reportId,
+        newCSRName,
+        reason,
+      });
       return { success: false, error: error.message };
     }
   }
@@ -535,6 +552,7 @@ export class AssignmentEngine {
         })),
       };
     } catch (error) {
+      console.error('Error fetching workload distribution:', error.message);
       return { success: false, error: error.message };
     }
   }
@@ -609,6 +627,10 @@ export class AssignmentEngine {
 
       return { success: true, data };
     } catch (error) {
+      console.error('Error escalating ticket:', error.message, {
+        reportId,
+        escalationReason,
+      });
       return { success: false, error: error.message };
     }
   }
@@ -634,6 +656,7 @@ export class AssignmentEngine {
 
       return data || [];
     } catch (error) {
+      console.error('Error fetching supervisors:', error.message);
       return [];
     }
   }
