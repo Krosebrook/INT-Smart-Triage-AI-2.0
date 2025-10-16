@@ -58,6 +58,10 @@ build/Release
 # Yarn
 .yarn-integrity
 
+# Lock files - keep only package-lock.json (npm is standard)
+pnpm-lock.yaml
+yarn.lock
+
 # dotenv environment variables
 .env
 .env.local
