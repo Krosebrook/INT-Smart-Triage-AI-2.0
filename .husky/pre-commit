@@ -1,7 +1,6 @@
 # Check if package-lock.json is in sync with package.json
 echo "🔍 Checking if package-lock.json is in sync with package.json..."
-npm install --package-lock-only --dry-run > /dev/null 2>&1
-if [ $? -ne 0 ]; then
+if ! npm ci --dry-run > /dev/null 2>&1; then
   echo "❌ ERROR: Your package-lock.json is out of sync with package.json!"
   echo ""
   echo "Please run the following commands and try again:"
