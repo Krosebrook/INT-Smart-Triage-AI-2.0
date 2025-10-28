@@ -25,7 +25,7 @@
       "outputs": ["planner_notes", "priority_explanation", "escalation_flags"]
     },
     "activation_notes": "Needs prompt package and planner middleware integration to execute autonomously.",
-    "verification": "New tickets should include planner metadata once runtime is wired." 
+    "verification": "New tickets should include planner metadata once runtime is wired."
   },
   {
     "id": "department-router",
@@ -36,7 +36,11 @@
     "owners": ["Customer Success Ops"],
     "interfaces": {
       "inputs": ["planner_output", "csr_availability", "assignment_rules"],
-      "outputs": ["assignment_history", "routing_confidence", "escalation_events"]
+      "outputs": [
+        "assignment_history",
+        "routing_confidence",
+        "escalation_events"
+      ]
     },
     "activation_notes": "Embeddings + live workload feed must be connected for autonomous routing.",
     "verification": "Inspect `assignment_history` for agent-authored entries once enabled."
@@ -133,7 +137,11 @@
     "status": "registered",
     "owners": ["Operations Analytics"],
     "interfaces": {
-      "inputs": ["analytics_time_series", "sla_targets", "deployment_changelog"],
+      "inputs": [
+        "analytics_time_series",
+        "sla_targets",
+        "deployment_changelog"
+      ],
       "outputs": ["daily_heartbeat", "anomaly_alerts", "exec_summary"]
     },
     "activation_notes": "Batch scheduler and dashboard publishing need configuration for automated delivery.",

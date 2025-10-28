@@ -96,7 +96,10 @@ export class SentimentAnalyzer {
   analyze(text, customerTone = null) {
     const lowerText = text.toLowerCase();
     // Remove punctuation and split into words
-    const words = lowerText.replace(/[^\w\s]/g, ' ').split(/\s+/).filter(w => w.length > 0);
+    const words = lowerText
+      .replace(/[^\w\s]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w.length > 0);
 
     let positiveScore = 0;
     let negativeScore = 0;

@@ -71,7 +71,9 @@ export class AgentRuntime extends EventEmitter {
 
   registerConnector(connector) {
     if (!connector || typeof connector.onAgentStatusChange !== 'function') {
-      throw new Error('Connector must implement onAgentStatusChange(agent, context).');
+      throw new Error(
+        'Connector must implement onAgentStatusChange(agent, context).'
+      );
     }
     this.connectors.push(connector);
   }
