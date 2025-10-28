@@ -41,8 +41,7 @@ export class HubSpotIntegration {
      * @type {string}
      * @private
      */
-    this.accessToken =
-      options.accessToken || process.env.HUBSPOT_ACCESS_TOKEN;
+    this.accessToken = options.accessToken || process.env.HUBSPOT_ACCESS_TOKEN;
 
     /**
      * HubSpot portal ID

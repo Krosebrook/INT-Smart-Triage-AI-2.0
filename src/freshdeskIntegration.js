@@ -109,9 +109,7 @@ export class FreshdeskIntegration {
         status: response.status,
         error: errorText,
       });
-      throw new Error(
-        `Freshdesk API error: ${response.status} - ${errorText}`
-      );
+      throw new Error(`Freshdesk API error: ${response.status} - ${errorText}`);
     }
 
     // Handle 204 No Content
@@ -325,7 +323,10 @@ export class FreshdeskIntegration {
         body: JSON.stringify(notePayload),
       });
 
-      logger.info('Note added to Freshdesk ticket', { ticketId, noteId: note.id });
+      logger.info('Note added to Freshdesk ticket', {
+        ticketId,
+        noteId: note.id,
+      });
 
       return { success: true, noteId: note.id };
     } catch (error) {
@@ -450,7 +451,9 @@ export class FreshdeskIntegration {
    */
   async getKnowledgeBaseArticle(articleId) {
     try {
-      const article = await this.makeRequest(`/solutions/articles/${articleId}`);
+      const article = await this.makeRequest(
+        `/solutions/articles/${articleId}`
+      );
       return { success: true, article };
     } catch (error) {
       await this.logError('getKnowledgeBaseArticle', error, { articleId });
