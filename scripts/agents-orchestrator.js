@@ -8,7 +8,9 @@ async function main() {
   try {
     orchestrator = await startAgentOrchestrator();
   } catch (error) {
-    logger.error('Failed to start agent orchestrator.', { error: error.message });
+    logger.error('Failed to start agent orchestrator.', {
+      error: error.message,
+    });
     process.exit(1);
   }
 

@@ -211,7 +211,14 @@ export class SyncQueue {
    * @returns {Promise<void>}
    */
   async executeTask(task) {
-    const { task_id, integration_type, operation, entity_type, entity_id, payload } = task;
+    const {
+      task_id,
+      integration_type,
+      operation,
+      entity_type,
+      entity_id,
+      payload,
+    } = task;
 
     logger.info('Executing sync task', {
       taskId: task_id,
@@ -276,10 +283,20 @@ export class SyncQueue {
     try {
       switch (integrationType) {
         case 'hubspot':
-          return await this.routeHubSpotTask(integration, operation, entityType, payload);
+          return await this.routeHubSpotTask(
+            integration,
+            operation,
+            entityType,
+            payload
+          );
 
         case 'freshdesk':
-          return await this.routeFreshdeskTask(integration, operation, entityType, payload);
+          return await this.routeFreshdeskTask(
+            integration,
+            operation,
+            entityType,
+            payload
+          );
 
         default:
           return { success: false, error: 'Integration not implemented' };
@@ -303,7 +320,11 @@ export class SyncQueue {
   async routeHubSpotTask(integration, operation, entityType, payload) {
     switch (entityType) {
       case 'contact':
-        if (operation === 'sync' || operation === 'create' || operation === 'update') {
+        if (
+          operation === 'sync' ||
+          operation === 'create' ||
+          operation === 'update'
+        ) {
           return await integration.syncContact(payload);
         }
         break;
@@ -313,7 +334,10 @@ export class SyncQueue {
           return await integration.createDeal(payload);
         }
         if (operation === 'update') {
-          return await integration.updateDealStage(payload.reportId, payload.status);
+          return await integration.updateDealStage(
+            payload.reportId,
+            payload.status
+          );
         }
         break;
 
@@ -363,7 +387,10 @@ export class SyncQueue {
 
       case 'note':
         if (operation === 'create') {
-          return await integration.addNoteToTicket(payload.ticketId, payload.noteContent);
+          return await integration.addNoteToTicket(
+            payload.ticketId,
+            payload.noteContent
+          );
         }
         break;
     }

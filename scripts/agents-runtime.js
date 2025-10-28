@@ -36,10 +36,7 @@ function parseArgs() {
 }
 
 async function bootstrapRuntime() {
-  const connectors = [
-    createDashboardConnector(),
-    createAutomationConnector(),
-  ];
+  const connectors = [createDashboardConnector(), createAutomationConnector()];
 
   return AgentRuntime.create({ connectors });
 }
@@ -108,7 +105,9 @@ async function main() {
       default:
         renderAgents(runtime.listAgents(), options.json);
         if (!options.json) {
-          console.log('\nUse `node scripts/agents-runtime.js activate --agent automation-ops` to change status.');
+          console.log(
+            '\nUse `node scripts/agents-runtime.js activate --agent automation-ops` to change status.'
+          );
         }
         break;
     }

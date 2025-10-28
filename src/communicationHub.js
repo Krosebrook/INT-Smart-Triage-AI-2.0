@@ -257,7 +257,9 @@ export class CommunicationHub {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Teams webhook error: ${response.status} - ${errorText}`);
+        throw new Error(
+          `Teams webhook error: ${response.status} - ${errorText}`
+        );
       }
 
       const messageId = this.generateMessageId();
