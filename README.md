@@ -108,6 +108,8 @@ See [IMPROVEMENTS_IMPLEMENTED.md](./IMPROVEMENTS_IMPLEMENTED.md) for details.
 
 ## 📖 Documentation
 
+### Core Documentation
+- **[README.md](./README.md)** - This file - System overview and quick start
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
 - **[BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md)** - Safe branch merging procedures
 - **[MERGE_QUICK_START.md](./MERGE_QUICK_START.md)** - Quick reference for branch merges
