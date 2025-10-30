@@ -5,8 +5,11 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "predev": "npm run build:modules",
     "dev": "vite",
-    "build": "vite build",
+    "build:modules": "tsc -p tsconfig.build.json",
+    "build": "npm run build:modules && vite build",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "deploy": "vercel --prod",
     "lint": "eslint . --ext .js,.cjs,.ts,.tsx --ignore-path .gitignore",
