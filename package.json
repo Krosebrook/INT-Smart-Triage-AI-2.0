@@ -11,21 +11,31 @@
     "deploy": "vercel --prod",
     "lint": "eslint . --ext .js,.cjs --ignore-path .gitignore",
     "lint:fix": "eslint . --ext .js,.cjs --ignore-path .gitignore --fix",
-    "format": "prettier --write \"**/*.{js,cjs,json,md,html,css}\"",
-    "format:check": "prettier --check \"**/*.{js,cjs,json,md,html,css}\"",
-    "test": "node --test test/*.test.js",
-    "test:coverage": "c8 --reporter=text --reporter=html --reporter=lcov node --test test/*.test.js",
-    "test:coverage-check": "c8 --check-coverage --lines 70 --functions 70 --branches 70 node --test test/*.test.js",
-    "validate": "npm run format:check && npm run lint && npm test && npm run build"
+    "format": "prettier --write \"**/*.{js,ts,tsx,cjs,json,md,html,css}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,tsx,cjs,json,md,html,css}\"",
+    "test": "node --loader ts-node/esm --test test/*.test.js test/*.test.ts",
+    "test:coverage": "c8 --reporter=text --reporter=html --reporter=lcov node --loader ts-node/esm --test test/*.test.js test/*.test.ts",
+    "test:coverage-check": "c8 --check-coverage --lines 70 --functions 70 --branches 70 node --loader ts-node/esm --test test/*.test.js test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "validate": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",
-    "undici": "^6.3.0"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "undici": "^6.3.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@types/node": "^24.9.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
     "c8": "^10.1.3",
     "eslint": "^8.55.0",
     "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
     "vercel": "^32.4.1",
     "vite": "^5.0.0"
   },

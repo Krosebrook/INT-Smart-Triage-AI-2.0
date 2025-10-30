@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "checkJs": false,
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "baseUrl": "."
+  },
+  "include": ["src", "scripts", "test", "api", "vite.config.ts"],
+  "exclude": ["dist", "node_modules", "src/communicationHub.js"]
+}
