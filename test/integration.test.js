@@ -1,5 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import { Readable } from 'node:stream';
 
 describe('Integration Tests', () => {
   it('should simulate a complete triage request flow', async () => {
@@ -89,7 +90,7 @@ describe('Integration Tests', () => {
 
   it('should generate appropriate response for high priority issues', async () => {
     const { TriageEngine } = await import('../src/services/triageEngine.js');
-    
+
     const engine = new TriageEngine();
     const criticalIssue = {
       customerName: 'VIP Customer',
@@ -107,5 +108,80 @@ describe('Integration Tests', () => {
     
     console.log('✓ High priority response generated correctly');
     console.log(`  Response: ${result.responseApproach.substring(0, 80)}...`);
+  });
+
+  describe('Demo mode proxy', () => {
+    const originalDemoMode = process.env.DEMO_MODE;
+    const originalProxyKey = process.env.DEMO_PROXY_KEY;
+    const proxyKey = 'unit-test-demo-key';
+
+    function createMockReq(body, headers = {}) {
+      const stream = Readable.from([JSON.stringify(body)]);
+      stream.headers = headers;
+      stream.method = 'POST';
+      return stream;
+    }
+
+    function createMockRes() {
+      const headers = {};
+      return {
+        headers,
+        statusCode: 200,
+        jsonPayload: null,
+        setHeader(name, value) {
+          headers[name] = value;
+        },
+        status(code) {
+          this.statusCode = code;
+          return this;
+        },
+        json(payload) {
+          this.jsonPayload = payload;
+          return this;
+        }
+      };
+    }
+
+    it('should return demo tickets when authorized in demo mode', async () => {
+      process.env.DEMO_MODE = 'true';
+      process.env.DEMO_PROXY_KEY = proxyKey;
+
+      const handler = (await import('../api/demo-data.js')).default;
+
+      const req = createMockReq({ resource: 'tickets' }, {
+        'x-demo-auth': proxyKey
+      });
+      const res = createMockRes();
+
+      try {
+        await handler(req, res);
+
+        assert.strictEqual(res.statusCode, 200);
+        assert.ok(res.jsonPayload?.data?.tickets?.length > 0, 'Expected demo tickets to be returned');
+        assert.strictEqual(res.jsonPayload.mode, 'demo');
+      } finally {
+        process.env.DEMO_MODE = originalDemoMode;
+        process.env.DEMO_PROXY_KEY = originalProxyKey;
+      }
+    });
+
+    it('should reject unauthorized demo data requests', async () => {
+      process.env.DEMO_MODE = 'true';
+      process.env.DEMO_PROXY_KEY = proxyKey;
+
+      const handler = (await import('../api/demo-data.js')).default;
+      const req = createMockReq({ resource: 'tickets' });
+      const res = createMockRes();
+
+      try {
+        await handler(req, res);
+
+        assert.strictEqual(res.statusCode, 401);
+        assert.strictEqual(res.jsonPayload?.error, 'Invalid demo credentials');
+      } finally {
+        process.env.DEMO_MODE = originalDemoMode;
+        process.env.DEMO_PROXY_KEY = originalProxyKey;
+      }
+    });
   });
 });

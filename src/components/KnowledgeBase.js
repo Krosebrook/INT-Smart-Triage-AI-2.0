@@ -1,4 +1,6 @@
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class KnowledgeBase {
   constructor(containerId) {
@@ -14,6 +16,17 @@ export class KnowledgeBase {
   }
 
   async loadArticles() {
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('knowledge-base');
+      if (error) {
+        console.error('Error loading demo knowledge base:', error);
+        this.articles = [];
+        return;
+      }
+      this.articles = (data?.articles || []).filter(article => article.published);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('knowledge_base_articles')
       .select('*, author:users(name)')
@@ -31,6 +44,16 @@ export class KnowledgeBase {
   async searchArticles(query) {
     if (!query.trim()) {
       await this.loadArticles();
+      return;
+    }
+
+    if (isGuestDemoMode()) {
+      const lower = query.toLowerCase();
+      this.articles = this.articles.filter(article =>
+        article.title.toLowerCase().includes(lower) ||
+        article.content.toLowerCase().includes(lower) ||
+        (article.tags || []).some(tag => tag.toLowerCase().includes(lower))
+      );
       return;
     }
 
@@ -52,6 +75,9 @@ export class KnowledgeBase {
   }
 
   async createArticleFromTicket(ticketId) {
+    if (isGuestDemoMode()) {
+      throw new Error('Article creation is disabled in demo mode.');
+    }
     const { data: ticket, error: ticketError } = await supabase
       .from('tickets')
       .select('*, messages:ticket_messages(*)')
@@ -105,6 +131,12 @@ export class KnowledgeBase {
     const article = this.articles.find(a => a.id === articleId);
     if (!article) return;
 
+    if (isGuestDemoMode()) {
+      article.view_count = (article.view_count || 0) + 1;
+      this.render();
+      return;
+    }
+
     await supabase
       .from('knowledge_base_articles')
       .update({ view_count: article.view_count + 1 })
@@ -118,6 +150,12 @@ export class KnowledgeBase {
     const updates = helpful
       ? { helpful_count: article.helpful_count + 1 }
       : { not_helpful_count: article.not_helpful_count + 1 };
+
+    if (isGuestDemoMode()) {
+      Object.assign(article, updates);
+      this.render();
+      return;
+    }
 
     await supabase
       .from('knowledge_base_articles')
@@ -146,12 +184,13 @@ export class KnowledgeBase {
   render() {
     const filteredArticles = this.getFilteredArticles();
     const categories = [...new Set(this.articles.map(a => a.category))];
+    const readOnly = isGuestDemoMode();
 
     this.container.innerHTML = `
       <div class="kb-container">
         <div class="kb-header">
           <h3>Knowledge Base</h3>
-          <button class="btn-primary btn-small" onclick="window.knowledgeBase.showCreateDialog()">
+          <button class="btn-primary btn-small" ${readOnly ? 'disabled title="Demo mode is read-only"' : ''} onclick="window.knowledgeBase.showCreateDialog()">
             + New Article
           </button>
         </div>

@@ -1,7 +1,12 @@
 import { supabase } from './supabaseClient.js';
+import { isGuestDemoMode } from './sessionState.js';
+import { fetchDemoData } from './demoApiClient.js';
 
 export class FollowUpService {
   async scheduleFollowUp(ticketId, followUpType, delayHours = 24) {
+    if (isGuestDemoMode()) {
+      throw new Error('Follow-up scheduling is disabled in demo mode.');
+    }
     const scheduledFor = new Date();
     scheduledFor.setHours(scheduledFor.getHours() + delayHours);
 
@@ -32,6 +37,14 @@ export class FollowUpService {
   }
 
   async getPendingFollowUps() {
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('follow-ups');
+      if (error) {
+        console.error('Error loading demo follow-ups:', error);
+        return [];
+      }
+      return data?.pending || [];
+    }
     const now = new Date().toISOString();
 
     const { data, error } = await supabase
@@ -56,6 +69,15 @@ export class FollowUpService {
   }
 
   async getUpcomingFollowUps(limit = 10) {
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('follow-ups');
+      if (error) {
+        console.error('Error loading demo follow-ups:', error);
+        return [];
+      }
+      const upcoming = data?.upcoming || [];
+      return upcoming.slice(0, limit);
+    }
     const now = new Date().toISOString();
 
     const { data, error } = await supabase
@@ -81,6 +103,9 @@ export class FollowUpService {
   }
 
   async executeFollowUp(followUpId) {
+    if (isGuestDemoMode()) {
+      throw new Error('Executing follow-ups is disabled in demo mode.');
+    }
     const { data: followUp, error: fetchError } = await supabase
       .from('ticket_follow_ups')
       .select(`
@@ -148,6 +173,9 @@ export class FollowUpService {
   }
 
   async cancelFollowUp(followUpId) {
+    if (isGuestDemoMode()) {
+      throw new Error('Canceling follow-ups is disabled in demo mode.');
+    }
     const { error } = await supabase
       .from('ticket_follow_ups')
       .delete()
@@ -160,6 +188,9 @@ export class FollowUpService {
   }
 
   async autoScheduleFollowUps() {
+    if (isGuestDemoMode()) {
+      return;
+    }
     const { data: tickets, error } = await supabase
       .from('tickets')
       .select('*')

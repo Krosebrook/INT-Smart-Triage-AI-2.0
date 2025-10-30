@@ -1,4 +1,6 @@
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class CustomerContextPanel {
   constructor(containerId) {
@@ -11,6 +13,24 @@ export class CustomerContextPanel {
 
   async loadCustomerData(customerId) {
     this.customerId = customerId;
+
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('customer-context', { customerId });
+      if (error || !data?.context) {
+        console.error('Error loading demo customer context:', error);
+        this.customerData = null;
+        this.ticketHistory = [];
+        this.sentimentData = null;
+        this.render();
+        return;
+      }
+
+      this.customerData = data.context.customer;
+      this.ticketHistory = data.context.tickets || [];
+      this.sentimentData = data.context.sentiment || null;
+      this.render();
+      return;
+    }
 
     const [customerResult, ticketsResult, sentimentResult] = await Promise.all([
       supabase

@@ -1,4 +1,6 @@
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class ResponseTemplates {
   constructor(containerId) {
@@ -14,6 +16,17 @@ export class ResponseTemplates {
   }
 
   async loadTemplates() {
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('response-templates');
+      if (error) {
+        console.error('Error loading demo templates:', error);
+        this.templates = [];
+        return;
+      }
+      this.templates = data?.templates || [];
+      return;
+    }
+
     const { data, error } = await supabase
       .from('response_templates')
       .select('*, created_by_user:users(name)')
@@ -43,6 +56,10 @@ export class ResponseTemplates {
   }
 
   async saveTemplate(templateData) {
+    if (isGuestDemoMode()) {
+      alert('Demo mode is read-only. Templates cannot be saved.');
+      return null;
+    }
     const { data, error } = await supabase
       .from('response_templates')
       .insert({
@@ -71,6 +88,10 @@ export class ResponseTemplates {
     const template = this.templates.find(t => t.id === templateId);
     if (!template) return null;
 
+    if (isGuestDemoMode()) {
+      return template;
+    }
+
     await supabase
       .from('response_templates')
       .update({ usage_count: template.usage_count + 1 })
@@ -94,6 +115,7 @@ export class ResponseTemplates {
   }
 
   render() {
+    const readOnly = isGuestDemoMode();
     const filteredTemplates = this.getFilteredTemplates();
     const categories = [...new Set(this.templates.map(t => t.category))];
     const tones = [...new Set(this.templates.map(t => t.tone))];
@@ -102,7 +124,7 @@ export class ResponseTemplates {
       <div class="templates-container">
         <div class="templates-header">
           <h3>Response Templates</h3>
-          <button class="btn-primary btn-small" onclick="window.responseTemplates.showCreateDialog()">
+          <button class="btn-primary btn-small" ${readOnly ? 'disabled title="Demo mode is read-only"' : ''} onclick="window.responseTemplates.showCreateDialog()">
             + New Template
           </button>
         </div>
@@ -118,7 +140,7 @@ export class ResponseTemplates {
             ${tones.map(tone => `<option value="${tone}">${tone}</option>`).join('')}
           </select>
 
-          <button class="btn-secondary btn-small" onclick="window.responseTemplates.showAIGenerator()">
+          <button class="btn-secondary btn-small" ${readOnly ? 'disabled title="Demo mode is read-only"' : ''} onclick="window.responseTemplates.showAIGenerator()">
             ✨ Generate with AI
           </button>
         </div>

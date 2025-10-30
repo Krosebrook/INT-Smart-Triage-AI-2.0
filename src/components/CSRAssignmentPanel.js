@@ -1,4 +1,6 @@
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class CSRAssignmentPanel {
   constructor(containerId) {
@@ -14,6 +16,23 @@ export class CSRAssignmentPanel {
   }
 
   async loadData() {
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('csr-assignment');
+      if (error) {
+        console.error('Error loading demo CSR data:', error);
+        this.csrs = [];
+        this.unassignedTickets = [];
+        this.assignedTickets = [];
+        return;
+      }
+
+      this.csrs = data?.csrs || [];
+      const tickets = (data?.tickets || []).filter(Boolean);
+      this.unassignedTickets = tickets.filter(t => !t?.assigned_to);
+      this.assignedTickets = tickets.filter(t => t?.assigned_to);
+      return;
+    }
+
     const [csrResult, ticketsResult] = await Promise.all([
       supabase
         .from('users')
@@ -40,6 +59,10 @@ export class CSRAssignmentPanel {
   }
 
   async assignTicket(ticketId, csrId) {
+    if (isGuestDemoMode()) {
+      alert('Assignments are disabled in demo mode.');
+      return false;
+    }
     const { error } = await supabase
       .from('tickets')
       .update({
@@ -60,6 +83,10 @@ export class CSRAssignmentPanel {
   }
 
   async unassignTicket(ticketId) {
+    if (isGuestDemoMode()) {
+      alert('Assignments are disabled in demo mode.');
+      return false;
+    }
     const { error } = await supabase
       .from('tickets')
       .update({
@@ -84,11 +111,12 @@ export class CSRAssignmentPanel {
   }
 
   render() {
+    const readOnly = isGuestDemoMode();
     this.container.innerHTML = `
       <div class="assignment-panel">
         <div class="assignment-header">
           <h3>CSR Assignment Dashboard</h3>
-          <button class="btn-secondary btn-small" onclick="window.csrAssignmentPanel.autoAssignTickets()">
+          <button class="btn-secondary btn-small" ${readOnly ? 'disabled title="Demo mode is read-only"' : ''} onclick="window.csrAssignmentPanel.autoAssignTickets()">
             🤖 Auto-Assign
           </button>
         </div>
@@ -218,6 +246,10 @@ export class CSRAssignmentPanel {
   }
 
   async autoAssignTickets() {
+    if (isGuestDemoMode()) {
+      alert('Auto-assignment is disabled in demo mode.');
+      return;
+    }
     if (this.unassignedTickets.length === 0) {
       alert('No unassigned tickets to assign');
       return;

@@ -1,4 +1,6 @@
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class SentimentAnalyticsDashboard {
   constructor(containerId) {
@@ -16,29 +18,43 @@ export class SentimentAnalyticsDashboard {
   async loadAnalytics() {
     const { startDate, endDate } = this.getDateRange();
 
-    const [sentimentResult, performanceResult, ticketsResult] = await Promise.all([
-      supabase
-        .from('sentiment_analytics')
-        .select('*')
-        .gte('period_start', startDate)
-        .lte('period_end', endDate),
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('sentiment-analytics', { startDate, endDate });
+      if (error) {
+        console.error('Error loading demo sentiment analytics:', error);
+        this.sentimentData = [];
+        this.csrPerformance = [];
+        this.tickets = [];
+      } else {
+        this.sentimentData = data?.sentiment || [];
+        this.csrPerformance = data?.performance || [];
+        this.tickets = data?.tickets || [];
+      }
+    } else {
+      const [sentimentResult, performanceResult, ticketsResult] = await Promise.all([
+        supabase
+          .from('sentiment_analytics')
+          .select('*')
+          .gte('period_start', startDate)
+          .lte('period_end', endDate),
 
-      supabase
-        .from('csr_performance')
-        .select('*, csr:users(name, email)')
-        .gte('period_start', startDate)
-        .lte('period_end', endDate),
+        supabase
+          .from('csr_performance')
+          .select('*, csr:users(name, email)')
+          .gte('period_start', startDate)
+          .lte('period_end', endDate),
 
-      supabase
-        .from('tickets')
-        .select('sentiment_score, status, priority, created_at')
-        .gte('created_at', startDate)
-        .lte('created_at', endDate)
-    ]);
+        supabase
+          .from('tickets')
+          .select('sentiment_score, status, priority, created_at')
+          .gte('created_at', startDate)
+          .lte('created_at', endDate)
+      ]);
 
-    this.sentimentData = sentimentResult.data || [];
-    this.csrPerformance = performanceResult.data || [];
-    this.tickets = ticketsResult.data || [];
+      this.sentimentData = sentimentResult.data || [];
+      this.csrPerformance = performanceResult.data || [];
+      this.tickets = ticketsResult.data || [];
+    }
 
     this.analyticsData = this.computeAnalytics();
   }
