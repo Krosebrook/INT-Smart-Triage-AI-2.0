@@ -8,17 +8,32 @@ export class DatabaseService {
   constructor() {
     this.supabase = null;
     this.isInitialized = false;
-    this.initializeClient();
+    this.configurationError = null;
+
+    try {
+      this.initializeClient();
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : 'Supabase configuration error: secure service role key required.';
+      this.configurationError = error instanceof Error ? error : new Error(message);
+      console.error(message);
+      throw this.configurationError;
+    }
   }
 
   initializeClient() {
     const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+      || process.env.SUPABASE_SERVICE_KEY
+      || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('Missing Supabase configuration');
-      console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('SUPABASE')));
-      return;
+    if (!supabaseUrl) {
+      throw new Error('Supabase configuration error: SUPABASE_URL must be set before initializing the database client.');
+    }
+
+    if (!supabaseServiceKey) {
+      throw new Error('Supabase configuration error: SUPABASE_SERVICE_ROLE_KEY (service role key) is required; anon keys are not permitted.');
     }
 
     try {
@@ -33,7 +48,8 @@ export class DatabaseService {
       });
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize Supabase client:', error);
+      const reason = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Supabase configuration error: failed to initialize client (${reason}).`);
     }
   }
 
