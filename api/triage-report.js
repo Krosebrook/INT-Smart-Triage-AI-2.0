@@ -12,7 +12,14 @@ import { setSecurityHeaders, validateHttpMethod, extractClientInfo, createRateLi
 
 const geminiService = new GeminiService();
 const triageEngine = new TriageEngine();
-const dbService = new DatabaseService();
+let dbService;
+try {
+    dbService = new DatabaseService();
+} catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown database initialization error';
+    console.error('Triage report database initialization error:', message);
+    dbService = null;
+}
 const rateLimiter = createRateLimiter(60000, 50);
 
 export default async function handler(req, res) {
@@ -30,7 +37,7 @@ export default async function handler(req, res) {
     }
 
     // Verify database service
-    if (!dbService.isInitialized) {
+    if (!dbService?.isInitialized) {
         console.error('Database service not configured');
         return res.status(500).json({
             error: 'Service Configuration Error',

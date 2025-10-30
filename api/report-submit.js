@@ -15,7 +15,14 @@ import {
   sanitizeReportSubmission
 } from '../src/utils/validation.js';
 
-const dbService = new DatabaseService();
+let dbService;
+try {
+  dbService = new DatabaseService();
+} catch (error) {
+  const message = error instanceof Error ? error.message : 'Unknown database initialization error';
+  console.error('Report submission database initialization error:', message);
+  dbService = null;
+}
 const rateLimiter = createRateLimiter(60000, 20);
 
 function parseRequestBody(req) {
@@ -46,7 +53,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (!dbService.isInitialized) {
+  if (!dbService?.isInitialized) {
     console.error('Database service not configured for report submission');
     return res.status(500).json({
       error: 'Service Configuration Error',

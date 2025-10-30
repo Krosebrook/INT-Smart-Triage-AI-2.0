@@ -7,7 +7,14 @@ import { DatabaseService } from '../src/services/database.js';
 import { setSecurityHeaders, validateHttpMethod } from '../src/utils/security.js';
 
 // Initialize database service
-const dbService = new DatabaseService();
+let dbService;
+try {
+    dbService = new DatabaseService();
+} catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown database initialization error';
+    console.error('Health check database initialization error:', message);
+    dbService = null;
+}
 let healthCheckCache = { data: null, timestamp: 0 };
 const CACHE_DURATION = 10000; // 10 seconds cache as required
 
@@ -90,29 +97,35 @@ async function performHealthCheck() {
     };
     
     // Check database connection and RLS status
-    try {
-        const dbStatus = await dbService.testConnection();
-        healthData.checks.database = dbStatus.status;
-        healthData.checks.rls = dbStatus.rls;
-        
-        if (dbStatus.rls === 'enforced') {
-            healthData.security = 'RLS properly enforced - public access denied';
-        } else if (dbStatus.rls === 'needs_verification') {
-            healthData.warnings = ['Database accessible - verify RLS is properly configured'];
-        }
-    } catch (error) {
-        if (error.message.includes('not initialized')) {
-            healthData.checks.database = 'not_configured';
-            healthData.checks.rls = 'not_configured';
-            healthData.warnings = ['Database service not properly configured'];
-        } else if (error.message.includes('relation "reports" does not exist')) {
-            healthData.checks.database = 'table_missing';
-            healthData.checks.rls = 'table_missing';
-            healthData.warnings = ['Reports table does not exist. Run database setup.'];
-        } else {
-            healthData.checks.database = 'error';
-            healthData.checks.rls = 'unknown';
-            healthData.warnings = [`Database connectivity issue: ${error.message}`];
+    if (!dbService?.isInitialized) {
+        healthData.checks.database = 'not_configured';
+        healthData.checks.rls = 'not_configured';
+        healthData.warnings = ['Database service not properly configured'];
+    } else {
+        try {
+            const dbStatus = await dbService.testConnection();
+            healthData.checks.database = dbStatus.status;
+            healthData.checks.rls = dbStatus.rls;
+
+            if (dbStatus.rls === 'enforced') {
+                healthData.security = 'RLS properly enforced - public access denied';
+            } else if (dbStatus.rls === 'needs_verification') {
+                healthData.warnings = ['Database accessible - verify RLS is properly configured'];
+            }
+        } catch (error) {
+            if (error.message.includes('not initialized')) {
+                healthData.checks.database = 'not_configured';
+                healthData.checks.rls = 'not_configured';
+                healthData.warnings = ['Database service not properly configured'];
+            } else if (error.message.includes('relation "reports" does not exist')) {
+                healthData.checks.database = 'table_missing';
+                healthData.checks.rls = 'table_missing';
+                healthData.warnings = ['Reports table does not exist. Run database setup.'];
+            } else {
+                healthData.checks.database = 'error';
+                healthData.checks.rls = 'unknown';
+                healthData.warnings = [`Database connectivity issue: ${error.message}`];
+            }
         }
     }
 
