@@ -1,0 +1,137 @@
+.triage-summary {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 24px;
+}
+
+.triage-summary__header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #111827;
+}
+
+.triage-summary__subtitle {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.triage-summary__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.triage-summary__metric {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 120px;
+}
+
+.triage-summary__metric-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+}
+
+.triage-summary__metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.triage-summary__metric-helper {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.triage-summary__metric-trend {
+  font-size: 0.9rem;
+}
+
+.trend-up {
+  color: #059669;
+}
+
+.trend-down {
+  color: #dc2626;
+}
+
+.trend-flat {
+  color: #6b7280;
+}
+
+.triage-summary__risks h3,
+.triage-summary__recommendations h3 {
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.risk-indicator {
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.95rem;
+}
+
+.risk-low {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.risk-medium {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+}
+
+.risk-high {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+.risk-description {
+  font-size: 0.85rem;
+  color: inherit;
+}
+
+.triage-summary__recommendations ul {
+  margin: 0;
+  padding-left: 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.triage-summary__recommendations li {
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .triage-summary {
+    padding: 20px;
+  }
+
+  .triage-summary__metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .triage-summary__metrics {
+    grid-template-columns: 1fr;
+  }
+}

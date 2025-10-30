@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -6,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
+  plugins: [react()],
   root: '.',
   server: {
     port: 3000,
@@ -23,7 +25,8 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         portal: resolve(__dirname, 'client-success-portal.html'),
-        demo: resolve(__dirname, 'demo.html')
+        demo: resolve(__dirname, 'demo.html'),
+        reportDetail: resolve(__dirname, 'report-detail.html')
       }
     }
   }
