@@ -176,10 +176,63 @@
             color: #92400e;
         }
 
+        .status-btn.status-blocked.active {
+            border-color: #b91c1c;
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-btn.status-escalated.active {
+            border-color: #be185d;
+            background: #fbcfe8;
+            color: #be185d;
+        }
+
         .status-btn.status-resolved.active {
             border-color: #065f46;
             background: #d1fae5;
             color: #065f46;
+        }
+
+        .sla-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sla-controls input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sla-summary {
+            margin-top: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .sla-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .sla-badge.overdue {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .sla-badge.soon {
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .section {
@@ -448,6 +501,8 @@
                         <div class="status-buttons">
                             <button class="status-btn status-new" data-status="new">New</button>
                             <button class="status-btn status-in_progress" data-status="in_progress">In Progress</button>
+                            <button class="status-btn status-blocked" data-status="blocked">Blocked</button>
+                            <button class="status-btn status-escalated" data-status="escalated">Escalated</button>
                             <button class="status-btn status-resolved" data-status="resolved">Resolved</button>
                         </div>
                     </div>
@@ -460,6 +515,16 @@
                             <button class="btn btn-secondary" id="unassignBtn" style="padding: 10px 20px; display: none;">Unassign</button>
                         </div>
                         <div id="currentAssignment" style="margin-top: 10px; color: #666; font-size: 14px;"></div>
+                    </div>
+
+                    <div class="status-selector" style="margin-top: 15px;">
+                        <label>SLA Due</label>
+                        <div class="sla-controls">
+                            <input type="datetime-local" id="slaInput">
+                            <button class="btn btn-primary" id="updateSlaBtn" style="padding: 10px 20px;">Save SLA</button>
+                            <button class="btn btn-secondary" id="clearSlaBtn" style="padding: 10px 20px;">Clear</button>
+                        </div>
+                        <div id="slaSummary" class="sla-summary"></div>
                     </div>
 
                     <div class="action-buttons">
@@ -527,7 +592,8 @@
     </div>
 
     <script type="module">
-        import { supabase, updateReportStatus, getNotes, addNote, deleteNote, assignReport } from '/src/supabaseClient.js';
+        import { formatStatus as formatStatusLabel, getSlaBadgeState } from '/scripts/history.js';
+        import { supabase, updateReportStatus, getNotes, addNote, deleteNote, assignReport, updateReportSlaDue } from '/src/supabaseClient.js';
 
         const urlParams = new URLSearchParams(window.location.search);
         const reportId = urlParams.get('id');
@@ -553,6 +619,10 @@
 
                 if (!data) {
                     throw new Error('Report not found');
+                }
+
+                if (!data.assignee && data.assigned_to) {
+                    data.assignee = data.assigned_to;
                 }
 
                 currentReport = data;
@@ -612,6 +682,7 @@
             updateStatusButtons(report.status || 'new');
             loadNotes();
             updateAssignmentUI(report);
+            updateSlaUI(report);
         }
 
         function updateAssignmentUI(report) {
@@ -620,15 +691,38 @@
             const unassignBtn = document.getElementById('unassignBtn');
             const currentAssignment = document.getElementById('currentAssignment');
 
-            if (report.assigned_to) {
-                assignInput.value = report.assigned_to;
+            if (report.assignee) {
+                assignInput.value = report.assignee;
                 unassignBtn.style.display = 'block';
-                currentAssignment.textContent = `Currently assigned to: ${report.assigned_to} (${new Date(report.assigned_at).toLocaleString()})`;
+                const assignedAt = report.assigned_at ? new Date(report.assigned_at).toLocaleString() : 'Unknown';
+                currentAssignment.textContent = `Currently assigned to: ${report.assignee} (${assignedAt})`;
             } else {
                 assignInput.value = '';
                 unassignBtn.style.display = 'none';
                 currentAssignment.textContent = 'Not assigned';
             }
+        }
+
+        function updateSlaUI(report) {
+            const slaInput = document.getElementById('slaInput');
+            const slaSummary = document.getElementById('slaSummary');
+
+            if (report.sla_due) {
+                const parsed = new Date(report.sla_due);
+                if (!Number.isNaN(parsed.getTime())) {
+                    const localValue = new Date(parsed.getTime() - parsed.getTimezoneOffset() * 60000)
+                        .toISOString()
+                        .slice(0, 16);
+                    slaInput.value = localValue;
+                } else {
+                    slaInput.value = '';
+                }
+            } else {
+                slaInput.value = '';
+            }
+
+            const { className, label } = getSlaBadgeState(report);
+            slaSummary.innerHTML = `<span class="${className}">${label}</span>`;
         }
 
         document.getElementById('assignBtn').onclick = async () => {
@@ -645,7 +739,7 @@
             const result = await assignReport(reportId, assignTo);
 
             if (result.success) {
-                currentReport.assigned_to = assignTo;
+                currentReport.assignee = assignTo;
                 currentReport.assigned_at = new Date().toISOString();
                 updateAssignmentUI(currentReport);
 
@@ -674,7 +768,7 @@
             const result = await assignReport(reportId, null);
 
             if (result.success) {
-                currentReport.assigned_to = null;
+                currentReport.assignee = null;
                 currentReport.assigned_at = null;
                 updateAssignmentUI(currentReport);
 
@@ -688,6 +782,75 @@
                 }, 3000);
             } else {
                 alert(`Failed to unassign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+        };
+
+        document.getElementById('updateSlaBtn').onclick = async () => {
+            const slaInput = document.getElementById('slaInput');
+            if (!slaInput.value) {
+                alert('Please select an SLA due date and time.');
+                return;
+            }
+
+            const parsed = new Date(slaInput.value);
+            if (Number.isNaN(parsed.getTime())) {
+                alert('Invalid SLA due date');
+                return;
+            }
+
+            const btn = document.getElementById('updateSlaBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const isoValue = parsed.toISOString();
+            const result = await updateReportSlaDue(reportId, isoValue);
+
+            if (result.success) {
+                currentReport.sla_due = isoValue;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA updated';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to update SLA: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Save SLA';
+        };
+
+        document.getElementById('clearSlaBtn').onclick = async () => {
+            if (!confirm('Clear SLA due date for this report?')) {
+                return;
+            }
+
+            const btn = document.getElementById('clearSlaBtn');
+            btn.disabled = true;
+
+            const result = await updateReportSlaDue(reportId, null);
+
+            if (result.success) {
+                currentReport.sla_due = null;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA cleared';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to clear SLA: ${result.error}`);
             }
 
             btn.disabled = false;
@@ -789,7 +952,10 @@
             const buttons = document.querySelectorAll('.status-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.dataset.status === currentStatus) {
+                const statusKey = btn.dataset.status;
+                btn.textContent = formatStatusLabel(statusKey);
+
+                if (statusKey === currentStatus) {
                     btn.classList.add('active');
                 }
 
@@ -805,10 +971,11 @@
                     if (result.success) {
                         currentReport.status = newStatus;
                         updateStatusButtons(newStatus);
+                        updateSlaUI(currentReport);
 
                         const notification = document.createElement('div');
                         notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
-                        notification.textContent = `✓ Status updated to ${formatStatus(newStatus)}`;
+                        notification.textContent = `✓ Status updated to ${formatStatusLabel(newStatus)}`;
                         document.body.appendChild(notification);
 
                         setTimeout(() => {
@@ -820,18 +987,9 @@
                     }
 
                     btn.disabled = false;
-                    btn.textContent = formatStatus(newStatus);
+                    btn.textContent = formatStatusLabel(newStatus);
                 };
             });
-        }
-
-        function formatStatus(status) {
-            const statusMap = {
-                'new': 'New',
-                'in_progress': 'In Progress',
-                'resolved': 'Resolved'
-            };
-            return statusMap[status] || status;
         }
 
         window.openKBModal = function(kbId) {

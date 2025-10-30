@@ -1,6 +1,8 @@
 // Supabase client for INT Smart Triage AI 2.0
 import { createClient } from '@supabase/supabase-js';
 
+const REPORT_STATUS_VALUES = ['new', 'in_progress', 'resolved', 'blocked', 'escalated'];
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -119,6 +121,9 @@ export async function searchReports(query, filters = {}) {
         if (filters.customerTone) {
             queryBuilder = queryBuilder.eq('customer_tone', filters.customerTone);
         }
+        if (filters.status && REPORT_STATUS_VALUES.includes(filters.status)) {
+            queryBuilder = queryBuilder.eq('status', filters.status);
+        }
         if (filters.dateFrom) {
             queryBuilder = queryBuilder.gte('created_at', filters.dateFrom);
         }
@@ -126,7 +131,22 @@ export async function searchReports(query, filters = {}) {
             queryBuilder = queryBuilder.lte('created_at', filters.dateTo);
         }
         if (filters.assignedTo) {
-            queryBuilder = queryBuilder.ilike('assigned_to', `%${filters.assignedTo}%`);
+            queryBuilder = queryBuilder.ilike('assignee', `%${filters.assignedTo}%`);
+        }
+        if (filters.assignee) {
+            queryBuilder = queryBuilder.ilike('assignee', `%${filters.assignee}%`);
+        }
+        if (filters.slaDueAfter) {
+            queryBuilder = queryBuilder.gte('sla_due', filters.slaDueAfter);
+        }
+        if (filters.slaDueBefore) {
+            queryBuilder = queryBuilder.lte('sla_due', filters.slaDueBefore);
+        }
+        if (filters.slaDueIsNull === true) {
+            queryBuilder = queryBuilder.is('sla_due', null);
+        }
+        if (filters.excludeResolved) {
+            queryBuilder = queryBuilder.neq('status', 'resolved');
         }
 
         queryBuilder = queryBuilder
@@ -193,6 +213,10 @@ export async function updateReportStatus(reportId, status) {
     }
 
     try {
+        if (!REPORT_STATUS_VALUES.includes(status)) {
+            return { success: false, error: `Invalid status: ${status}` };
+        }
+
         const updateData = {
             status,
             updated_at: new Date().toISOString()
@@ -288,11 +312,38 @@ export async function assignReport(reportId, assignedTo) {
     }
 
     try {
+        const nowIso = new Date().toISOString();
+        const updatePayload = {
+            assignee: assignedTo,
+            assigned_at: assignedTo ? nowIso : null,
+            updated_at: nowIso
+        };
+
+        const { data, error } = await supabase
+            .from('reports')
+            .update(updatePayload)
+            .eq('report_id', reportId)
+            .select();
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error assigning report:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function updateReportSlaDue(reportId, slaDue) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
         const { data, error } = await supabase
             .from('reports')
             .update({
-                assigned_to: assignedTo,
-                assigned_at: new Date().toISOString(),
+                sla_due: slaDue,
                 updated_at: new Date().toISOString()
             })
             .eq('report_id', reportId)
@@ -302,7 +353,7 @@ export async function assignReport(reportId, assignedTo) {
 
         return { success: true, data };
     } catch (error) {
-        console.error('Error assigning report:', error);
+        console.error('Error updating SLA due date:', error);
         return { success: false, error: error.message };
     }
 }
