@@ -8,16 +8,29 @@ export class DatabaseService {
   constructor() {
     this.supabase = null;
     this.isInitialized = false;
-    this.initializeClient();
+    this.configurationError = null;
+
+    try {
+      this.initializeClient();
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : 'Supabase configuration error: secure service role key required.';
+      this.configurationError = error instanceof Error ? error : new Error(message);
+      console.error(message);
+      throw this.configurationError;
+    }
   }
 
   initializeClient() {
     const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Missing Supabase configuration');
-      console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('SUPABASE')));
+      if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
+      }
       return;
     }
 
@@ -33,7 +46,8 @@ export class DatabaseService {
       });
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize Supabase client:', error);
+      const reason = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Supabase configuration error: failed to initialize client (${reason}).`);
     }
   }
 
@@ -70,7 +84,7 @@ export class DatabaseService {
       const { data, error } = await this.supabase
         .from('reports')
         .insert([reportData])
-        .select('report_id, created_at, priority')
+        .select('report_id, created_at, priority, category, confidence_score')
         .single();
 
       if (error) {

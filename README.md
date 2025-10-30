@@ -42,6 +42,7 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 ├── vercel.json            # Vercel deployment configuration
 ├── api/
 │   ├── health-check.js    # System health and RLS verification
+│   ├── report-submit.js   # Validated public submissions via service role
 │   └── triage-report.js   # Secure triage processing and logging
 ├── supabase-setup.sql     # Database schema with RLS policies
 ├── DEPLOYMENT.md          # Complete production deployment guide
@@ -69,13 +70,13 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 
    **Server-Side (API endpoints only):**
    - `SUPABASE_URL`: Your Supabase project URL
-   - `SUPABASE_ANON_KEY`: Your Supabase anon key
-   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (for privileged operations)
+   - `SUPABASE_ANON_KEY`: Your Supabase anon key (read-only operations)
+   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for write operations)
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
    - `DEMO_MODE`: Mirror of `VITE_DEMO_MODE` that enables the mock data proxy on the server
    - `DEMO_PROXY_KEY`: Token that must match `VITE_DEMO_PROXY_KEY` for demo requests
 
-3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor
+3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor (re-run after pulling this update to replace the legacy anon insert policy)
 
 4. **Verify Deployment**: Check `/api/health-check` endpoint returns 200 OK
 
@@ -87,8 +88,8 @@ System health verification with RLS status confirmation
 ### POST `/api/triage-report`
 Secure triage processing with database logging
 
-### POST `/api/demo-data`
-Authenticated proxy that serves mock ticket, customer, and analytics data when Supabase authentication is unavailable. Enabled only when `DEMO_MODE=true` and the `X-Demo-Auth` header matches `DEMO_PROXY_KEY`.
+### POST `/api/report-submit`
+Validated report persistence for unauthenticated flows (uses service role with full input sanitization)
 
 ## 🔒 Security Compliance
 
