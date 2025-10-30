@@ -70,6 +70,11 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    - `SUPABASE_ANON_KEY`: Your Supabase anon key (read-only operations)
    - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for write operations)
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
+   - `AI_ASSISTANT_URL`: HTTPS endpoint for the hosted transcript analysis model
+   - `AI_ASSISTANT_API_KEY`: Bearer token used to authenticate with the hosted model
+   - `AI_ASSISTANT_MODEL`: Optional override for the model name (defaults to `gpt-4.1-mini`)
+   - `AI_ASSISTANT_TIMEOUT_MS`: Optional request timeout override in milliseconds (default `10000`)
+   - `AI_ASSISTANT_MAX_TOKENS`: Optional prompt length guardrail in tokens (default `3500`)
 
 3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor (re-run after pulling this update to replace the legacy anon insert policy)
 
@@ -85,6 +90,10 @@ Secure triage processing with database logging
 
 ### POST `/api/report-submit`
 Validated report persistence for unauthenticated flows (uses service role with full input sanitization)
+
+### POST `/api/ingest`
+Normalizes customer communications (email or ChatGPT transcripts), routes them through the hosted AI assistant for structured
+analysis, redacts PII, and persists the sanitized result into the `normalized_transcripts` table.
 
 ## 🔒 Security Compliance
 
