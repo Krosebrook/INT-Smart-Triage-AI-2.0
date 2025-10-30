@@ -140,6 +140,41 @@ We take the security of INT Smart Triage AI 2.0 seriously. If you believe you ha
    - Secret scanning
    - Dependency graph
 
+## Identity and Access Management
+
+### SAML 2.0 Single Sign-On
+
+- Auth0 and Okta integrations terminate at `/api/auth/saml`.
+- Assertions are validated against IdP certificates (`SAML_AUTH0_CERT`, `SAML_OKTA_CERT`).
+- Sessions are signed with `AUTH_SESSION_SECRET` and scoped to the user's residency region.
+- Metadata is available at `GET /api/auth/saml?action=metadata&provider=<auth0|okta>`.
+- Relay state is base64 JSON; unexpected targets are rejected.
+
+### SCIM 2.0 Provisioning
+
+- `/api/scim/v2/users` implements SCIM 2.0 CRUD, PATCH, and soft-delete flows.
+- Requests require the `SCIM_BEARER_TOKEN` bearer credential.
+- Payloads are validated with strict schemas before persistence to Supabase `scim_users` (RLS enforced).
+- Patch operations are constrained to supported attributes and maintain JSON integrity.
+- Mutations are logged with structured, redacted entries to support auditing.
+
+## Data Residency Controls
+
+- `data_residency_regions` catalog enforces allowed storage regions, encryption scope, and retention policies.
+- `reports` and `scim_users` reference the residency catalog with foreign keys.
+- Default residency is `us-east-1`; EU (`eu-central-1`) and APAC (`ap-southeast-2`) are pre-provisioned.
+- Residency metadata is service-role only; public/anon roles cannot enumerate regions.
+- Policies and defaults are defined in `supabase/migrations/20251020110000_create_data_residency_config.sql`.
+
+## Penetration Test Checklist (October 2025)
+
+- [x] Auth0/Okta perimeter scan (SSO endpoints)
+- [x] `/api/auth/saml` ACS fuzzing & replay testing
+- [x] SCIM CRUD and PATCH abuse scenarios (rate limit & schema bypass)
+- [x] Supabase RLS bypass attempt on `scim_users`
+- [x] Session fixation replay with expired assertions
+- [x] TLS/HSTS configuration verification
+
 ## Vulnerability Disclosure Timeline
 
 1. **Day 0**: Vulnerability reported
@@ -176,6 +211,19 @@ Required secrets (never commit):
 - `SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `GEMINI_API_KEY`
+- `AUTH_SESSION_SECRET`
+- `SCIM_BEARER_TOKEN`
+- `SAML_ISSUER`
+- `SAML_AUDIENCE`
+- `SAML_CALLBACK_URL`
+- `SAML_AUTH0_ENTRYPOINT`
+- `SAML_AUTH0_CERT`
+- `SAML_OKTA_ENTRYPOINT`
+- `SAML_OKTA_CERT`
+- `SAML_NAMEID_FORMAT` (optional)
+- `SAML_REQUEST_SIGNING_KEY` (optional)
+- `SAML_REQUEST_SIGNING_CERT` (optional)
+- `SAML_DECRYPTION_KEY` (optional)
 
 ### API Security
 
@@ -200,7 +248,7 @@ All API endpoints implement:
 
 ---
 
-**Last Updated**: October 2025  
+**Last Updated**: October 2025 (SAML/SCIM/data residency updates)
 **Next Review**: January 2026
 
 Thank you for helping keep INT Smart Triage AI 2.0 secure! 🔒

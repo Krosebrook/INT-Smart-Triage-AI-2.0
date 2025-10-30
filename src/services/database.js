@@ -27,11 +27,11 @@ export class DatabaseService {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('Missing Supabase configuration');
-      if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-        console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
-      }
-      return;
+      const missing = [];
+      if (!supabaseUrl) missing.push('SUPABASE_URL');
+      if (!supabaseServiceKey) missing.push('SUPABASE_SERVICE_ROLE_KEY');
+      const requirement = missing.length > 1 ? 'are required for secure database access.' : 'is required for secure database access.';
+      throw new Error(`Supabase configuration error: ${missing.join(', ')} ${requirement}`);
     }
 
     try {

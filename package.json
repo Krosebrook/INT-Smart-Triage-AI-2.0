@@ -20,7 +20,10 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",
-    "undici": "^6.3.0"
+    "@node-saml/node-saml": "^5.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "undici": "^6.3.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "c8": "^10.1.3",
