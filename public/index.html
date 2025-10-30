@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INT Smart Triage AI 2.0 - Overview</title>
+    <link rel="stylesheet" href="/public/theme.css">
+    <link rel="stylesheet" href="/src/styles/navigation.css">
+    <script src="/scripts/navigation.js" defer></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 40px 20px 60px;
+        }
+
+        .overview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 28px;
+        }
+
+        .hero-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 40px;
+            box-shadow: 0 20px 45px rgba(30, 41, 59, 0.14);
+            color: var(--text-primary);
+        }
+
+        .hero-card h1 {
+            font-size: clamp(2.2rem, 4vw, 3rem);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .hero-card p {
+            max-width: 680px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .nav-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        .nav-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 16px 30px rgba(30, 41, 59, 0.12);
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nav-card:hover,
+        .nav-card:focus-visible {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 42px rgba(79, 70, 229, 0.25);
+        }
+
+        .nav-card h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .nav-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .nav-card__badge {
+            align-self: flex-start;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(79, 70, 229, 0.12);
+            color: var(--site-header-active);
+            font-weight: 700;
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 28px 16px 48px;
+            }
+
+            .hero-card {
+                padding: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__brand" href="/public/index.html">
+                INT Smart Triage
+                <span>Client Success Platform</span>
+            </a>
+            <nav class="site-nav" aria-label="Primary">
+                <button class="site-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation">
+                    <span>Menu</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path fill="currentColor" d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                    </svg>
+                </button>
+                <ul class="site-nav__list" id="primary-navigation" data-nav-list>
+                    <li><a class="site-nav__link" href="/public/index.html">Overview</a></li>
+                    <li><a class="site-nav__link" href="/public/client-history.html">Client History</a></li>
+                    <li><a class="site-nav__link" href="/public/analytics.html">Analytics</a></li>
+                    <li><a class="site-nav__link" href="/public/demo.html">Demo <span class="site-nav__badge">Live</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="overview-container">
+        <section class="hero-card">
+            <h1>Accelerate Customer Outcomes with INT Smart Triage</h1>
+            <p>Navigate the Client Success Platform to monitor analytics, review historical conversations, and experiment with the triage demo. Each workspace is optimised for rapid decision making and AI-assisted support.</p>
+        </section>
+
+        <section class="nav-grid" aria-label="Key destinations">
+            <a class="nav-card" href="/public/client-history.html">
+                <span class="nav-card__badge">Context</span>
+                <h2>Client History Workspace</h2>
+                <p>Audit every interaction, consolidate escalations, and track commitments with rich filters and actionable metadata.</p>
+            </a>
+            <a class="nav-card" href="/public/analytics.html">
+                <span class="nav-card__badge">Insights</span>
+                <h2>Analytics Dashboard</h2>
+                <p>Monitor service KPIs, sentiment trends, and performance anomalies with real-time visualisations.</p>
+            </a>
+            <a class="nav-card" href="/public/demo.html">
+                <span class="nav-card__badge">Prototype</span>
+                <h2>AI Triage Demo</h2>
+                <p>Simulate ticket intake flows, validate persona responses, and stress-test your knowledge base coverage.</p>
+            </a>
+        </section>
+    </main>
+</body>
+</html>
