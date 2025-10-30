@@ -1,0 +1,132 @@
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.textGroup {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.125rem;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: rgba(15, 23, 42, 0.65);
+  line-height: 1.4;
+}
+
+.indicators {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(15, 23, 42, 0.03);
+  border-radius: 0.75rem;
+  min-width: 120px;
+}
+
+.indicatorNeutral,
+.indicatorInfo,
+.indicatorSuccess,
+.indicatorWarning,
+.indicatorDanger {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.indicatorNeutral {
+  background: rgba(15, 23, 42, 0.25);
+}
+
+.indicatorInfo {
+  background: #2563eb;
+}
+
+.indicatorSuccess {
+  background: #10b981;
+}
+
+.indicatorWarning {
+  background: #f59e0b;
+}
+
+.indicatorDanger {
+  background: #ef4444;
+}
+
+.indicatorContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.indicatorLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+.indicatorValue {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .topBar {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .indicators {
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .indicator {
+    flex: 1 1 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .topBar {
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
