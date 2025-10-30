@@ -112,7 +112,7 @@
         </div>
         <button type="submit" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 12px;">Sign In</button>
       </form>
-      <button onclick="skipAuth()" style="width: 100%; padding: 12px; background: transparent; color: #6b7280; border: 1px solid #d1d5db; border-radius: 6px; font-weight: 500; cursor: pointer;">Continue as Guest</button>
+      <button onclick="continueAsGuest()" style="width: 100%; padding: 12px; background: transparent; color: #6b7280; border: 1px solid #d1d5db; border-radius: 6px; font-weight: 500; cursor: pointer;">Continue as Guest</button>
       <p style="text-align: center; margin-top: 16px; color: #9ca3af; font-size: 13px;">Demo: Use any email/password or skip to guest mode</p>
     </div>
   </div>
@@ -202,6 +202,15 @@
     import { notificationCenter } from './src/components/NotificationCenter.js';
     import { ExportUtils } from './src/utils/exportUtils.js';
     import { seedDemoData } from './src/utils/demoData.js';
+    import {
+      setCurrentSession,
+      clearSession,
+      enableDemoGuestMode,
+      disableDemoGuestMode,
+      isGuestDemoMode,
+      isDemoModeEnabled,
+      getDemoCredentials
+    } from './src/services/sessionState.js';
 
     window.ticketDashboard = new TicketDashboard('ticketDashboard');
     window.customerContextPanel = new CustomerContextPanel('customerContext');
@@ -244,14 +253,19 @@
       }
     };
 
+    const demoModeEnabled = isDemoModeEnabled();
+    const demoCredentials = getDemoCredentials();
     let currentUser = null;
 
     async function checkAuth() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         currentUser = session.user;
+        setCurrentSession(session);
         showPortal();
       } else {
+        disableDemoGuestMode();
+        clearSession();
         showAuthScreen();
       }
     }
@@ -264,22 +278,49 @@
     function showPortal() {
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('portalApp').style.display = 'block';
+      const guestMode = isGuestDemoMode();
+      document.body.dataset.portalMode = guestMode ? 'demo-guest' : 'authenticated';
       if (currentUser) {
         document.getElementById('userDisplay').textContent = currentUser.email;
+      } else if (guestMode) {
+        document.getElementById('userDisplay').textContent = 'Guest (Demo Mode)';
       } else {
-        document.getElementById('userDisplay').textContent = 'Guest User';
+        document.getElementById('userDisplay').textContent = 'User';
       }
       initializeComponents();
     }
 
-    window.skipAuth = function() {
-      currentUser = { email: 'guest@example.com', role: 'guest' };
+    window.continueAsGuest = async function() {
+      if (!demoModeEnabled) {
+        alert('Demo mode is disabled. Please sign in with valid credentials.');
+        return;
+      }
+
+      if (demoCredentials.email && demoCredentials.password) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: demoCredentials.email,
+          password: demoCredentials.password
+        });
+
+        if (!error && data?.user) {
+          currentUser = data.user;
+          setCurrentSession(data.session ?? { user: data.user });
+          showPortal();
+          return;
+        }
+      }
+
+      currentUser = null;
+      enableDemoGuestMode();
+      clearSession();
       showPortal();
     };
 
     window.logout = async function() {
       await supabase.auth.signOut();
       currentUser = null;
+      disableDemoGuestMode();
+      clearSession();
       showAuthScreen();
     };
 

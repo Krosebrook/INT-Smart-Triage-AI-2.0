@@ -1,5 +1,7 @@
 import { followUpService } from '../services/followUpService.js';
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class FollowUpManager {
   constructor(containerId) {
@@ -55,11 +57,12 @@ export class FollowUpManager {
   }
 
   render() {
+    const readOnly = isGuestDemoMode();
     this.container.innerHTML = `
       <div class="followup-manager">
         <div class="followup-header">
           <h3>Follow-Up Management</h3>
-          <button class="btn-primary btn-small" onclick="window.followUpManager.showScheduleDialog()">
+          <button class="btn-primary btn-small" ${readOnly ? 'disabled title="Demo mode is read-only"' : ''} onclick="window.followUpManager.showScheduleDialog()">
             + Schedule Follow-Up
           </button>
         </div>
@@ -172,18 +175,36 @@ export class FollowUpManager {
       return;
     }
 
-    const { data: ticket, error } = await supabase
-      .from('tickets')
-      .select('id')
-      .eq('ticket_number', ticketNumber)
-      .maybeSingle();
+    let ticketId = null;
 
-    if (error || !ticket) {
-      alert('Ticket not found');
-      return;
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('tickets');
+      if (error) {
+        alert('Ticket lookup failed in demo mode');
+        return;
+      }
+      const match = data?.tickets?.find(t => t?.ticket_number === ticketNumber);
+      if (!match) {
+        alert('Ticket not found');
+        return;
+      }
+      ticketId = match.id;
+    } else {
+      const { data: ticket, error } = await supabase
+        .from('tickets')
+        .select('id')
+        .eq('ticket_number', ticketNumber)
+        .maybeSingle();
+
+      if (error || !ticket) {
+        alert('Ticket not found');
+        return;
+      }
+
+      ticketId = ticket.id;
     }
 
-    const success = await this.scheduleFollowUp(ticket.id, type, hours);
+    const success = await this.scheduleFollowUp(ticketId, type, hours);
     if (success) {
       alert('Follow-up scheduled successfully!');
       this.closeScheduleDialog();

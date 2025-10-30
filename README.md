@@ -63,12 +63,17 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    **Client-Side (exposed to browser):**
    - `VITE_SUPABASE_URL`: Your Supabase project URL
    - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
-   
+   - `VITE_DEMO_MODE`: Set to `true` to enable guest demo access
+   - `VITE_DEMO_EMAIL` / `VITE_DEMO_PASSWORD`: Seeded demo credentials for Supabase sign-in
+   - `VITE_DEMO_PROXY_KEY`: Shared token used to call the secure `/api/demo-data` proxy
+
    **Server-Side (API endpoints only):**
    - `SUPABASE_URL`: Your Supabase project URL
    - `SUPABASE_ANON_KEY`: Your Supabase anon key
    - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (for privileged operations)
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
+   - `DEMO_MODE`: Mirror of `VITE_DEMO_MODE` that enables the mock data proxy on the server
+   - `DEMO_PROXY_KEY`: Token that must match `VITE_DEMO_PROXY_KEY` for demo requests
 
 3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor
 
@@ -81,6 +86,9 @@ System health verification with RLS status confirmation
 
 ### POST `/api/triage-report`
 Secure triage processing with database logging
+
+### POST `/api/demo-data`
+Authenticated proxy that serves mock ticket, customer, and analytics data when Supabase authentication is unavailable. Enabled only when `DEMO_MODE=true` and the `X-Demo-Auth` header matches `DEMO_PROXY_KEY`.
 
 ## 🔒 Security Compliance
 
