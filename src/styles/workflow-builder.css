@@ -1,0 +1,318 @@
+:root {
+  color-scheme: light dark;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  background: #f4f6fb;
+  color: #0f172a;
+}
+
+.workflow-builder {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.workflow-panel {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.workflow-panel h2 {
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+}
+
+.palette-section + .palette-section {
+  margin-top: 1.25rem;
+}
+
+.palette-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.palette-item {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 0.85rem;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  cursor: grab;
+}
+
+.palette-item:active {
+  cursor: grabbing;
+}
+
+.palette-item:hover {
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+
+.palette-item .tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.palette-item.trigger .tag {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.palette-item.condition .tag {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+}
+
+.palette-item.action .tag {
+  background: rgba(244, 114, 182, 0.12);
+  color: #be185d;
+}
+
+.builder-canvas {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 50%), #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.canvas-header h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.canvas-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.canvas-actions button {
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.canvas-actions button.primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  border: none;
+}
+
+.canvas-actions button:hover {
+  background: rgba(37, 99, 235, 0.12);
+}
+
+.canvas-dropzone {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+}
+
+.canvas-dropzone.active {
+  border-radius: 18px;
+  border: 2px solid rgba(37, 99, 235, 0.35);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.canvas-placeholder {
+  border: 2px dashed rgba(59, 130, 246, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  color: rgba(59, 130, 246, 0.7);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.node-card {
+  position: relative;
+  border-radius: 16px;
+  padding: 1.1rem 1rem 1.1rem 1.5rem;
+  margin-bottom: 1rem;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16px 35px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.node-card.selected {
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.25);
+}
+
+.node-card .node-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.node-card.trigger .node-badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.node-card.condition .node-badge {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+}
+
+.node-card.action .node-badge {
+  background: rgba(244, 114, 182, 0.12);
+  color: #be185d;
+}
+
+.node-actions {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.node-actions button {
+  background: rgba(15, 23, 42, 0.04);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+
+.node-actions button:hover {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+.connection-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.connection-card {
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.8);
+  padding: 0.75rem;
+}
+
+.connection-card select,
+.connection-card input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.editor-panel h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.editor-panel fieldset {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f8fafc;
+}
+
+.editor-panel fieldset legend {
+  padding: 0 0.35rem;
+  font-weight: 600;
+}
+
+.editor-panel label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.editor-panel input,
+.editor-panel textarea,
+.editor-panel select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.5rem 0.65rem;
+  font-size: 0.95rem;
+  background: #ffffff;
+}
+
+.editor-panel textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.rule-preview {
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.05);
+  padding: 1rem;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  max-height: 260px;
+}
+
+.rule-preview pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 1280px) {
+  .workflow-builder {
+    grid-template-columns: 1fr;
+    grid-template-rows: 320px auto 360px;
+    height: auto;
+  }
+
+  .workflow-panel,
+  .editor-panel {
+    border-right: none;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  }
+}

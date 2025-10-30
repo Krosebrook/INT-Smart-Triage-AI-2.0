@@ -52,6 +52,7 @@ coverage/
 # Build outputs
 dist/
 build/
+build-ts/
 *.tgz
 
 # Temporary files
