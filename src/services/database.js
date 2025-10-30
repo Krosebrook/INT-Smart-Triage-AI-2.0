@@ -24,16 +24,14 @@ export class DatabaseService {
 
   initializeClient() {
     const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-      || process.env.SUPABASE_SERVICE_KEY
-      || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!supabaseUrl) {
-      throw new Error('Supabase configuration error: SUPABASE_URL must be set before initializing the database client.');
-    }
-
-    if (!supabaseServiceKey) {
-      throw new Error('Supabase configuration error: SUPABASE_SERVICE_ROLE_KEY (service role key) is required; anon keys are not permitted.');
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase configuration');
+      if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
+      }
+      return;
     }
 
     try {
@@ -86,7 +84,7 @@ export class DatabaseService {
       const { data, error } = await this.supabase
         .from('reports')
         .insert([reportData])
-        .select('report_id, created_at, priority')
+        .select('report_id, created_at, priority, category, confidence_score')
         .single();
 
       if (error) {
