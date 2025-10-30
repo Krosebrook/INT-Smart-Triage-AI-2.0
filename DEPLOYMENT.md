@@ -4,8 +4,8 @@
 Secure, production-ready AI Triage Tool for INT Inc. Client Success. This system provides CSRs with intelligent ticket triage, empathetic talking points, Knowledge Base suggestions, and secure audit logging via Supabase with mandatory Row Level Security.
 
 ## 🔐 Security Features
-- **Mandatory RLS (Row Level Security)**: Zero client-side database access
-- **Service Role Authentication**: Server-side only database operations  
+- **Mandatory RLS (Row Level Security)**: Browser Supabase client locked down by default-deny policies on every exposed table
+- **Service Role Authentication**: Serverless functions use service role keys only for privileged writes (never shipped to the browser)
 - **Comprehensive Security Headers**: XSS, CSRF, and clickjacking protection
 - **Input Validation & Sanitization**: Prevents injection attacks
 - **Audit Logging**: Complete request tracking with IP and session data
@@ -76,25 +76,25 @@ vercel env add GEMINI_API_KEY production
 4. Execute the script
 
 #### Step 2: Verify RLS Configuration
-Run this query to confirm RLS is properly configured:
+Because the CSR dashboard talks to Supabase directly from the browser, you **must** confirm RLS on every table it can touch. Run this query for each table in `('tickets','ticket_messages','customers','response_templates','knowledge_base_articles','channel_integrations','sentiment_analytics','csr_performance')`:
 ```sql
 -- Check RLS status
-SELECT 
+SELECT
     schemaname,
     tablename,
     rowsecurity as rls_enabled,
-    (SELECT count(*) FROM pg_policies WHERE tablename = 'reports') as policy_count
-FROM pg_tables 
-WHERE tablename = 'reports';
+    (SELECT count(*) FROM pg_policies WHERE tablename = '<table_name>') as policy_count
+FROM pg_tables
+WHERE tablename = '<table_name>';
 
 -- List all policies
-SELECT * FROM pg_policies WHERE tablename = 'reports';
+SELECT * FROM pg_policies WHERE tablename = '<table_name>';
 ```
 
 **Expected Results:**
 - `rls_enabled`: `true`
-- `policy_count`: `2` (deny public, allow service_role)
-- Policy names: "Deny all public access", "Allow service role access"
+- `policy_count`: `>= 1` (at least a deny-all fallback and the scoped allow policy)
+- Policies must scope access to authenticated CSR role or channel webhook as defined in `supabase-setup.sql`
 
 ### 4. Functional Testing
 
@@ -152,8 +152,8 @@ curl -X POST https://your-app.vercel.app/api/triage-report \
 
 ## 🛡️ Security Verification Checklist
 
-- [ ] **RLS Enabled**: `ALTER TABLE reports ENABLE ROW LEVEL SECURITY;` executed
-- [ ] **Public Access Denied**: Default policy blocks all public access
+- [ ] **RLS Enabled**: `ALTER TABLE <table> ENABLE ROW LEVEL SECURITY;` executed for every CSR-facing table
+- [ ] **Public Access Denied**: Default policy blocks all public access (verify with anonymous session tests)
 - [ ] **Service Role Access**: API can write to database using service role
 - [ ] **Environment Variables**: Secrets configured in Vercel (not in code)
 - [ ] **HTTPS Enforced**: All communications encrypted
@@ -166,14 +166,13 @@ curl -X POST https://your-app.vercel.app/api/triage-report \
 ```
 CSR Interface (index.html)
     ↓ HTTPS
-Vercel Edge Functions
-    ↓ Secure API Calls
-/api/health-check.js ←→ Supabase (Health Check)
-/api/triage-report.js ←→ Supabase (Secure Write)
-    ↓ Service Role Auth
+Supabase JS Client (anon key + RLS)
+    ↘ Real-time subscriptions / filtered queries (tickets, templates, KB)
+Vercel Edge Functions (e.g., /api/triage-report)
+    ↓ Service Role Auth (privileged writes only)
 Supabase Database (RLS Enforced)
     ↓ Audit Trail
-Reports Table (No Public Access)
+Tables: tickets, ticket_messages, response_templates, knowledge_base_articles, customers, analytics
 ```
 
 ## 📊 Monitoring & Maintenance
@@ -224,4 +223,4 @@ For technical support or security concerns:
 
 ---
 
-**🔒 Security Reminder**: This system enforces zero client-side database access through mandatory RLS. All database operations are performed server-side with proper authentication and audit logging.
+**🔒 Security Reminder**: The CSR dashboard embeds the Supabase JS client for low-latency reads and realtime updates. Treat RLS verification as part of every deployment—any gap immediately becomes a data exposure path. Service role keys stay server-only and are never bundled in the browser.
