@@ -689,7 +689,8 @@
         }
 
         function viewReport(reportId) {
-            window.location.href = `/?report=${reportId}`;
+            const target = `/report-detail.html?id=${encodeURIComponent(reportId)}`;
+            window.location.href = target;
         }
 
         function viewCustomerHistory(customerName) {
