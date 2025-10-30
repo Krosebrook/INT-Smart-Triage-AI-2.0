@@ -32,22 +32,25 @@ describe('Security Configuration Validation', () => {
 
   it('should have security headers defined in API endpoints', async () => {
     const fs = await import('fs/promises');
-    
-    // Check health-check endpoint
-    const healthCheck = await fs.readFile('api/health-check.js', 'utf-8');
-    assert.ok(healthCheck.includes('X-Content-Type-Options'), 'Missing X-Content-Type-Options header');
-    assert.ok(healthCheck.includes('X-Frame-Options'), 'Missing X-Frame-Options header');
-    assert.ok(healthCheck.includes('X-XSS-Protection'), 'Missing X-XSS-Protection header');
-    assert.ok(healthCheck.includes('Strict-Transport-Security'), 'Missing HSTS header');
-    
-    // Check triage-report endpoint
-    const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
-    assert.ok(triageReport.includes('X-Content-Type-Options'), 'Missing X-Content-Type-Options header');
-    assert.ok(triageReport.includes('X-Frame-Options'), 'Missing X-Frame-Options header');
-    assert.ok(triageReport.includes('X-XSS-Protection'), 'Missing X-XSS-Protection header');
-    assert.ok(triageReport.includes('Strict-Transport-Security'), 'Missing HSTS header');
-    assert.ok(triageReport.includes('Content-Security-Policy'), 'Missing CSP header');
-    assert.ok(triageReport.includes('Referrer-Policy'), 'Missing Referrer-Policy header');
+
+    const securityUtils = await fs.readFile('src/utils/security.js', 'utf-8');
+    assert.ok(securityUtils.includes('X-Content-Type-Options'), 'Missing X-Content-Type-Options header');
+    assert.ok(securityUtils.includes('X-Frame-Options'), 'Missing X-Frame-Options header');
+    assert.ok(securityUtils.includes('X-XSS-Protection'), 'Missing X-XSS-Protection header');
+    assert.ok(securityUtils.includes('Strict-Transport-Security'), 'Missing HSTS header');
+    assert.ok(securityUtils.includes('Content-Security-Policy'), 'Missing CSP header');
+    assert.ok(securityUtils.includes('Referrer-Policy'), 'Missing Referrer-Policy header');
+
+    const endpoints = [
+      'api/health-check.js',
+      'api/triage-report.js',
+      'api/report-submit.js'
+    ];
+
+    for (const file of endpoints) {
+      const content = await fs.readFile(file, 'utf-8');
+      assert.ok(content.includes('setSecurityHeaders'), `${file} must set security headers`);
+    }
   });
 
   it('should have RLS configuration in database setup', async () => {
@@ -64,23 +67,37 @@ describe('Security Configuration Validation', () => {
   it('should have input validation in triage endpoint', async () => {
     const fs = await import('fs/promises');
     const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
-    
-    assert.ok(triageReport.includes('trim()'), 'Input should be trimmed');
-    assert.ok(triageReport.includes('substring('), 'Input length should be limited');
-    assert.ok(triageReport.includes('validTones'), 'Customer tone should be validated');
-    assert.ok(triageReport.includes('toLowerCase()'), 'Input should be normalized');
+    const validationUtils = await fs.readFile('src/utils/validation.js', 'utf-8');
+
+    assert.ok(triageReport.includes('validateTriageRequest'), 'Triage endpoint must validate requests');
+    assert.ok(triageReport.includes('sanitizeTriageData'), 'Triage endpoint must sanitize data');
     assert.ok(triageReport.includes('Validation Error'), 'Should have validation error handling');
+
+    assert.ok(validationUtils.includes('substring(0, 100)'), 'Customer name limit must be enforced');
+    assert.ok(validationUtils.includes('substring(0, 200)'), 'Ticket subject limit must be enforced');
+    assert.ok(validationUtils.includes('substring(0, 2000)'), 'Issue description limit must be enforced');
+    assert.ok(validationUtils.includes("'calm'"), 'Customer tone whitelist must include calm');
+    assert.ok(validationUtils.includes("'urgent'"), 'Customer tone whitelist must include urgent');
   });
 
   it('should use service role key, not anon key', async () => {
     const fs = await import('fs/promises');
     const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
     const healthCheck = await fs.readFile('api/health-check.js', 'utf-8');
-    
-    assert.ok(triageReport.includes('SUPABASE_SERVICE_ROLE_KEY'), 'Must use service role key');
-    assert.ok(healthCheck.includes('SUPABASE_SERVICE_ROLE_KEY'), 'Must use service role key');
-    assert.ok(!triageReport.includes('SUPABASE_ANON_KEY'), 'Should not use anon key');
-    assert.ok(!healthCheck.includes('SUPABASE_ANON_KEY'), 'Should not use anon key');
+    const reportSubmit = await fs.readFile('api/report-submit.js', 'utf-8');
+
+    for (const file of [triageReport, healthCheck, reportSubmit]) {
+      assert.ok(file.includes('DatabaseService'), 'Endpoints must use DatabaseService for service role access');
+      assert.ok(!file.includes('SUPABASE_ANON_KEY'), 'Anon key must not be referenced in endpoints');
+    }
+  });
+
+  it('should require service role configuration in database service', async () => {
+    const fs = await import('fs/promises');
+    const databaseService = await fs.readFile('src/services/database.js', 'utf-8');
+
+    assert.ok(databaseService.includes('SUPABASE_SERVICE_ROLE_KEY'), 'Service role key must be required');
+    assert.ok(!databaseService.includes('VITE_SUPABASE_ANON_KEY'), 'Database service must not fall back to anon key');
   });
 
   it('should have audit logging fields in database schema', async () => {
@@ -118,11 +135,33 @@ describe('Security Configuration Validation', () => {
     const fs = await import('fs/promises');
     const healthCheck = await fs.readFile('api/health-check.js', 'utf-8');
     const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
-    
-    assert.ok(healthCheck.includes("req.method !== 'GET'"), 'Health check should only allow GET');
-    assert.ok(triageReport.includes("req.method !== 'POST'"), 'Triage should only allow POST');
-    assert.ok(healthCheck.includes('405'), 'Should return 405 for wrong method');
-    assert.ok(triageReport.includes('405'), 'Should return 405 for wrong method');
+    const reportSubmit = await fs.readFile('api/report-submit.js', 'utf-8');
+
+    assert.ok(healthCheck.includes('validateHttpMethod'), 'Health check should validate HTTP methods');
+    assert.ok(triageReport.includes('validateHttpMethod'), 'Triage endpoint should validate HTTP methods');
+    assert.ok(reportSubmit.includes('validateHttpMethod'), 'Report submission should validate HTTP methods');
+
+    assert.ok(healthCheck.includes("['GET']"), 'Health check must allow only GET');
+    assert.ok(triageReport.includes("['POST']"), 'Triage endpoint must allow only POST');
+    assert.ok(reportSubmit.includes("['POST']"), 'Report submission must allow only POST');
+  });
+
+  it('should validate public report submission endpoint', async () => {
+    const fs = await import('fs/promises');
+    const reportSubmit = await fs.readFile('api/report-submit.js', 'utf-8');
+
+    assert.ok(reportSubmit.includes('Validation Error'), 'Report submission should reject invalid payloads');
+    assert.ok(reportSubmit.includes('createRateLimiter'), 'Report submission should rate limit clients');
+    assert.ok(reportSubmit.includes('sanitizeReportSubmission'), 'Report submission should sanitize data');
+  });
+
+  it('should restrict report insertion policies to authenticated roles', async () => {
+    const fs = await import('fs/promises');
+    const migration = await fs.readFile('supabase/migrations/20251007140835_allow_anon_insert_reports.sql', 'utf-8');
+
+    assert.ok(!migration.includes('TO anon'), 'Anon role must not have insert access');
+    assert.ok(migration.includes('TO authenticated'), 'Authenticated users should have insert access');
+    assert.ok(migration.includes('TO service_role'), 'Service role should retain insert access');
   });
 });
 
@@ -166,11 +205,12 @@ describe('Database Security Validation', () => {
 describe('Code Security Validation', () => {
   it('should not have hardcoded credentials in codebase', async () => {
     const fs = await import('fs/promises');
-    
+
     // Check main API files for hardcoded credentials
     const filesToCheck = [
       'api/health-check.js',
       'api/triage-report.js',
+      'api/report-submit.js',
       'index.js'
     ];
     
@@ -262,44 +302,39 @@ describe('Documentation Validation', () => {
 describe('Supabase Client Configuration', () => {
   it('should disable session persistence for security', async () => {
     const fs = await import('fs/promises');
-    const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
-    const healthCheck = await fs.readFile('api/health-check.js', 'utf-8');
-    
-    assert.ok(triageReport.includes('persistSession: false'), 'Must disable session persistence');
-    assert.ok(healthCheck.includes('persistSession: false'), 'Must disable session persistence');
+    const databaseService = await fs.readFile('src/services/database.js', 'utf-8');
+
+    assert.ok(databaseService.includes('persistSession: false'), 'Must disable session persistence');
   });
 
   it('should disable auto-refresh for security', async () => {
     const fs = await import('fs/promises');
-    const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
-    const healthCheck = await fs.readFile('api/health-check.js', 'utf-8');
-    
-    assert.ok(triageReport.includes('autoRefreshToken: false'), 'Must disable auto-refresh');
-    assert.ok(healthCheck.includes('autoRefreshToken: false'), 'Must disable auto-refresh');
+    const databaseService = await fs.readFile('src/services/database.js', 'utf-8');
+
+    assert.ok(databaseService.includes('autoRefreshToken: false'), 'Must disable auto-refresh');
   });
 });
 
 describe('Input Sanitization Logic', () => {
   it('should have length limits on all text inputs', async () => {
     const fs = await import('fs/promises');
-    const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
-    
-    // Verify substring limits match database schema
-    assert.ok(triageReport.includes('substring(0, 100)'), 'Customer name limit');
-    assert.ok(triageReport.includes('substring(0, 200)'), 'Ticket subject limit');
-    assert.ok(triageReport.includes('substring(0, 2000)'), 'Issue description limit');
-    assert.ok(triageReport.includes('substring(0, 50)'), 'CSR agent limit');
+    const validationUtils = await fs.readFile('src/utils/validation.js', 'utf-8');
+
+    assert.ok(validationUtils.includes('substring(0, 100)'), 'Customer name limit');
+    assert.ok(validationUtils.includes('substring(0, 200)'), 'Ticket subject limit');
+    assert.ok(validationUtils.includes('substring(0, 2000)'), 'Issue description limit');
+    assert.ok(validationUtils.includes('substring(0, 50)'), 'CSR agent limit');
   });
 
   it('should validate customer tone against whitelist', async () => {
     const fs = await import('fs/promises');
-    const triageReport = await fs.readFile('api/triage-report.js', 'utf-8');
-    
-    assert.ok(triageReport.includes("'calm'"), 'Must include calm tone');
-    assert.ok(triageReport.includes("'frustrated'"), 'Must include frustrated tone');
-    assert.ok(triageReport.includes("'angry'"), 'Must include angry tone');
-    assert.ok(triageReport.includes("'confused'"), 'Must include confused tone');
-    assert.ok(triageReport.includes("'urgent'"), 'Must include urgent tone');
+    const validationUtils = await fs.readFile('src/utils/validation.js', 'utf-8');
+
+    assert.ok(validationUtils.includes("'calm'"), 'Must include calm tone');
+    assert.ok(validationUtils.includes("'frustrated'"), 'Must include frustrated tone');
+    assert.ok(validationUtils.includes("'angry'"), 'Must include angry tone');
+    assert.ok(validationUtils.includes("'confused'"), 'Must include confused tone');
+    assert.ok(validationUtils.includes("'urgent'"), 'Must include urgent tone');
   });
 });
 

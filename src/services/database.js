@@ -13,11 +13,13 @@ export class DatabaseService {
 
   initializeClient() {
     const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Missing Supabase configuration');
-      console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('SUPABASE')));
+      if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
+      }
       return;
     }
 
@@ -70,7 +72,7 @@ export class DatabaseService {
       const { data, error } = await this.supabase
         .from('reports')
         .insert([reportData])
-        .select('report_id, created_at, priority')
+        .select('report_id, created_at, priority, category, confidence_score')
         .single();
 
       if (error) {

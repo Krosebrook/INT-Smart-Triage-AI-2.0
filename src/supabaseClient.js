@@ -12,43 +12,32 @@ export const supabase = supabaseUrl && supabaseAnonKey
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
 
-// Save triage report to database
+// Save triage report to database via secure serverless endpoint
 export async function saveTriageReport(reportData) {
-    if (!supabase) {
-        console.warn('Supabase not configured. Skipping database save.');
-        return { success: false, error: 'Database not configured' };
-    }
-
     try {
-        const { data, error } = await supabase
-            .from('reports')
-            .insert([{
-                report_id: reportData.reportId,
-                customer_name: reportData.customerName,
-                ticket_subject: reportData.ticketSubject,
-                issue_description: reportData.issueDescription,
-                customer_tone: reportData.customerTone,
-                priority: reportData.priority,
-                category: reportData.category || 'general',
-                confidence_score: parseFloat(reportData.confidence),
-                response_approach: reportData.responseApproach,
-                talking_points: reportData.talkingPoints,
-                knowledge_base_articles: reportData.knowledgeBase,
-                metadata: {
-                    department: reportData.department,
-                    analysis: reportData.analysis
-                },
-                csr_agent: reportData.csrAgent || 'Unknown',
-                processed_at: new Date().toISOString(),
-                status: 'new'
-            }])
-            .select();
+        const response = await fetch('/api/report-submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ report: reportData })
+        });
 
-        if (error) throw error;
+        const payload = await response.json();
 
-        return { success: true, data };
+        if (!response.ok) {
+            const errorMessage = payload?.message || 'Failed to submit triage report';
+            console.error('Report submission failed:', payload);
+            return {
+                success: false,
+                error: errorMessage,
+                details: payload?.details || null
+            };
+        }
+
+        return { success: true, data: payload };
     } catch (error) {
-        console.error('Error saving to database:', error);
+        console.error('Error submitting report via API:', error);
         return { success: false, error: error.message };
     }
 }
