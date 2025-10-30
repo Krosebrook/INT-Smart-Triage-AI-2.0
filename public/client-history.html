@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client History - INT Smart Triage AI 2.0</title>
+    <link rel="stylesheet" href="/public/theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #e0e7ff;
+            color: #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #c7d2fe;
+        }
+
+        .search-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .history-stats-card {
+            display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.35);
+        }
+
+        .history-stats-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .history-stats-card__header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .history-stats-card__subtitle {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .history-stats {
+            display: grid;
+            gap: 16px;
+        }
+
+        .history-stats__summary {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-stats__total {
+            font-size: 42px;
+            font-weight: 700;
+        }
+
+        .history-stats__subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .history-stats__bars {
+            display: grid;
+            gap: 12px;
+        }
+
+        .history-stats__row {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .history-stats__row:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .history-stats__row-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .history-stats__row-label {
+            text-transform: capitalize;
+        }
+
+        .history-stats__bar {
+            position: relative;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.25);
+            overflow: hidden;
+        }
+
+        .history-stats__bar-fill {
+            height: 100%;
+            border-radius: inherit;
+            transition: width 0.4s ease;
+        }
+
+        .history-stats__percent {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 6px;
+        }
+
+        .history-stats__highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .history-stats__highlight {
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 120px;
+        }
+
+        .history-stats__highlight--warning {
+            background: rgba(253, 186, 140, 0.3);
+        }
+
+        .history-stats__highlight--success {
+            background: rgba(134, 239, 172, 0.3);
+        }
+
+        .history-stats__highlight-count {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .history-stats__highlight-label {
+            font-size: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        .history-stats__empty {
+            font-size: 14px;
+            opacity: 0.85;
+            text-align: center;
+        }
+
+        .history-stats__bar-fill.status-new {
+            background: rgba(14, 165, 233, 0.85);
+        }
+
+        .history-stats__bar-fill.status-in_progress {
+            background: rgba(249, 115, 22, 0.85);
+        }
+
+        .history-stats__bar-fill.status-waiting_customer {
+            background: rgba(234, 179, 8, 0.85);
+        }
+
+        .history-stats__bar-fill.status-resolved {
+            background: rgba(34, 197, 94, 0.85);
+        }
+
+        .history-stats__bar-fill.status-closed {
+            background: rgba(107, 114, 128, 0.85);
+        }
+
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .results-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .results-count strong {
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .report-card {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .report-checkbox {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .report-card.has-checkbox {
+            padding-left: 55px;
+        }
+
+        .report-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .report-title {
+            flex: 1;
+        }
+
+        .report-title h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .report-meta {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .report-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority-low {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .tone-angry {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .tone-urgent {
+            background: #fed7aa;
+            color: #c2410c;
+        }
+
+        .tone-frustrated {
+            background: #fde68a;
+            color: #92400e;
+        }
+
+        .tone-confused {
+            background: #ddd6fe;
+            color: #5b21b6;
+        }
+
+        .tone-calm {
+            background: #bfdbfe;
+            color: #1e40af;
+        }
+
+        .category-badge {
+            background: #e0e7ff;
+            color: #667eea;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-new {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-in_progress {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-resolved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .report-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .report-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .report-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 70%;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-text {
+            height: 16px;
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-badge {
+            height: 20px;
+            width: 80px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            input, select, button {
+                font-size: 16px;
+                min-height: 44px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .report-header {
+                flex-direction: column;
+            }
+
+            .report-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1>📊 Client History</h1>
+            <div class="header-actions">
+                <button id="exportSelectedBtn" class="btn btn-primary" style="display: none;">Export Selected</button>
+                <a href="/" class="btn btn-secondary">← New Triage</a>
+                <a href="/demo.html" class="btn btn-secondary">Demo</a>
+            </div>
+        </div>
+
+        <div id="historyStatsPanel" class="history-stats-card" hidden>
+            <div class="history-stats-card__header">
+                <h2>Report Status Overview</h2>
+                <p class="history-stats-card__subtitle">Live distribution for the current result set.</p>
+            </div>
+            <div id="historyStatsContainer"></div>
+        </div>
+
+        <div class="search-section">
+            <form id="searchForm" class="search-form">
+                <div class="form-group">
+                    <label for="searchQuery">Search Customer / Subject / Description</label>
+                    <input type="text" id="searchQuery" placeholder="Enter customer name, ticket subject, or keywords...">
+                </div>
+                <div class="form-group">
+                    <label for="assignedFilter">Assigned To</label>
+                    <input type="text" id="assignedFilter" placeholder="Filter by CSR name...">
+                </div>
+                <div class="form-group">
+                    <label for="priorityFilter">Priority</label>
+                    <select id="priorityFilter">
+                        <option value="">All Priorities</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="toneFilter">Customer Tone</label>
+                    <select id="toneFilter">
+                        <option value="">All Tones</option>
+                        <option value="angry">Angry</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="frustrated">Frustrated</option>
+                        <option value="confused">Confused</option>
+                        <option value="calm">Calm</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter" data-testid="status-filter">
+                        <option value="">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="waiting_customer">Waiting on Customer</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">🔍 Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count">
+                    <strong id="resultsCount">0</strong> reports found
+                </div>
+                <button id="exportBtn" class="btn btn-secondary btn-small" style="display: none;">
+                    📥 Export to CSV
+                </button>
+            </div>
+
+            <div id="resultsContainer">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading reports...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initTheme, toggleTheme } from '/public/theme.js';
+        import { initKeyboardShortcuts } from '/public/shortcuts.js';
+        window.toggleTheme = toggleTheme;
+        initTheme();
+        initKeyboardShortcuts();
+    </script>
+
+    <script type="module">
+        import { HistoryStats } from '/modules/HistoryStats.js';
+        import { supabase, getCustomerReports, searchReports, getReportById } from '../src/supabaseClient.js';
+
+        const historyStatsPanel = document.getElementById('historyStatsPanel');
+        const historyStatsContainer = document.getElementById('historyStatsContainer');
+        const historyStatsComponent = historyStatsContainer ? new HistoryStats(historyStatsContainer) : null;
+        const statusFilterEl = document.getElementById('statusFilter');
+
+        const statusLabels = {
+            'new': 'New',
+            'in_progress': 'In Progress',
+            'waiting_customer': 'Waiting on Customer',
+            'resolved': 'Resolved',
+            'closed': 'Closed'
+        };
+
+        function hideHistoryStats() {
+            if (historyStatsComponent) {
+                historyStatsComponent.hide();
+            }
+            if (historyStatsPanel) {
+                historyStatsPanel.style.display = 'none';
+                historyStatsPanel.setAttribute('hidden', 'true');
+            }
+        }
+
+        hideHistoryStats();
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerName = urlParams.get('customer');
+        const reportId = urlParams.get('report');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (reportId) {
+                await loadSingleReport(reportId);
+            } else if (customerName) {
+                document.getElementById('searchQuery').value = customerName;
+                await loadCustomerReports(customerName);
+            } else {
+                await loadAllReports();
+            }
+
+            // Setup event listeners
+            document.getElementById('searchForm').addEventListener('submit', handleSearch);
+            document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+        });
+
+        async function loadSingleReport(reportId) {
+            const result = await getReportById(reportId);
+            if (result.success && result.data) {
+                displayReports([result.data]);
+            } else {
+                showEmpty('Report not found');
+            }
+        }
+
+        async function loadCustomerReports(customerName) {
+            const result = await getCustomerReports(customerName);
+            if (result.success) {
+                displayReports(result.data);
+            } else {
+                showError(result.error);
+            }
+        }
+
+        async function loadAllReports() {
+            const result = await searchReports('', {});
+            if (result.success) {
+                displayReports(result.data);
+            } else {
+                showError(result.error);
+            }
+        }
+
+        async function handleSearch(e) {
+            e.preventDefault();
+
+            const query = document.getElementById('searchQuery').value;
+            const priority = document.getElementById('priorityFilter').value;
+            const tone = document.getElementById('toneFilter').value;
+            const assigned = document.getElementById('assignedFilter').value;
+            const status = statusFilterEl ? statusFilterEl.value : '';
+
+            showLoading();
+
+            const result = await searchReports(query, {
+                priority: priority || undefined,
+                customerTone: tone || undefined,
+                assignedTo: assigned || undefined,
+                status: status || undefined
+            });
+
+            if (result.success) {
+                displayReports(result.data);
+            } else {
+                showError(result.error);
+            }
+        }
+
+        function displayReports(reports) {
+            const container = document.getElementById('resultsContainer');
+            const countEl = document.getElementById('resultsCount');
+            const exportBtn = document.getElementById('exportBtn');
+
+            countEl.textContent = reports.length;
+
+            if (reports.length === 0) {
+                showEmpty('No reports found matching your search criteria.');
+                exportBtn.style.display = 'none';
+                return;
+            }
+
+            exportBtn.style.display = 'block';
+            updateQuickStats(reports);
+
+            container.innerHTML = reports.map(report => `
+                <div class="report-card has-checkbox">
+                    <input type="checkbox" class="report-checkbox" value="${report.report_id}" onclick="event.stopPropagation(); toggleSelection();">
+                    <div onclick="viewReport('${report.report_id}')">
+                    <div class="report-header">
+                        <div class="report-title">
+                            <h3>${escapeHtml(report.ticket_subject)}</h3>
+                            <div class="report-meta">
+                                <strong>${escapeHtml(report.customer_name)}</strong> •
+                                ${formatDate(report.created_at)} •
+                                Report ID: ${report.report_id}
+                            </div>
+                        </div>
+                        <div class="report-badges">
+                            <span class="status-badge status-${report.status}">${formatStatus(report.status)}</span>
+                            <span class="badge priority-${report.priority}">${report.priority.toUpperCase()}</span>
+                            <span class="badge tone-${report.customer_tone}">${report.customer_tone}</span>
+                            <span class="badge category-badge">${report.category}</span>
+                        </div>
+                    </div>
+                    <div class="report-description">
+                        ${escapeHtml(report.issue_description)}
+                    </div>
+                    <div class="report-footer">
+                        <div class="report-stats">
+                            <div>📊 Confidence: ${report.confidence_score}%</div>
+                            <div>🎯 Department: ${report.metadata?.department || 'N/A'}</div>
+                            <div>👤 Agent: ${report.csr_agent}</div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); viewReport('${report.report_id}')">View Details</button>
+                            <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); viewCustomerHistory('${escapeHtml(report.customer_name)}')">Customer History</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showLoading() {
+            hideHistoryStats();
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = Array(3).fill(0).map(() => `
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 60%;"></div>
+                    <div style="margin-top: 15px;">
+                        <div class="skeleton skeleton-badge"></div>
+                        <div class="skeleton skeleton-badge"></div>
+                        <div class="skeleton skeleton-badge"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showEmpty(message) {
+            hideHistoryStats();
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h3>${message}</h3>
+                    <p>Try adjusting your search criteria or create a new triage report.</p>
+                </div>
+            `;
+        }
+
+        function showError(error) {
+            hideHistoryStats();
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <h3>Error loading reports</h3>
+                    <p>${escapeHtml(error)}</p>
+                </div>
+            `;
+        }
+
+        function viewReport(reportId) {
+            window.location.href = `/?report=${reportId}`;
+        }
+
+        function viewCustomerHistory(customerName) {
+            window.location.href = `/client-history.html?customer=${encodeURIComponent(customerName)}`;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatStatus(status) {
+            const formatted = statusLabels[status];
+            if (formatted) {
+                return formatted;
+            }
+            return status ? status.replace(/_/g, ' ') : 'Unknown';
+        }
+
+        function updateQuickStats(reports) {
+            if (!historyStatsComponent || !historyStatsPanel) {
+                return;
+            }
+
+            if (!Array.isArray(reports) || reports.length === 0) {
+                hideHistoryStats();
+                return;
+            }
+
+            const statusCounts = reports.reduce((acc, report) => {
+                const key = report.status || 'new';
+                acc[key] = (acc[key] || 0) + 1;
+                return acc;
+            }, {});
+
+            const statuses = Object.entries(statusCounts).map(([key, count]) => ({
+                key,
+                label: statusLabels[key] || key.replace(/_/g, ' '),
+                count
+            }));
+
+            const highlightMetrics = [
+                { label: 'High Priority', count: reports.filter(r => r.priority === 'high').length, accent: 'warning' },
+                { label: 'Resolved', count: statusCounts.resolved || 0, accent: 'success' }
+            ].filter(metric => metric.count > 0);
+
+            historyStatsComponent.render({
+                total: reports.length,
+                statuses,
+                highlights: highlightMetrics
+            });
+
+            historyStatsPanel.style.display = 'block';
+            historyStatsPanel.removeAttribute('hidden');
+        }
+
+        function toggleSelection() {
+            const checkboxes = document.querySelectorAll('.report-checkbox:checked');
+            const exportBtn = document.getElementById('exportSelectedBtn');
+            exportBtn.style.display = checkboxes.length > 0 ? 'block' : 'none';
+        }
+
+        document.getElementById('exportSelectedBtn').onclick = async () => {
+            const selected = Array.from(document.querySelectorAll('.report-checkbox:checked')).map(cb => cb.value);
+
+            if (selected.length === 0) {
+                alert('No reports selected');
+                return;
+            }
+
+            if (!supabase) {
+                const result = await searchReports('', {});
+                if (!result.success) {
+                    alert(`Error fetching reports: ${result.error}`);
+                    return;
+                }
+
+                const filtered = result.data.filter(report => selected.includes(report.report_id));
+                exportToCSV(filtered);
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('reports')
+                .select('*')
+                .in('report_id', selected);
+
+            if (error) {
+                alert(`Error fetching reports: ${error.message}`);
+                return;
+            }
+
+            exportToCSV(data);
+        };
+
+        function exportToCSV(reports) {
+            const headers = ['Report ID', 'Customer', 'Subject', 'Status', 'Priority', 'Tone', 'Category', 'Created Date'];
+            const rows = reports.map(r => [
+                r.report_id,
+                r.customer_name,
+                r.ticket_subject,
+                r.status || 'new',
+                r.priority,
+                r.customer_tone,
+                r.category,
+                new Date(r.created_at).toLocaleString()
+            ]);
+
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `reports-export-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Make functions global for onclick handlers
+        window.viewReport = viewReport;
+        window.viewCustomerHistory = viewCustomerHistory;
+    </script>
+</body>
+</html>
