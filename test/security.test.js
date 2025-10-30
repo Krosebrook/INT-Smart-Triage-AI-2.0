@@ -1,5 +1,55 @@
-import { describe, it } from 'node:test';
+import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert';
+import { DatabaseService } from '../src/services/database.js';
+
+const ORIGINAL_ENV = { ...process.env };
+
+const restoreEnvironment = () => {
+  for (const key of Object.keys(process.env)) {
+    if (!(key in ORIGINAL_ENV)) {
+      delete process.env[key];
+    }
+  }
+
+  for (const [key, value] of Object.entries(ORIGINAL_ENV)) {
+    if (typeof value === 'undefined') {
+      delete process.env[key];
+    } else {
+      process.env[key] = value;
+    }
+  }
+};
+
+describe('DatabaseService configuration hardening', () => {
+  beforeEach(() => {
+    restoreEnvironment();
+  });
+
+  afterEach(() => {
+    restoreEnvironment();
+  });
+
+  it('should throw a configuration error when service role key is missing', () => {
+    process.env.SUPABASE_URL = 'https://example.supabase.co';
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    delete process.env.SUPABASE_SERVICE_KEY;
+    delete process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+
+    assert.throws(
+      () => new DatabaseService(),
+      /SUPABASE_SERVICE_ROLE_KEY.*required/i,
+      'DatabaseService should enforce presence of a service role key'
+    );
+  });
+
+  it('should initialize successfully when a service role key is provided', () => {
+    process.env.SUPABASE_URL = 'https://example.supabase.co';
+    process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-role-key';
+
+    const service = new DatabaseService();
+    assert.ok(service.isInitialized, 'DatabaseService should initialize with a service role key');
+  });
+});
 
 /**
  * Security Validation Tests

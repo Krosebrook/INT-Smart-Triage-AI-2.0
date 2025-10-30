@@ -8,7 +8,18 @@ export class DatabaseService {
   constructor() {
     this.supabase = null;
     this.isInitialized = false;
-    this.initializeClient();
+    this.configurationError = null;
+
+    try {
+      this.initializeClient();
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : 'Supabase configuration error: secure service role key required.';
+      this.configurationError = error instanceof Error ? error : new Error(message);
+      console.error(message);
+      throw this.configurationError;
+    }
   }
 
   initializeClient() {
@@ -35,7 +46,8 @@ export class DatabaseService {
       });
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize Supabase client:', error);
+      const reason = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Supabase configuration error: failed to initialize client (${reason}).`);
     }
   }
 
