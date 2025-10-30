@@ -150,6 +150,35 @@ curl -X POST https://your-app.vercel.app/api/triage-report \
 }
 ```
 
+#### Public Report Submission Endpoint
+```bash
+curl -X POST https://your-app.vercel.app/api/report-submit \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reportId": "TR-TEST-0001",
+    "customerName": "Test Customer",
+    "ticketSubject": "Login Issue",
+    "issueDescription": "Cannot login to the system",
+    "customerTone": "frustrated",
+    "priority": "medium",
+    "responseApproach": "Provide reset instructions and confirm resolution.",
+    "talkingPoints": ["Acknowledge the inconvenience", "Provide reset link"],
+    "knowledgeBase": ["KB-AUTH-01: Authentication Issues"]
+  }'
+```
+
+**Expected Response (201 Created):**
+```json
+{
+  "success": true,
+  "reportId": "TR-TEST-0001",
+  "createdAt": "2024-01-01T12:00:00.000Z",
+  "priority": "medium",
+  "category": "general",
+  "confidenceScore": 82
+}
+```
+
 ## 🛡️ Security Verification Checklist
 
 - [ ] **RLS Enabled**: `ALTER TABLE <table> ENABLE ROW LEVEL SECURITY;` executed for every CSR-facing table
@@ -166,10 +195,12 @@ curl -X POST https://your-app.vercel.app/api/triage-report \
 ```
 CSR Interface (index.html)
     ↓ HTTPS
-Supabase JS Client (anon key + RLS)
-    ↘ Real-time subscriptions / filtered queries (tickets, templates, KB)
-Vercel Edge Functions (e.g., /api/triage-report)
-    ↓ Service Role Auth (privileged writes only)
+Vercel Edge Functions
+    ↓ Secure API Calls
+/api/health-check.js ←→ Supabase (Health Check)
+/api/report-submit.js ←→ Supabase (Service role validated insert)
+/api/triage-report.js ←→ Supabase (Secure Write)
+    ↓ Service Role Auth
 Supabase Database (RLS Enforced)
     ↓ Audit Trail
 Tables: tickets, ticket_messages, response_templates, knowledge_base_articles, customers, analytics
