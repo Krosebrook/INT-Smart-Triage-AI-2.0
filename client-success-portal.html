@@ -202,6 +202,7 @@
     import { notificationCenter } from './src/components/NotificationCenter.js';
     import { ExportUtils } from './src/utils/exportUtils.js';
     import { seedDemoData } from './src/utils/demoData.js';
+    import { initAuthFlow } from './src/portal/authFlow.js';
 
     window.ticketDashboard = new TicketDashboard('ticketDashboard');
     window.customerContextPanel = new CustomerContextPanel('customerContext');
@@ -244,65 +245,14 @@
       }
     };
 
-    let currentUser = null;
-
-    async function checkAuth() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        currentUser = session.user;
-        showPortal();
-      } else {
-        showAuthScreen();
-      }
-    }
-
-    function showAuthScreen() {
-      document.getElementById('authScreen').style.display = 'block';
-      document.getElementById('portalApp').style.display = 'none';
-    }
-
-    function showPortal() {
-      document.getElementById('authScreen').style.display = 'none';
-      document.getElementById('portalApp').style.display = 'block';
-      if (currentUser) {
-        document.getElementById('userDisplay').textContent = currentUser.email;
-      } else {
-        document.getElementById('userDisplay').textContent = 'Guest User';
-      }
-      initializeComponents();
-    }
-
-    window.skipAuth = function() {
-      currentUser = { email: 'guest@example.com', role: 'guest' };
-      showPortal();
-    };
-
-    window.logout = async function() {
-      await supabase.auth.signOut();
-      currentUser = null;
-      showAuthScreen();
-    };
-
-    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        if (error.message.includes('Invalid')) {
-          const { error: signUpError } = await supabase.auth.signUp({ email, password });
-          if (!signUpError) {
-            alert('Account created! You can now sign in.');
-          }
-        } else {
-          alert('Login error: ' + error.message);
-        }
-      } else {
-        currentUser = data.user;
-        showPortal();
-      }
+    const authController = initAuthFlow({
+      supabase,
+      document,
+      window,
+      onPortalReady: () => {
+        initializeComponents();
+      },
+      alertFn: (message) => alert(message)
     });
 
     window.addEventListener('view-ticket', async (e) => {
@@ -313,7 +263,7 @@
       }
     });
 
-    checkAuth();
+    authController.checkAuth();
   </script>
 </body>
 </html>

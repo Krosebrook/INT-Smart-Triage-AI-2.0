@@ -1,16 +1,24 @@
 // Supabase client for INT Smart Triage AI 2.0
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const runtimeEnv = typeof import.meta !== 'undefined' && import.meta.env
+    ? import.meta.env
+    : process.env;
+
+const supabaseUrl = runtimeEnv?.VITE_SUPABASE_URL || runtimeEnv?.SUPABASE_URL;
+const supabaseAnonKey = runtimeEnv?.VITE_SUPABASE_ANON_KEY || runtimeEnv?.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('Supabase credentials not found. Database features will be disabled.');
 }
 
-export const supabase = supabaseUrl && supabaseAnonKey
+export let supabase = supabaseUrl && supabaseAnonKey
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
+
+export function setSupabaseClient(client) {
+    supabase = client;
+}
 
 // Save triage report to database
 export async function saveTriageReport(reportData) {
