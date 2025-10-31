@@ -83,9 +83,169 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+        .history-stats-card {
+            display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.35);
+        }
+
+        .history-stats-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .history-stats-card__header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .history-stats-card__subtitle {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .history-stats {
+            display: grid;
+            gap: 16px;
+        }
+
+        .history-stats__summary {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-stats__total {
+            font-size: 42px;
+            font-weight: 700;
+        }
+
+        .history-stats__subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .history-stats__bars {
+            display: grid;
+            gap: 12px;
+        }
+
+        .history-stats__row {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .history-stats__row:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .history-stats__row-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .history-stats__row-label {
+            text-transform: capitalize;
+        }
+
+        .history-stats__bar {
+            position: relative;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.25);
+            overflow: hidden;
+        }
+
+        .history-stats__bar-fill {
+            height: 100%;
+            border-radius: inherit;
+            transition: width 0.4s ease;
+        }
+
+        .history-stats__percent {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 6px;
+        }
+
+        .history-stats__highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .history-stats__highlight {
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 120px;
+        }
+
+        .history-stats__highlight--warning {
+            background: rgba(253, 186, 140, 0.3);
+        }
+
+        .history-stats__highlight--success {
+            background: rgba(134, 239, 172, 0.3);
+        }
+
+        .history-stats__highlight-count {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .history-stats__highlight-label {
+            font-size: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        .history-stats__empty {
+            font-size: 14px;
+            opacity: 0.85;
+            text-align: center;
+        }
+
+        .history-stats__bar-fill.status-new {
+            background: rgba(14, 165, 233, 0.85);
+        }
+
+        .history-stats__bar-fill.status-in_progress {
+            background: rgba(249, 115, 22, 0.85);
+        }
+
+        .history-stats__bar-fill.status-waiting_customer {
+            background: rgba(234, 179, 8, 0.85);
+        }
+
+        .history-stats__bar-fill.status-resolved {
+            background: rgba(34, 197, 94, 0.85);
+        }
+
+        .history-stats__bar-fill.status-closed {
+            background: rgba(107, 114, 128, 0.85);
+        }
+
+
         .search-form {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
             gap: 10px;
             align-items: end;
         }
@@ -473,33 +633,12 @@
             </div>
         </div>
 
-        <div id="quickStats" class="search-section" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statTotal">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">Total Reports</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statNew">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">New</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statProgress">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">In Progress</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statResolved">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">Resolved</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statOverdue">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">SLA Overdue</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statHigh">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">High Priority</div>
-                </div>
+        <div id="historyStatsPanel" class="history-stats-card" hidden>
+            <div class="history-stats-card__header">
+                <h2>Report Status Overview</h2>
+                <p class="history-stats-card__subtitle">Live distribution for the current result set.</p>
             </div>
+            <div id="historyStatsContainer"></div>
         </div>
 
         <div class="search-section">
@@ -544,13 +683,14 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="slaFilter">SLA</label>
-                    <select id="slaFilter" name="sla">
-                        <option value="all">All</option>
-                        <option value="overdue">Overdue</option>
-                        <option value="today">Due Today</option>
-                        <option value="week">Due This Week</option>
-                        <option value="none">No SLA</option>
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter" data-testid="status-filter">
+                        <option value="">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="waiting_customer">Waiting on Customer</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -587,8 +727,33 @@
     </script>
 
     <script type="module">
-        import { buildHistoryFilters, formatStatus as formatStatusLabel, formatSlaDue, getSlaBadgeState } from '/scripts/history.js';
+        import { HistoryStats } from '/modules/HistoryStats.js';
         import { supabase, getCustomerReports, searchReports, getReportById } from '../src/supabaseClient.js';
+
+        const historyStatsPanel = document.getElementById('historyStatsPanel');
+        const historyStatsContainer = document.getElementById('historyStatsContainer');
+        const historyStatsComponent = historyStatsContainer ? new HistoryStats(historyStatsContainer) : null;
+        const statusFilterEl = document.getElementById('statusFilter');
+
+        const statusLabels = {
+            'new': 'New',
+            'in_progress': 'In Progress',
+            'waiting_customer': 'Waiting on Customer',
+            'resolved': 'Resolved',
+            'closed': 'Closed'
+        };
+
+        function hideHistoryStats() {
+            if (historyStatsComponent) {
+                historyStatsComponent.hide();
+            }
+            if (historyStatsPanel) {
+                historyStatsPanel.style.display = 'none';
+                historyStatsPanel.setAttribute('hidden', 'true');
+            }
+        }
+
+        hideHistoryStats();
 
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -641,12 +806,20 @@
         async function handleSearch(e) {
             e.preventDefault();
 
-            const formData = new FormData(e.target);
-            const { query, filters } = buildHistoryFilters(formData);
+            const query = document.getElementById('searchQuery').value;
+            const priority = document.getElementById('priorityFilter').value;
+            const tone = document.getElementById('toneFilter').value;
+            const assigned = document.getElementById('assignedFilter').value;
+            const status = statusFilterEl ? statusFilterEl.value : '';
 
             showLoading();
 
-            const result = await searchReports(query, filters);
+            const result = await searchReports(query, {
+                priority: priority || undefined,
+                customerTone: tone || undefined,
+                assignedTo: assigned || undefined,
+                status: status || undefined
+            });
 
             if (result.success) {
                 displayReports(result.data);
@@ -723,6 +896,7 @@
         }
 
         function showLoading() {
+            hideHistoryStats();
             const container = document.getElementById('resultsContainer');
             container.innerHTML = Array(3).fill(0).map(() => `
                 <div class="skeleton-card">
@@ -739,6 +913,7 @@
         }
 
         function showEmpty(message) {
+            hideHistoryStats();
             const container = document.getElementById('resultsContainer');
             container.innerHTML = `
                 <div class="empty-state">
@@ -752,6 +927,7 @@
         }
 
         function showError(error) {
+            hideHistoryStats();
             const container = document.getElementById('resultsContainer');
             container.innerHTML = `
                 <div class="empty-state">
@@ -799,26 +975,49 @@
             return div.innerHTML;
         }
 
+        function formatStatus(status) {
+            const formatted = statusLabels[status];
+            if (formatted) {
+                return formatted;
+            }
+            return status ? status.replace(/_/g, ' ') : 'Unknown';
+        }
+
         function updateQuickStats(reports) {
-            document.getElementById('quickStats').style.display = 'block';
-            document.getElementById('statTotal').textContent = reports.length;
-            document.getElementById('statNew').textContent = reports.filter(r => (r.status || 'new') === 'new').length;
-            document.getElementById('statProgress').textContent = reports.filter(r => (r.status || 'new') === 'in_progress').length;
-            document.getElementById('statResolved').textContent = reports.filter(r => (r.status || 'new') === 'resolved').length;
-            document.getElementById('statOverdue').textContent = reports.filter(r => {
-                const status = r.status || 'new';
-                if (!r.sla_due || status === 'resolved') {
-                    return false;
-                }
+            if (!historyStatsComponent || !historyStatsPanel) {
+                return;
+            }
 
-                const due = new Date(r.sla_due);
-                if (Number.isNaN(due.getTime())) {
-                    return false;
-                }
+            if (!Array.isArray(reports) || reports.length === 0) {
+                hideHistoryStats();
+                return;
+            }
 
-                return due.getTime() < Date.now();
-            }).length;
-            document.getElementById('statHigh').textContent = reports.filter(r => r.priority === 'high').length;
+            const statusCounts = reports.reduce((acc, report) => {
+                const key = report.status || 'new';
+                acc[key] = (acc[key] || 0) + 1;
+                return acc;
+            }, {});
+
+            const statuses = Object.entries(statusCounts).map(([key, count]) => ({
+                key,
+                label: statusLabels[key] || key.replace(/_/g, ' '),
+                count
+            }));
+
+            const highlightMetrics = [
+                { label: 'High Priority', count: reports.filter(r => r.priority === 'high').length, accent: 'warning' },
+                { label: 'Resolved', count: statusCounts.resolved || 0, accent: 'success' }
+            ].filter(metric => metric.count > 0);
+
+            historyStatsComponent.render({
+                total: reports.length,
+                statuses,
+                highlights: highlightMetrics
+            });
+
+            historyStatsPanel.style.display = 'block';
+            historyStatsPanel.removeAttribute('hidden');
         }
 
         function toggleSelection() {
@@ -832,6 +1031,18 @@
 
             if (selected.length === 0) {
                 alert('No reports selected');
+                return;
+            }
+
+            if (!supabase) {
+                const result = await searchReports('', {});
+                if (!result.success) {
+                    alert(`Error fetching reports: ${result.error}`);
+                    return;
+                }
+
+                const filtered = result.data.filter(report => selected.includes(report.report_id));
+                exportToCSV(filtered);
                 return;
             }
 

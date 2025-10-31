@@ -31,7 +31,7 @@ export class DatabaseService {
       if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
       }
-      return;
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
     }
 
     try {
