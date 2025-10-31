@@ -304,6 +304,16 @@
             position: relative;
         }
 
+        .report-card.overdue {
+            border-color: #b91c1c;
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.15);
+        }
+
+        .report-card.due-soon {
+            border-color: #92400e;
+            box-shadow: 0 4px 12px rgba(146, 64, 14, 0.1);
+        }
+
         .report-checkbox {
             position: absolute;
             top: 20px;
@@ -421,9 +431,40 @@
             color: #92400e;
         }
 
+        .status-blocked {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-escalated {
+            background: #fbcfe8;
+            color: #be185d;
+        }
+
         .status-resolved {
             background: #d1fae5;
             color: #065f46;
+        }
+
+        .sla-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .sla-badge.overdue {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .sla-badge.soon {
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .report-description {
@@ -608,11 +649,11 @@
                 </div>
                 <div class="form-group">
                     <label for="assignedFilter">Assigned To</label>
-                    <input type="text" id="assignedFilter" placeholder="Filter by CSR name...">
+                    <input type="text" id="assignedFilter" name="assignee" placeholder="Filter by CSR name...">
                 </div>
                 <div class="form-group">
                     <label for="priorityFilter">Priority</label>
-                    <select id="priorityFilter">
+                    <select id="priorityFilter" name="priority">
                         <option value="">All Priorities</option>
                         <option value="high">High</option>
                         <option value="medium">Medium</option>
@@ -620,8 +661,19 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter" name="status">
+                        <option value="">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="blocked">Blocked</option>
+                        <option value="escalated">Escalated</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="toneFilter">Customer Tone</label>
-                    <select id="toneFilter">
+                    <select id="toneFilter" name="tone">
                         <option value="">All Tones</option>
                         <option value="angry">Angry</option>
                         <option value="urgent">Urgent</option>
@@ -792,8 +844,18 @@
             exportBtn.style.display = 'block';
             updateQuickStats(reports);
 
-            container.innerHTML = reports.map(report => `
-                <div class="report-card has-checkbox">
+            const now = new Date();
+            container.innerHTML = reports.map(report => {
+                const statusKey = report.status || 'new';
+                const { className: slaBadgeClass, label: slaLabel } = getSlaBadgeState({ sla_due: report.sla_due, status: statusKey }, now);
+                const cardState = slaBadgeClass.includes('overdue')
+                    ? ' overdue'
+                    : (slaBadgeClass.includes('soon') ? ' due-soon' : '');
+                const confidence = formatConfidence(report.confidence_score);
+                const assignee = escapeHtml(report.assignee || report.assigned_to || 'Unassigned');
+
+                return `
+                <div class="report-card has-checkbox${cardState}">
                     <input type="checkbox" class="report-checkbox" value="${report.report_id}" onclick="event.stopPropagation(); toggleSelection();">
                     <div onclick="viewReport('${report.report_id}')">
                     <div class="report-header">
@@ -806,7 +868,7 @@
                             </div>
                         </div>
                         <div class="report-badges">
-                            <span class="status-badge status-${report.status}">${formatStatus(report.status)}</span>
+                            <span class="status-badge status-${statusKey}">${formatStatusLabel(statusKey)}</span>
                             <span class="badge priority-${report.priority}">${report.priority.toUpperCase()}</span>
                             <span class="badge tone-${report.customer_tone}">${report.customer_tone}</span>
                             <span class="badge category-badge">${report.category}</span>
@@ -817,9 +879,11 @@
                     </div>
                     <div class="report-footer">
                         <div class="report-stats">
-                            <div>📊 Confidence: ${report.confidence_score}%</div>
+                            <div>📊 Confidence: ${confidence}</div>
                             <div>🎯 Department: ${report.metadata?.department || 'N/A'}</div>
                             <div>👤 Agent: ${report.csr_agent}</div>
+                            <div>🧑‍🤝‍🧑 Owner: ${assignee}</div>
+                            <div>⏱️ <span class="${slaBadgeClass}">${slaLabel}</span></div>
                         </div>
                         <div class="report-actions">
                             <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); viewReport('${report.report_id}')">View Details</button>
@@ -827,8 +891,8 @@
                         </div>
                     </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function showLoading() {
@@ -890,6 +954,19 @@
                 hour: '2-digit',
                 minute: '2-digit'
             });
+        }
+
+        function formatConfidence(value) {
+            if (value === null || value === undefined || value === '') {
+                return 'N/A';
+            }
+
+            const numeric = Number(value);
+            if (Number.isNaN(numeric)) {
+                return 'N/A';
+            }
+
+            return `${numeric}%`;
         }
 
         function escapeHtml(text) {
@@ -983,15 +1060,17 @@
         };
 
         function exportToCSV(reports) {
-            const headers = ['Report ID', 'Customer', 'Subject', 'Status', 'Priority', 'Tone', 'Category', 'Created Date'];
+            const headers = ['Report ID', 'Customer', 'Subject', 'Status', 'Priority', 'Tone', 'Category', 'Assignee', 'SLA Due', 'Created Date'];
             const rows = reports.map(r => [
                 r.report_id,
                 r.customer_name,
                 r.ticket_subject,
-                r.status || 'new',
+                formatStatusLabel(r.status || 'new'),
                 r.priority,
                 r.customer_tone,
                 r.category,
+                r.assignee || '',
+                formatSlaDue(r.sla_due),
                 new Date(r.created_at).toLocaleString()
             ]);
 
