@@ -1,15 +1,19 @@
 import { supabase } from '../services/supabaseClient.js';
+import { forecastingService } from '../services/forecastingService.js';
 
 export class NotificationCenter {
   constructor() {
     this.notifications = [];
     this.container = null;
     this.subscriptions = [];
+    this.forecastAlertIds = new Set();
+    this.forecastAlertInterval = null;
   }
 
   init() {
     this.createContainer();
     this.setupRealtimeListeners();
+    this.scheduleForecastAlertPolling();
   }
 
   createContainer() {
@@ -191,6 +195,39 @@ export class NotificationCenter {
     this.subscriptions.push(followUpChannel);
   }
 
+  scheduleForecastAlertPolling() {
+    this.checkForecastAlerts();
+    if (this.forecastAlertInterval) {
+      clearInterval(this.forecastAlertInterval);
+    }
+    this.forecastAlertInterval = setInterval(() => this.checkForecastAlerts(), 60 * 60 * 1000);
+  }
+
+  async checkForecastAlerts() {
+    try {
+      const alerts = await forecastingService.getForecastAlerts(7);
+      alerts.forEach(alert => {
+        const key = forecastingService.alertKey(alert);
+        if (!key || this.forecastAlertIds.has(key)) {
+          return;
+        }
+
+        this.forecastAlertIds.add(key);
+
+        const type = alert.severity === 'critical' ? 'urgent' : alert.severity === 'warning' ? 'warning' : 'info';
+        this.showNotification({
+          type,
+          title: 'Forecast Alert',
+          message: alert.message,
+          icon: '📈',
+          duration: 10000
+        });
+      });
+    } catch (error) {
+      console.error('Failed to retrieve forecast alerts', error);
+    }
+  }
+
   showNotification({ type = 'info', title, message, icon = 'ℹ️', duration = 5000 }) {
     const id = Date.now();
     const notification = {
@@ -239,6 +276,12 @@ export class NotificationCenter {
     this.subscriptions.forEach(sub => {
       supabase.removeChannel(sub);
     });
+    this.subscriptions = [];
+    if (this.forecastAlertInterval) {
+      clearInterval(this.forecastAlertInterval);
+      this.forecastAlertInterval = null;
+    }
+    this.forecastAlertIds.clear();
     if (this.container) {
       this.container.remove();
     }
