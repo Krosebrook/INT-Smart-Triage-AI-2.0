@@ -20,20 +20,21 @@ SUPABASE_SERVICE_ROLE_KEY=<key>
 ```
 
 #### 2. Updated Database Service
-Modified `/src/services/database.js` to support both client-side (`VITE_` prefixed) and server-side environment variables:
+Modified `/src/services/database.js` to require the `SUPABASE_SERVICE_ROLE_KEY` for all writes:
 ```javascript
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseServiceKey) {
+  console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
+}
 ```
 
-#### 3. Added RLS Policy for Anonymous Inserts
-Created migration `allow_anon_insert_reports.sql` to allow the anon role to insert triage reports:
-```sql
-CREATE POLICY "Allow anon to insert reports" ON reports
-    FOR INSERT
-    TO anon
-    WITH CHECK (true);
-```
+#### 3. Added Secure Report Submission Endpoint
+Implemented `/api/report-submit` to validate input and persist reports using the service role on behalf of unauthenticated clients.
+
+#### 4. Replaced Insecure RLS Policy
+Updated migration `20251007140835_allow_anon_insert_reports.sql` to drop the anon insert policy and grant insert access only to authenticated users and the service role.
 
 ### Verification
 - Build completes successfully: ✅
