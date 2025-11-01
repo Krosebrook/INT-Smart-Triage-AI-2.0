@@ -7,9 +7,30 @@
       branches: [main, Update2.0]
 
   jobs:
+    validate:
+      name: Comprehensive Validation
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v5
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v6
+          with:
+            node-version: '20'
+            cache: 'npm'
+
+        - name: Run comprehensive validation
+          run: npm run validate:imports
+
     test:
       name: Test and Lint
       runs-on: ubuntu-latest
+      permissions:
+        contents: read
       strategy:
         matrix:
           node-version: [20, 22]
@@ -27,6 +48,9 @@
         - name: Install dependencies
           run: npm ci
 
+        - name: Check code formatting
+          run: npm run format:check
+
         - name: Run linter
           run: npm run lint
 
@@ -39,6 +63,8 @@
     security:
       name: Security Check
       runs-on: ubuntu-latest
+      permissions:
+        contents: read
 
       steps:
         - name: Checkout code
