@@ -188,7 +188,7 @@ const ReportDetail: React.FC = () => {
           <p>Track investigations, escalations, and proactive outreach in one place.</p>
         </div>
 
-        <form className="report-detail__form" onSubmit={handleCreateNote} aria-label="Add note form">
+        <form className="report-detail__form" onSubmit={handleCreateNote}>
           <label className="report-detail__label" htmlFor="note-author">
             Analyst
           </label>
@@ -211,6 +211,7 @@ const ReportDetail: React.FC = () => {
             onChange={(event) => setContent(event.target.value)}
             placeholder="Summarize the insight, escalation, or next action"
             rows={3}
+            required
             />
 
           <button type="submit" className="report-detail__submit" disabled={isSubmitting}>
