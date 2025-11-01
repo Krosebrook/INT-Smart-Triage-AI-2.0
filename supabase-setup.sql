@@ -40,21 +40,34 @@ CREATE INDEX IF NOT EXISTS idx_reports_csr_agent ON reports(csr_agent);
 -- MANDATORY: Enable Row Level Security (RLS)
 ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
 
+-- Remove legacy insecure policies if re-running setup
+DROP POLICY IF EXISTS "Allow anon to insert reports" ON reports;
+
 -- CRITICAL SECURITY REQUIREMENT: Set default DENY ALL policy for public role
 -- This ensures NO client-side access to the database
+DROP POLICY IF EXISTS "Deny all public access" ON reports;
 CREATE POLICY "Deny all public access" ON reports
-    FOR ALL 
+    FOR ALL
     TO public
     USING (false)
     WITH CHECK (false);
 
 -- Allow service role (used by API endpoints) to perform all operations
 -- This policy allows our Vercel serverless functions to access the data
+DROP POLICY IF EXISTS "Allow service role access" ON reports;
 CREATE POLICY "Allow service role access" ON reports
-    FOR ALL 
+    FOR ALL
     TO service_role
     USING (true)
     WITH CHECK (true);
+
+-- Allow authenticated users with valid JWTs to insert reports through secure clients
+DROP POLICY IF EXISTS "Allow authenticated insert reports" ON reports;
+CREATE POLICY "Allow authenticated insert reports" ON reports
+    FOR INSERT
+    TO authenticated
+    USING (auth.role() = 'authenticated' AND auth.uid() IS NOT NULL)
+    WITH CHECK (auth.role() = 'authenticated' AND auth.uid() IS NOT NULL);
 
 -- Optional: Create a policy for authenticated CSR users (if implementing user authentication)
 -- CREATE POLICY "Allow authenticated CSR access" ON reports
