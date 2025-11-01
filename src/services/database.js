@@ -144,4 +144,27 @@ export class DatabaseService {
       throw new Error(`Failed to retrieve reports: ${error.message}`);
     }
   }
+
+  async insertNormalizedTranscript(transcriptRecord) {
+    if (!this.isInitialized || !this.supabase) {
+      throw new Error('Database not initialized');
+    }
+
+    try {
+      const { data, error } = await this.supabase
+        .from('normalized_transcripts')
+        .upsert([transcriptRecord], { onConflict: 'transcript_id' })
+        .select('transcript_id, created_at, summary, sentiment, key_issues')
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Normalized transcript insert error:', error);
+      throw new Error(`Failed to save normalized transcript: ${error.message}`);
+    }
+  }
 }

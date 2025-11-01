@@ -81,6 +81,11 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for write operations)
    - `FORECASTING_SERVICE_URL`: Internal URL to reach the forecasting container (e.g. `http://forecasting-service:8000`)
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
+   - `AI_ASSISTANT_URL`: HTTPS endpoint for the hosted transcript analysis model
+   - `AI_ASSISTANT_API_KEY`: Bearer token used to authenticate with the hosted model
+   - `AI_ASSISTANT_MODEL`: Optional override for the model name (defaults to `gpt-4.1-mini`)
+   - `AI_ASSISTANT_TIMEOUT_MS`: Optional request timeout override in milliseconds (default `10000`)
+   - `AI_ASSISTANT_MAX_TOKENS`: Optional prompt length guardrail in tokens (default `3500`)
 
 4. **Provision Supabase**
    1. Run `supabase-setup.sql` in the Supabase SQL editor to build core schema.
@@ -138,6 +143,10 @@ Secure triage processing with database logging
 
 ### POST `/api/report-submit`
 Validated report persistence for unauthenticated flows (uses service role with full input sanitization)
+
+### POST `/api/ingest`
+Normalizes customer communications (email or ChatGPT transcripts), routes them through the hosted AI assistant for structured
+analysis, redacts PII, and persists the sanitized result into the `normalized_transcripts` table.
 
 ## 🔒 Security Compliance
 
