@@ -31,7 +31,7 @@ export class DatabaseService {
       if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
       }
-      throw new Error('Supabase configuration error: SUPABASE_SERVICE_ROLE_KEY is required.');
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
     }
 
     try {
@@ -142,6 +142,29 @@ export class DatabaseService {
     } catch (error) {
       console.error('Database select error:', error);
       throw new Error(`Failed to retrieve reports: ${error.message}`);
+    }
+  }
+
+  async insertNormalizedTranscript(transcriptRecord) {
+    if (!this.isInitialized || !this.supabase) {
+      throw new Error('Database not initialized');
+    }
+
+    try {
+      const { data, error } = await this.supabase
+        .from('normalized_transcripts')
+        .upsert([transcriptRecord], { onConflict: 'transcript_id' })
+        .select('transcript_id, created_at, summary, sentiment, key_issues')
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Normalized transcript insert error:', error);
+      throw new Error(`Failed to save normalized transcript: ${error.message}`);
     }
   }
 }

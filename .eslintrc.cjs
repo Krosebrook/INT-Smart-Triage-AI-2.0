@@ -17,6 +17,21 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['*.ts', '*.tsx', 'src/**/*.ts', 'src/**/*.tsx', 'stories/**/*.tsx'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+      parserOptions: {
+        project: false,
+        sourceType: 'module',
+        ecmaVersion: 'latest',
+      },
+      rules: {
+        '@typescript-eslint/consistent-type-imports': 'error',
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      },
+    },
+    {
       files: ['index.js'],
       rules: {
         'no-console': 'off', // Allow console in main entry point
