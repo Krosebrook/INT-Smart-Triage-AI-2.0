@@ -10,7 +10,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('Supabase credentials not found. Database features will operate in mock mode.');
 }
 
-export const supabase = supabaseUrl && supabaseAnonKey
+export let supabase = supabaseUrl && supabaseAnonKey
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
 
