@@ -5,6 +5,7 @@ export class ForecastDashboard {
     this.container = document.getElementById(containerId);
     this.forecasts = [];
     this.accuracy = null;
+    this.error = null;
   }
 
   async init() {
@@ -13,14 +14,33 @@ export class ForecastDashboard {
   }
 
   async loadData() {
-    this.forecasts = await forecastingService.getForecasts(7);
-    this.accuracy = await forecastingService.calculateAccuracy();
+    try {
+      const [forecasts, accuracy] = await Promise.all([
+        forecastingService.getForecasts(7),
+        forecastingService.calculateAccuracy()
+      ]);
+
+      this.forecasts = forecasts;
+      this.accuracy = accuracy;
+      this.error = null;
+    } catch (error) {
+      console.error('Failed to load forecast data', error);
+      this.error = error.message || 'Forecasting service unavailable';
+      this.forecasts = [];
+      this.accuracy = null;
+    }
   }
 
   async generateNewForecast() {
-    await forecastingService.generateForecast(7);
-    await this.loadData();
-    this.render();
+    try {
+      await forecastingService.generateForecast(7);
+      await this.loadData();
+      this.render();
+    } catch (error) {
+      console.error('Failed to generate forecast', error);
+      this.error = error.message || 'Unable to generate forecast';
+      this.render();
+    }
   }
 
   render() {
@@ -32,6 +52,12 @@ export class ForecastDashboard {
             🔮 Generate Forecast
           </button>
         </div>
+
+        ${this.error ? `
+          <div class="error-banner">
+            <strong>Forecast service warning:</strong> ${this.error}
+          </div>
+        ` : ''}
 
         ${this.accuracy ? `
           <div class="accuracy-banner">

@@ -1,0 +1,524 @@
+openapi: 3.1.0
+info:
+  title: INT Smart Triage Public API
+  version: 1.0.0
+  description: |
+    Versioned public API for INT Smart Triage AI. All endpoints are served under `/api/public/v1` and
+    use JSON payloads.
+servers:
+  - url: https://example.com
+    description: Production (replace with deployed domain)
+paths:
+  /api/public/v1/health:
+    get:
+      summary: Health check
+      description: Returns the current service and database health state.
+      responses:
+        '200':
+          description: Service is healthy or degraded but reachable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+              examples:
+                healthy:
+                  summary: Healthy status
+                  value:
+                    status: healthy
+                    timestamp: '2024-05-01T12:00:00Z'
+                    service: INT Smart Triage AI 2.0
+                    version: 1.0.0
+                    environment: production
+                    checks:
+                      api: healthy
+                      database: healthy
+                      rls: enforced
+                    security: RLS properly enforced - public access denied
+        '500':
+          description: Service health check failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthError'
+  /api/public/v1/triage-reports:
+    post:
+      summary: Generate triage report
+      description: Analyzes a support ticket and persists the report.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriageRequest'
+            examples:
+              basic:
+                summary: Example triage request
+                value:
+                  customerName: Jane Doe
+                  ticketSubject: Login failure
+                  issueDescription: Customer cannot access the dashboard since yesterday.
+                  customerTone: frustrated
+                  csrAgent: CSR123
+      responses:
+        '201':
+          description: Triage report generated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriageResponse'
+        '400':
+          description: Invalid request payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/public/v1/reports:
+    post:
+      summary: Submit finalized report
+      description: Persists a sanitized triage report from an external client.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportSubmission'
+      responses:
+        '201':
+          description: Report stored successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportSubmissionResponse'
+        '400':
+          description: Invalid report data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/public/v1/knowledge-base/articles:
+    post:
+      summary: Generate knowledge base article
+      description: Produces a knowledge base article draft for the provided support ticket context.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KnowledgeBaseRequest'
+      responses:
+        '200':
+          description: Knowledge base article generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeBaseArticle'
+        '400':
+          description: Missing required information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/public/v1/response-templates:
+    post:
+      summary: Generate response template
+      description: Returns a templated response tailored to the provided context.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateRequest'
+      responses:
+        '200':
+          description: Template generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateResponse'
+        '400':
+          description: Missing required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/public/v1/response-reviews:
+    post:
+      summary: Review CSR response quality
+      description: Scores an outbound CSR response for tone, completeness, and professionalism.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseReviewRequest'
+      responses:
+        '200':
+          description: Review completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseReview'
+        '400':
+          description: Missing response text.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          description: Optional additional context when available.
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+      required:
+        - error
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded]
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+        version:
+          type: string
+        environment:
+          type: string
+        checks:
+          type: object
+          properties:
+            api:
+              type: string
+            database:
+              type: string
+            rls:
+              type: string
+        security:
+          type: string
+        warnings:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - timestamp
+        - service
+        - version
+        - environment
+        - checks
+    HealthError:
+      allOf:
+        - $ref: '#/components/schemas/HealthStatus'
+        - type: object
+          properties:
+            status:
+              const: unhealthy
+            error:
+              type: object
+              properties:
+                message:
+                  type: string
+                timestamp:
+                  type: string
+                  format: date-time
+              required:
+                - message
+                - timestamp
+    TriageRequest:
+      type: object
+      properties:
+        customerName:
+          type: string
+        ticketSubject:
+          type: string
+        issueDescription:
+          type: string
+        customerTone:
+          type: string
+          enum: [calm, neutral, frustrated, urgent]
+        csrAgent:
+          type: string
+      required:
+        - customerName
+        - ticketSubject
+        - issueDescription
+        - customerTone
+        - csrAgent
+    TriageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        reportId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        category:
+          type: string
+        confidence:
+          type: string
+        responseApproach:
+          type: string
+        talkingPoints:
+          type: array
+          items:
+            type: string
+        knowledgeBase:
+          type: array
+          items:
+            type: string
+        kbArticleDraft:
+          nullable: true
+          oneOf:
+            - type: string
+            - type: 'null'
+        managementSummary:
+          nullable: true
+          oneOf:
+            - type: string
+            - type: 'null'
+        crmForwardingData:
+          nullable: true
+          oneOf:
+            - type: object
+            - type: 'null'
+        metadata:
+          type: object
+        security:
+          type: object
+      required:
+        - success
+        - reportId
+        - timestamp
+        - priority
+        - category
+        - confidence
+        - responseApproach
+        - talkingPoints
+        - knowledgeBase
+        - metadata
+        - security
+    ReportSubmission:
+      type: object
+      properties:
+        reportId:
+          type: string
+        customerName:
+          type: string
+        ticketSubject:
+          type: string
+        issueDescription:
+          type: string
+        customerTone:
+          type: string
+        priority:
+          type: string
+        category:
+          type: string
+        confidenceScore:
+          type: number
+        responseApproach:
+          type: string
+        talkingPoints:
+          type: array
+          items:
+            type: string
+        knowledgeBase:
+          type: array
+          items:
+            type: string
+        csrAgent:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        processedAt:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+      required:
+        - reportId
+        - customerName
+        - ticketSubject
+        - issueDescription
+        - customerTone
+        - priority
+        - category
+        - confidenceScore
+        - responseApproach
+        - talkingPoints
+        - knowledgeBase
+        - csrAgent
+        - createdAt
+        - processedAt
+    ReportSubmissionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        reportId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        priority:
+          type: string
+        category:
+          type: string
+        confidenceScore:
+          type: number
+      required:
+        - success
+        - reportId
+        - createdAt
+        - priority
+        - category
+        - confidenceScore
+    KnowledgeBaseRequest:
+      type: object
+      properties:
+        subject:
+          type: string
+        description:
+          type: string
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              sender_type:
+                type: string
+              message:
+                type: string
+      required:
+        - subject
+    KnowledgeBaseArticle:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        category:
+          type: string
+          enum: [technical, billing, account, general]
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - title
+        - content
+        - category
+        - tags
+    TemplateRequest:
+      type: object
+      properties:
+        category:
+          type: string
+        tone:
+          type: string
+        context:
+          type: string
+      required:
+        - category
+        - tone
+        - context
+    TemplateResponse:
+      type: object
+      properties:
+        template:
+          type: string
+      required:
+        - template
+    ResponseReviewRequest:
+      type: object
+      properties:
+        response:
+          type: string
+        ticketSubject:
+          type: string
+        ticketDescription:
+          type: string
+        customerName:
+          type: string
+      required:
+        - response
+    ResponseReview:
+      type: object
+      properties:
+        tone_score:
+          type: number
+        completeness_score:
+          type: number
+        professionalism_score:
+          type: number
+        suggestions:
+          type: array
+          items:
+            type: string
+      required:
+        - tone_score
+        - completeness_score
+        - professionalism_score
+        - suggestions
