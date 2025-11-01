@@ -13,6 +13,10 @@
 2. [Disaster Scenarios](#disaster-scenarios)
 3. [Recovery Objectives](#recovery-objectives)
 4. [Recovery Procedures](#recovery-procedures)
+   - [4.1 Complete System Recovery](#41-complete-system-recovery)
+   - [4.2 Database-Only Recovery](#42-database-only-recovery)
+   - [4.3 Code-Only Recovery](#43-code-only-recovery)
+   - [4.4 Deployment Rollback Playbook](#44-deployment-rollback-playbook)
 5. [Business Continuity](#business-continuity)
 6. [Testing & Validation](#testing--validation)
 7. [Communication Plan](#communication-plan)
@@ -554,6 +558,70 @@ curl https://your-app.vercel.app/api/health-check | jq
 ```
 
 ---
+
+### 4.4 Deployment Rollback Playbook
+
+**Trigger Conditions:**
+- Production deployment introduces regression (failed smoke tests, elevated error rate, security regression, or RLS misconfiguration)
+- CI pipeline reports failing lint/tests **after** deployment
+- Incident Commander authorizes rollback
+
+**Pre-Rollback Checklist (≤5 minutes):**
+1. Freeze new deploys: `vercel project update --git-deployments-enabled false`
+2. Capture failing build metadata: deployment URL, commit SHA, Supabase migration IDs
+3. Snapshot environment variables: `vercel env ls` and Supabase settings export
+4. Confirm last known-good deployment URL from `vercel list --limit 5`
+
+**Application Rollback (Vercel) — 5 minutes:**
+```bash
+# 1. Roll traffic back
+vercel rollback <previous-deployment-url>
+
+# 2. Re-enable git deploys after rollback completes
+vercel project update --git-deployments-enabled true
+
+# 3. Tag the rollback for auditing
+vercel alias set <previous-deployment-url> rollback-$(date +%Y%m%d%H%M)
+```
+
+**Database/RLS Validation — 10 minutes:**
+```sql
+-- 1. Ensure hardened policies remain intact
+BEGIN;
+  -- Reapply consolidated policy script if drift detected
+  \i supabase/policies.sql
+COMMIT;
+
+-- 2. Verify RLS and policy ownership
+SELECT check_rls_status('reports');
+SELECT tablename, policyname, roles
+FROM pg_policies
+WHERE tablename IN ('reports', 'report_notes');
+
+-- 3. Confirm recent migrations status
+SELECT id, name, executed_at
+FROM supabase_migrations.schema_migrations
+ORDER BY executed_at DESC
+LIMIT 5;
+```
+
+**Data Rollback (if migration caused regression):**
+1. Identify backup snapshot prior to failure (`Supabase → Backups`).
+2. Restore to isolated shadow project and diff schemas.
+3. Apply `pg_dump` restore **only** if corruption confirmed; otherwise revert migration via `supabase db rollback <migration_id>`.
+4. Re-run `supabase/policies.sql` after any structural rollback to re-enforce deny-by-default posture.
+
+**Post-Rollback Verification (≤10 minutes):**
+- ✅ `npm run lint` and `npm run test` on the rollback commit
+- ✅ `npx playwright test` (CI) against rollback deployment
+- ✅ `/api/health-check` responds with `rls: "enabled"`
+- ✅ Sample triage submission persists and is visible only to the originating organization
+- ✅ Incident timeline + rollback command output captured in `audit_logs`
+
+**Communication:** Notify stakeholders of rollback, include:
+- Deployment ID rolled back, commit SHA, time executed
+- User impact window and mitigation steps
+- Follow-up actions (hotfix plan, root-cause analysis owner)
 
 ## 5. Business Continuity
 
