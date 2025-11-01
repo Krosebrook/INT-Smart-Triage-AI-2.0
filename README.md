@@ -71,13 +71,15 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    Set the variables below in both your local `.env` and the Vercel dashboard:
 
    **Client-Side (exposed to browser):**
-   - `VITE_SUPABASE_URL`: Supabase project URL
-   - `VITE_SUPABASE_ANON_KEY`: Supabase anon key
+   - `VITE_SUPABASE_URL`: Your Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
+   - `VITE_FORECASTING_API_URL`: Base URL for the FastAPI forecasting microservice
 
    **Server-Side (API endpoints only):**
-   - `SUPABASE_URL`: Supabase project URL (matches above)
-   - `SUPABASE_ANON_KEY`: Supabase anon key (read-only operations)
-   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for writes + RLS maintenance)
+   - `SUPABASE_URL`: Your Supabase project URL
+   - `SUPABASE_ANON_KEY`: Your Supabase anon key (read-only operations)
+   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for write operations)
+   - `FORECASTING_SERVICE_URL`: Internal URL to reach the forecasting container (e.g. `http://forecasting-service:8000`)
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
 
 4. **Provision Supabase**
@@ -102,6 +104,31 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    - Submit a sample ticket through the UI and verify it appears in Supabase for the correct organization.
 
 ## 📋 API Endpoints
+
+### Forecasting Microservice (Python FastAPI)
+
+Run locally:
+
+```bash
+cd services/forecasting
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
+
+Container build:
+
+```bash
+docker build -t int-forecasting-service services/forecasting
+docker run --env-file ../../.env -p 8000:8000 int-forecasting-service
+```
+
+Key endpoints:
+
+- `POST /forecasts/generate?days=7` – train/regenerate forecasts and persist to Supabase
+- `GET /forecasts?days=7` – retrieve stored forecasts for analytics dashboards
+- `GET /forecasts/alerts` – surfaced high-volume warnings for Notification Center
+- `GET /forecasts/accuracy` – historical accuracy (MAPE & avg error)
 
 ### GET `/api/health-check`
 System health verification with RLS status confirmation
@@ -134,6 +161,8 @@ See [IMPROVEMENTS_IMPLEMENTED.md](./IMPROVEMENTS_IMPLEMENTED.md) for details.
 
 ## 📖 Documentation
 
+### Core Documentation
+- **[README.md](./README.md)** - This file - System overview and quick start
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
 - **[BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md)** - Safe branch merging procedures
 - **[MERGE_QUICK_START.md](./MERGE_QUICK_START.md)** - Quick reference for branch merges

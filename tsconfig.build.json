@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "public/modules",
+    "declaration": false,
+    "sourceMap": false,
+    "target": "ES2019",
+    "module": "ESNext",
+    "jsx": "react"
+  },
+  "include": [
+    "src/components/HistoryStats.tsx"
+  ]
+}
