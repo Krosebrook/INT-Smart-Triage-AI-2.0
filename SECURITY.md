@@ -90,6 +90,7 @@ We take the security of INT Smart Triage AI 2.0 seriously. If you believe you ha
    - Use parameterized queries
    - Never expose service role keys client-side
    - Use service role only in serverless functions
+   - Validate browser anon-key sessions cannot bypass RLS (run policy smoke tests each release)
 
 ## Security Features
 
@@ -98,7 +99,7 @@ We take the security of INT Smart Triage AI 2.0 seriously. If you believe you ha
 1. **Row Level Security (RLS)**
    - Mandatory RLS on all Supabase tables
    - Service role authentication for API
-   - Zero client-side database access
+   - Browser Supabase client uses anon key; policies restrict CSR visibility to authorized rows only
 
 2. **Input Sanitization**
    - XSS prevention
@@ -224,6 +225,12 @@ Required secrets (never commit):
 - `SAML_REQUEST_SIGNING_KEY` (optional)
 - `SAML_REQUEST_SIGNING_CERT` (optional)
 - `SAML_DECRYPTION_KEY` (optional)
+
+### Browser Supabase Client
+
+- **Risk**: CSR dashboard runs the Supabase JS client with the anon key. Any missing or overly broad RLS policy will expose data immediately.
+- **Mitigation**: Enforce deny-by-default policies for every table listed in `supabase-setup.sql`, add automated checks that query with an anonymous session, and restrict columns to only those needed by the UI.
+- **Operator Action**: Re-run the RLS verification steps in `DEPLOYMENT.md` after every schema or policy change.
 
 ### API Security
 
