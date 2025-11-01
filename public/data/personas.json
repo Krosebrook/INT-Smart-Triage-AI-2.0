@@ -1,0 +1,296 @@
+[
+  {
+    "id": "infosec_specialist",
+    "name": "Sarah Johnson",
+    "role": "Information Security Specialist",
+    "department": "InfoSec",
+    "experience_level": "senior",
+    "communication_style": "technical",
+    "specialties": ["soc2_compliance", "cyber_insurance", "vulnerability_assessment", "security_policies"],
+    "tone_preference": "professional_reassuring",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Thank you for reaching out about your security needs.",
+      "investigation": "I'm conducting a thorough security assessment to address your concerns.",
+      "resolution": "We've developed a comprehensive security plan to protect your organization."
+    }
+  },
+  {
+    "id": "tech_support_lead",
+    "name": "Mike Chen",
+    "role": "Technology Support Lead",
+    "department": "Technology",
+    "experience_level": "senior",
+    "communication_style": "technical",
+    "specialties": ["managed_it", "email_migration", "saas_migration", "business_insights"],
+    "tone_preference": "professional_helpful",
+    "escalation_threshold": "high",
+    "response_templates": {
+      "greeting": "Thanks for contacting INT Technology Services.",
+      "investigation": "I'm investigating this technical issue and will provide a solution.",
+      "resolution": "I've identified the solution and we're ready to implement."
+    }
+  },
+  {
+    "id": "web_design_specialist",
+    "name": "Emma Williams",
+    "role": "Web Design Specialist",
+    "department": "Website Design",
+    "experience_level": "senior",
+    "communication_style": "creative",
+    "specialties": ["custom_web_design", "ecommerce", "wordpress", "accessibility"],
+    "tone_preference": "friendly_professional",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Excited to help bring your website vision to life!",
+      "investigation": "Let me review your design requirements and create a plan.",
+      "resolution": "I've prepared a custom design proposal for your review."
+    }
+  },
+  {
+    "id": "brand_strategist",
+    "name": "James Brown",
+    "role": "Brand Strategist",
+    "department": "Branding & Identity",
+    "experience_level": "expert",
+    "communication_style": "consultative",
+    "specialties": ["brand_strategy", "logo_design", "visual_identity", "messaging"],
+    "tone_preference": "inspiring_professional",
+    "escalation_threshold": "low",
+    "response_templates": {
+      "greeting": "Let's build a brand that truly represents your business.",
+      "investigation": "I'm analyzing your market position and brand opportunities.",
+      "resolution": "I've crafted a comprehensive brand strategy for your business."
+    }
+  },
+  {
+    "id": "content_strategist",
+    "name": "Lisa Martinez",
+    "role": "Content Strategist",
+    "department": "Content Creation",
+    "experience_level": "senior",
+    "communication_style": "creative",
+    "specialties": ["content_strategy", "seo_writing", "ebooks", "whitepapers"],
+    "tone_preference": "engaging_professional",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Ready to create content that positions you as a thought leader.",
+      "investigation": "Let me research your audience and develop a content plan.",
+      "resolution": "I've created a comprehensive content strategy tailored to your goals."
+    }
+  },
+  {
+    "id": "marketing_manager",
+    "name": "David Park",
+    "role": "Managed Marketing Manager",
+    "department": "Managed Marketing",
+    "experience_level": "senior",
+    "communication_style": "consultative",
+    "specialties": ["hubspot", "marketing_automation", "email_campaigns", "crm_management"],
+    "tone_preference": "data_driven_friendly",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Let's grow your business with strategic marketing.",
+      "investigation": "I'm analyzing your marketing needs and automation opportunities.",
+      "resolution": "I've set up your marketing automation and campaigns."
+    }
+  },
+  {
+    "id": "operations_specialist",
+    "name": "Rachel Thompson",
+    "role": "Operations Specialist",
+    "department": "Operations",
+    "experience_level": "senior",
+    "communication_style": "precise",
+    "specialties": ["bookkeeping", "startup_fundamentals", "process_management", "ai_bi"],
+    "tone_preference": "efficient_supportive",
+    "escalation_threshold": "medium",
+    "response_templates": {
+      "greeting": "Let's streamline your operations for maximum efficiency.",
+      "investigation": "I'm reviewing your processes to identify optimization opportunities.",
+      "resolution": "I've implemented systems that will save you time and money."
+    }
+  },
+  {
+    "id": "medical_practice_owner",
+    "name": "Dr. Renee Marshall",
+    "role": "Medical Practice Owner",
+    "department": "Client",
+    "experience_level": "expert",
+    "communication_style": "direct",
+    "specialties": ["healthcare_compliance", "patient_marketing", "practice_management"],
+    "tone_preference": "professional_empathetic",
+    "escalation_threshold": "low",
+    "testimonial": "Choosing INT was one of my best business decisions.",
+    "needs": ["website_design", "managed_marketing", "hipaa_compliance", "bookkeeping"]
+  },
+  {
+    "id": "ecommerce_director",
+    "name": "Jamie Schwartz",
+    "role": "Director of Marketing",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "collaborative",
+    "specialties": ["ecommerce", "hubspot", "marketing_automation"],
+    "tone_preference": "results_focused",
+    "escalation_threshold": "medium",
+    "testimonial": "INT successfully launched HubSpot for us and provides amazing ongoing support.",
+    "needs": ["hubspot_implementation", "marketing_automation", "website_design", "analytics"]
+  },
+  {
+    "id": "government_vp",
+    "name": "Selen Warner",
+    "role": "VP Government Vertical & Marketing",
+    "department": "Client",
+    "experience_level": "expert",
+    "communication_style": "strategic",
+    "specialties": ["crm_migration", "data_integrity", "compliance"],
+    "tone_preference": "executive_level",
+    "escalation_threshold": "low",
+    "testimonial": "INT's data migration from Salesforce to HubSpot was seamless and customized to our needs.",
+    "needs": ["crm_migration", "marketing_automation", "compliance", "data_insights"]
+  },
+  {
+    "id": "hr_manager",
+    "name": "Kami Hunt",
+    "role": "Human Resources Manager",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "personable",
+    "specialties": ["hris", "payroll", "benefits_administration"],
+    "tone_preference": "warm_professional",
+    "escalation_threshold": "medium",
+    "testimonial": "INT is personable, thorough, and responsive.",
+    "needs": ["hris_implementation", "payroll_audit", "bookkeeping", "compliance"]
+  },
+  {
+    "id": "fuel_operations_manager",
+    "name": "Montanari Fuel Operations Manager",
+    "role": "Fuel/Energy Operations Manager",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "practical",
+    "specialties": ["logistics", "customer_communications", "operations"],
+    "tone_preference": "direct_supportive",
+    "escalation_threshold": "medium",
+    "testimonial": "INT resolved our texting and emailing issue by collaborating with our IT technician.",
+    "needs": ["email_integration", "network_security", "bookkeeping", "process_management"]
+  },
+  {
+    "id": "client_success_manager",
+    "name": "Katya Yushanova",
+    "role": "Client Success Manager",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "responsive",
+    "specialties": ["client_onboarding", "crm_setup", "training"],
+    "tone_preference": "enthusiastic_supportive",
+    "escalation_threshold": "low",
+    "testimonial": "INT provided above-and-beyond HubSpot setup and support - 1000 out of 10.",
+    "needs": ["crm_setup", "marketing_automation", "training", "ongoing_support"]
+  },
+  {
+    "id": "marketing_business_dev_manager",
+    "name": "Gregory J. Benson",
+    "role": "Marketing & Business Development Manager",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "creative",
+    "specialties": ["media_marketing", "brand_development", "content_strategy"],
+    "tone_preference": "innovative_professional",
+    "escalation_threshold": "medium",
+    "testimonial": "INT built a new website that elevated our online radio station.",
+    "needs": ["website_design", "hosting_maintenance", "content_strategy", "branding"]
+  },
+  {
+    "id": "vp_product_operations",
+    "name": "Marissa Luedy",
+    "role": "VP of Product & Operations",
+    "department": "Client",
+    "experience_level": "expert",
+    "communication_style": "data_driven",
+    "specialties": ["ecommerce", "operations", "data_analytics"],
+    "tone_preference": "analytical_focused",
+    "escalation_threshold": "low",
+    "testimonial": "INT's seamless HubSpot integration revolutionized our data-driven processes.",
+    "needs": ["crm_integration", "data_insights", "process_automation", "analytics"]
+  },
+  {
+    "id": "chief_people_officer",
+    "name": "Susan Pils",
+    "role": "Chief People Officer",
+    "department": "Client",
+    "experience_level": "expert",
+    "communication_style": "strategic",
+    "specialties": ["hr_strategy", "benefits", "payroll"],
+    "tone_preference": "executive_professional",
+    "escalation_threshold": "low",
+    "testimonial": "INT efficiently audited benefits and aligned records.",
+    "needs": ["benefits_audit", "hris_implementation", "payroll_alignment", "operations"]
+  },
+  {
+    "id": "nonprofit_service_manager",
+    "name": "SACPT Community Manager",
+    "role": "Non-profit/Community Service Manager",
+    "department": "Client",
+    "experience_level": "senior",
+    "communication_style": "mission_driven",
+    "specialties": ["nonprofit_management", "community_service", "digital_outreach"],
+    "tone_preference": "warm_inspiring",
+    "escalation_threshold": "medium",
+    "testimonial": "INT built a custom WordPress site with new logo that helps us connect military families with care package resources.",
+    "needs": ["custom_website", "brand_identity", "ecommerce_integration", "hosting_support"]
+  },
+  {
+    "id": "manufacturing_cfo",
+    "name": "Manufacturing CFO (Fictional)",
+    "role": "Chief Financial Officer - Manufacturing",
+    "department": "Client",
+    "experience_level": "expert",
+    "communication_style": "financial_analytical",
+    "specialties": ["financial_management", "compliance", "erp_systems"],
+    "tone_preference": "executive_precise",
+    "escalation_threshold": "low",
+    "testimonial": "Fictional best-practice persona for manufacturing sector needs.",
+    "needs": ["saas_migration", "business_insights_reporting", "infosec_compliance", "financial_strategy"]
+  },
+  {
+    "id": "startup_founder",
+    "name": "Startup Founder (Fictional)",
+    "role": "Founder & CEO - Startup",
+    "department": "Client",
+    "experience_level": "intermediate",
+    "communication_style": "visionary_urgent",
+    "specialties": ["business_development", "fundraising", "rapid_growth"],
+    "tone_preference": "fast_paced_innovative",
+    "escalation_threshold": "medium",
+    "testimonial": "Fictional best-practice persona for startup stage companies.",
+    "needs": ["branding_identity", "website_launch", "startup_fundamentals", "content_creation"]
+  },
+  {
+    "id": "biotech_compliance_officer",
+    "name": "Biotech Compliance Officer (Fictional)",
+    "role": "Compliance Officer - Biotech",
+    "department": "Client",
+    "experience_level": "expert",
+    "communication_style": "regulatory_focused",
+    "specialties": ["regulatory_compliance", "data_security", "audit_management"],
+    "tone_preference": "formal_precise",
+    "escalation_threshold": "low",
+    "testimonial": "Fictional best-practice persona for heavily regulated industries.",
+    "needs": ["infosec_compliance", "cyber_insurance", "operations_support", "audit_preparation"]
+  },
+  {
+    "id": "retail_marketing_coordinator",
+    "name": "Retail Marketing Coordinator (Fictional)",
+    "role": "Marketing Coordinator - Retail",
+    "department": "Client",
+    "experience_level": "intermediate",
+    "communication_style": "creative_collaborative",
+    "specialties": ["retail_marketing", "social_media", "customer_engagement"],
+    "tone_preference": "friendly_energetic",
+    "escalation_threshold": "medium",
+    "testimonial": "Fictional best-practice persona for retail sector.",
+    "needs": ["managed_marketing", "ecommerce_site", "content_creation", "social_media"]
+  }
+]
