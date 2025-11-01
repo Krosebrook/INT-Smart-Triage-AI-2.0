@@ -51,16 +51,25 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 
 ## 🚀 Quick Start
 
-1. **Deploy to Vercel**:
+1. **Clone & Install**
    ```bash
    git clone https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0.git
    cd INT-Smart-Triage-AI-2.0
    npm install
-   vercel --prod
    ```
 
-2. **Configure Environment Variables** in Vercel Dashboard:
-   
+2. **Quality Gate (local validation)**
+   ```bash
+   npm run lint
+   npm run test
+   npx playwright test   # optional locally — required before production deploy
+   ```
+   All three commands must pass prior to deploying. The Playwright suite requires a chromium binary; skip locally if unavailable and run inside CI.
+
+3. **Configure Environment Variables**
+
+   Set the variables below in both your local `.env` and the Vercel dashboard:
+
    **Client-Side (exposed to browser):**
    - `VITE_SUPABASE_URL`: Your Supabase project URL
    - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
@@ -73,9 +82,26 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    - `FORECASTING_SERVICE_URL`: Internal URL to reach the forecasting container (e.g. `http://forecasting-service:8000`)
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
 
-3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor (re-run after pulling this update to replace the legacy anon insert policy)
+4. **Provision Supabase**
+   1. Run `supabase-setup.sql` in the Supabase SQL editor to build core schema.
+   2. Immediately run `supabase/policies.sql` to enforce the hardened RLS policies (drops insecure defaults, enables tenant-aware access, and re-grants the service role).
+   3. Confirm status:
+      ```sql
+      SELECT check_rls_status('reports');
+      SELECT policyname, permissive, roles
+      FROM pg_policies
+      WHERE tablename IN ('reports', 'report_notes');
+      ```
 
-4. **Verify Deployment**: Check `/api/health-check` endpoint returns 200 OK
+5. **Deploy or Run Locally**
+   ```bash
+   npm run dev            # local development
+   vercel --prod          # production deployment
+   ```
+
+6. **Post-Deploy Smoke Test**
+   - Hit `/api/health-check` (expects `{ status: "healthy", rls: "enabled" }`).
+   - Submit a sample ticket through the UI and verify it appears in Supabase for the correct organization.
 
 ## 📋 API Endpoints
 
