@@ -602,7 +602,7 @@ npm error
 npm error Usage:
 npm error npm ci
 npm error
-npm error aliases: clean-install, ic, install-clean, isntall-clean
+npm error aliases: clean-install, ic, install-clean, install-clean
 npm error
 npm error Run "npm help ci" for more info
 
