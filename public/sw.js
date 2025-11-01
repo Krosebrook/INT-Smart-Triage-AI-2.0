@@ -16,6 +16,7 @@ const STATIC_ASSETS = [
     '/public/kb-search.html',
     '/public/report-detail.html',
     '/public/advanced-analytics.html',
+    '/public/modules/HistoryStats.js',
     '/public/data/kb.json',
     '/public/data/personas.json',
     '/src/supabaseClient.js',

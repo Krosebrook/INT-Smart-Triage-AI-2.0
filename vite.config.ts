@@ -26,7 +26,6 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         portal: resolve(__dirname, 'client-success-portal.html'),
         demo: resolve(__dirname, 'demo.html'),
-        clientProfile: resolve(__dirname, 'client-profile.html'),
       },
     },
   },

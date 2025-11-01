@@ -15,6 +15,11 @@
 - ✅ Assets bundled and optimized (15.51 KB CSS, 229.76 KB JS)
 - ✅ Vite configuration complete
 
+### Quality Gate
+- ✅ ESLint suite passing (`npm run lint`)
+- ✅ Node test runner passing (`npm run test`)
+- ⚠️ Playwright smoke suite executed in CI (`npx playwright test`)
+
 ### Environment Configuration
 - ✅ `.env` file configured with Supabase credentials
 - ✅ `.env.example` provided as template
@@ -24,7 +29,9 @@
 - ✅ Supabase project connected
 - ✅ 4 migrations applied successfully
 - ✅ Row Level Security (RLS) enabled on all tables
-- ✅ Policies configured for anon and authenticated access
+- ✅ `supabase-setup.sql` executed for schema baseline
+- ✅ `supabase/policies.sql` applied to enforce tenant-aware RLS
+- ✅ Policies validated via `SELECT check_rls_status('reports');`
 - ✅ Real-time subscriptions ready
 
 ### API Endpoints
@@ -70,6 +77,7 @@ git push -u origin main
 - [ ] Supabase connection working
 - [ ] API endpoints responding
 - [ ] Real-time features working
+- [ ] RLS spot-check complete (`SELECT policyname FROM pg_policies WHERE tablename = 'reports';`)
 
 ## 📋 Environment Variables Required
 
