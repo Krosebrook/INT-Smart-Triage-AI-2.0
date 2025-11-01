@@ -117,7 +117,13 @@ class MockQueryBuilder {
   }
 
   catch(reject) {
-    return Promise.reject(this.client.mockError).catch(reject);
+    if (this.client.mockError) {
+      return Promise.reject(this.client.mockError).catch(reject);
+    }
+    return Promise.resolve({
+      data: this.client.mockData[this.table] || null,
+      error: null,
+    }).catch(reject);
   }
 }
 

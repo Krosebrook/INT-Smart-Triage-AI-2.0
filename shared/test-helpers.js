@@ -162,8 +162,10 @@ export function createSpy() {
   spy.getCall = (index) => calls[index];
   spy.wasCalled = () => calls.length > 0;
   spy.wasCalledWith = (...expectedArgs) => {
-    return calls.some((callArgs) =>
-      expectedArgs.every((arg, i) => callArgs[i] === arg)
+    return calls.some(
+      (callArgs) =>
+        expectedArgs.length === callArgs.length &&
+        expectedArgs.every((arg, i) => callArgs[i] === arg)
     );
   };
   spy.reset = () => {

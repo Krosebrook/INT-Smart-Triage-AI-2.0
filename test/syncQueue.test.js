@@ -28,7 +28,7 @@ describe('SyncQueue', () => {
         pollInterval: 3000,
         maxRetries: 5,
       });
-      
+
       assert.strictEqual(customQueue.maxConcurrent, 10);
       assert.strictEqual(customQueue.pollInterval, 3000);
       assert.strictEqual(customQueue.maxRetries, 5);
@@ -73,13 +73,13 @@ describe('SyncQueue', () => {
   });
 
   describe('processNextTask()', () => {
-    it('should be a function', async () => {
+    it('should be a function', () => {
       assert.strictEqual(typeof queue.processNextTask, 'function');
     });
   });
 
   describe('enqueue()', () => {
-    it('should be a function', async () => {
+    it('should be a function', () => {
       assert.strictEqual(typeof queue.enqueue, 'function');
     });
 
@@ -98,26 +98,26 @@ describe('SyncQueue', () => {
   });
 
   describe('getStats()', () => {
-    it('should be a function', async () => {
+    it('should be a function', () => {
       assert.strictEqual(typeof queue.getStats, 'function');
     });
 
     it('should return statistics object', async () => {
       const stats = await queue.getStats();
-      
+
       assert.strictEqual(typeof stats, 'object');
       assert.ok('success' in stats);
     });
   });
 
   describe('retryTask()', () => {
-    it('should be a function', async () => {
+    it('should be a function', () => {
       assert.strictEqual(typeof queue.retryTask, 'function');
     });
   });
 
   describe('cleanupOldTasks()', () => {
-    it('should be a function', async () => {
+    it('should be a function', () => {
       assert.strictEqual(typeof queue.cleanupOldTasks, 'function');
     });
   });
