@@ -11,6 +11,7 @@
 import { execSync } from 'child_process';
 import { existsSync, statSync } from 'fs';
 import { join } from 'path';
+import { fileURLToPath } from 'url';
 
 // ANSI color codes for terminal output
 const colors = {
@@ -94,7 +95,7 @@ function validateProjectStructure() {
 /**
  * Main validation workflow
  */
-async function main() {
+function main() {
   console.log(
     `\n${colors.bold}${colors.cyan}╔════════════════════════════════════════════════╗`
   );
@@ -197,14 +198,16 @@ async function main() {
 }
 
 // Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch((error) => {
+if (fileURLToPath(import.meta.url) === process.argv[1]) {
+  try {
+    main();
+  } catch (error) {
     console.error(
       `${colors.red}${colors.bold}Fatal error:${colors.reset}`,
       error
     );
     process.exit(1);
-  });
+  }
 }
 
 export { validateProjectStructure, runCommand };
