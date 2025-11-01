@@ -212,19 +212,71 @@
             font-size: 16px;
         }
 
-        .summary-grid {
-            margin: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
+        .status-btn.status-blocked.active {
+            border-color: #b91c1c;
+            background: #fee2e2;
+            color: #b91c1c;
         }
 
-        .summary-grid dt {
-            font-size: 12px;
-            letter-spacing: 0.08em;
-            font-weight: 700;
-            color: #6b7280;
+        .status-btn.status-escalated.active {
+            border-color: #be185d;
+            background: #fbcfe8;
+            color: #be185d;
+        }
+
+        .status-btn.status-resolved.active {
+            border-color: #065f46;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .sla-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sla-controls input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sla-summary {
+            margin-top: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .sla-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-weight: 600;
             text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .sla-badge.overdue {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .sla-badge.soon {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .summary-grid dd {
@@ -519,10 +571,15 @@
                     </article>
                 </section>
 
-                <section class="section" aria-labelledby="notesHeading" data-section="notes">
-                    <div class="section-header">
-                        <h2 id="notesHeading">Notes</h2>
-                        <p>Collaborative updates for this report</p>
+                    <div class="status-selector">
+                        <label>Report Status</label>
+                        <div class="status-buttons">
+                            <button class="status-btn status-new" data-status="new">New</button>
+                            <button class="status-btn status-in_progress" data-status="in_progress">In Progress</button>
+                            <button class="status-btn status-blocked" data-status="blocked">Blocked</button>
+                            <button class="status-btn status-escalated" data-status="escalated">Escalated</button>
+                            <button class="status-btn status-resolved" data-status="resolved">Resolved</button>
+                        </div>
                     </div>
                     <form id="noteForm" class="note-form">
                         <label for="noteText" class="sr-only">Add note</label>
@@ -530,15 +587,23 @@
                         <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
                             <button type="submit">Add Note</button>
                         </div>
-                    </form>
-                    <div id="notesEmpty" hidden>No notes yet.</div>
-                    <div id="notesList" class="notes-list"></div>
-                </section>
+                        <div id="currentAssignment" style="margin-top: 10px; color: #666; font-size: 14px;"></div>
+                    </div>
 
-                <section class="section" aria-labelledby="actionsHeading" data-section="actions">
-                    <div class="section-header">
-                        <h2 id="actionsHeading">Actions</h2>
-                        <p>Update status, manage assignment, or jump to related views</p>
+                    <div class="status-selector" style="margin-top: 15px;">
+                        <label>SLA Due</label>
+                        <div class="sla-controls">
+                            <input type="datetime-local" id="slaInput">
+                            <button class="btn btn-primary" id="updateSlaBtn" style="padding: 10px 20px;">Save SLA</button>
+                            <button class="btn btn-secondary" id="clearSlaBtn" style="padding: 10px 20px;">Clear</button>
+                        </div>
+                        <div id="slaSummary" class="sla-summary"></div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="window.print()">📄 Export to PDF</button>
+                        <button class="btn btn-success" id="viewCustomerBtn">👤 View Customer History</button>
+                        <a href="/client-history.html" class="btn btn-secondary">📋 Back to All Reports</a>
                     </div>
                     <div class="action-stack">
                         <form id="statusForm" class="action-row">
@@ -574,8 +639,412 @@
                 </section>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script type="module" src="/src/reportDetail.js"></script>
+    <script type="module">
+        import { formatStatus as formatStatusLabel, getSlaBadgeState } from '/scripts/history.js';
+        import { supabase, updateReportStatus, getNotes, addNote, deleteNote, assignReport, updateReportSlaDue } from '/src/supabaseClient.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const reportId = urlParams.get('id');
+        let currentReport = null;
+
+        if (!reportId) {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('errorMessage').textContent = 'No report ID provided';
+            document.getElementById('errorMessage').style.display = 'block';
+        } else {
+            loadReport(reportId);
+        }
+
+        async function loadReport(reportId) {
+            try {
+                const { data, error } = await supabase
+                    .from('reports')
+                    .select('*')
+                    .eq('report_id', reportId)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (!data) {
+                    throw new Error('Report not found');
+                }
+
+                if (!data.assignee && data.assigned_to) {
+                    data.assignee = data.assigned_to;
+                }
+
+                currentReport = data;
+                displayReport(data);
+            } catch (error) {
+                console.error('Error loading report:', error);
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('errorMessage').textContent = `Error loading report: ${error.message}`;
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+
+        function displayReport(report) {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('reportContent').style.display = 'block';
+
+            document.getElementById('reportId').textContent = report.report_id;
+            document.getElementById('reportDate').textContent = new Date(report.created_at).toLocaleString();
+            document.getElementById('csrAgent').textContent = `CSR: ${report.csr_agent || 'N/A'}`;
+
+            const priorityBadge = document.getElementById('priorityBadge');
+            priorityBadge.className = `priority-badge priority-${report.priority}`;
+            priorityBadge.textContent = `${report.priority.toUpperCase()} PRIORITY`;
+
+            document.getElementById('customerName').textContent = report.customer_name;
+            document.getElementById('customerTone').textContent = report.customer_tone || 'N/A';
+            document.getElementById('department').textContent = report.metadata?.department || 'General';
+            document.getElementById('confidence').textContent = report.confidence_score ? `${report.confidence_score}%` : 'N/A';
+
+            document.getElementById('issueDescription').textContent = report.issue_description;
+            document.getElementById('responseApproach').textContent = report.response_approach || 'Standard empathetic response with technical focus.';
+
+            const talkingPointsList = document.getElementById('talkingPoints');
+            const talkingPoints = report.talking_points || [
+                'Acknowledge the customer\'s concern with empathy',
+                'Explain the technical steps being taken',
+                'Provide a realistic timeline for resolution'
+            ];
+            talkingPointsList.innerHTML = talkingPoints.map(point =>
+                `<li style="margin-bottom: 8px;">${point}</li>`
+            ).join('');
+
+            const kbArticlesList = document.getElementById('kbArticles');
+            const kbArticles = report.knowledge_base_articles || [];
+            if (kbArticles.length > 0) {
+                kbArticlesList.innerHTML = kbArticles.map(kb =>
+                    `<li><a href="#" onclick="openKBModal('${kb}'); return false;">${kb}</a></li>`
+                ).join('');
+            } else {
+                kbArticlesList.innerHTML = '<li>No KB articles available</li>';
+            }
+
+            document.getElementById('viewCustomerBtn').onclick = () => {
+                window.location.href = `/client-history.html?customer=${encodeURIComponent(report.customer_name)}`;
+            };
+
+            updateStatusButtons(report.status || 'new');
+            loadNotes();
+            updateAssignmentUI(report);
+            updateSlaUI(report);
+        }
+
+        function updateAssignmentUI(report) {
+            const assignInput = document.getElementById('assignInput');
+            const assignBtn = document.getElementById('assignBtn');
+            const unassignBtn = document.getElementById('unassignBtn');
+            const currentAssignment = document.getElementById('currentAssignment');
+
+            if (report.assignee) {
+                assignInput.value = report.assignee;
+                unassignBtn.style.display = 'block';
+                const assignedAt = report.assigned_at ? new Date(report.assigned_at).toLocaleString() : 'Unknown';
+                currentAssignment.textContent = `Currently assigned to: ${report.assignee} (${assignedAt})`;
+            } else {
+                assignInput.value = '';
+                unassignBtn.style.display = 'none';
+                currentAssignment.textContent = 'Not assigned';
+            }
+        }
+
+        function updateSlaUI(report) {
+            const slaInput = document.getElementById('slaInput');
+            const slaSummary = document.getElementById('slaSummary');
+
+            if (report.sla_due) {
+                const parsed = new Date(report.sla_due);
+                if (!Number.isNaN(parsed.getTime())) {
+                    const localValue = new Date(parsed.getTime() - parsed.getTimezoneOffset() * 60000)
+                        .toISOString()
+                        .slice(0, 16);
+                    slaInput.value = localValue;
+                } else {
+                    slaInput.value = '';
+                }
+            } else {
+                slaInput.value = '';
+            }
+
+            const { className, label } = getSlaBadgeState(report);
+            slaSummary.innerHTML = `<span class="${className}">${label}</span>`;
+        }
+
+        document.getElementById('assignBtn').onclick = async () => {
+            const assignTo = document.getElementById('assignInput').value.trim();
+            if (!assignTo) {
+                alert('Please enter a CSR name');
+                return;
+            }
+
+            const btn = document.getElementById('assignBtn');
+            btn.disabled = true;
+            btn.textContent = 'Assigning...';
+
+            const result = await assignReport(reportId, assignTo);
+
+            if (result.success) {
+                currentReport.assignee = assignTo;
+                currentReport.assigned_at = new Date().toISOString();
+                updateAssignmentUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = `✓ Assigned to ${assignTo}`;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to assign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Assign';
+        };
+
+        document.getElementById('unassignBtn').onclick = async () => {
+            if (!confirm('Remove assignment?')) return;
+
+            const btn = document.getElementById('unassignBtn');
+            btn.disabled = true;
+
+            const result = await assignReport(reportId, null);
+
+            if (result.success) {
+                currentReport.assignee = null;
+                currentReport.assigned_at = null;
+                updateAssignmentUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ Assignment removed';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to unassign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+        };
+
+        document.getElementById('updateSlaBtn').onclick = async () => {
+            const slaInput = document.getElementById('slaInput');
+            if (!slaInput.value) {
+                alert('Please select an SLA due date and time.');
+                return;
+            }
+
+            const parsed = new Date(slaInput.value);
+            if (Number.isNaN(parsed.getTime())) {
+                alert('Invalid SLA due date');
+                return;
+            }
+
+            const btn = document.getElementById('updateSlaBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const isoValue = parsed.toISOString();
+            const result = await updateReportSlaDue(reportId, isoValue);
+
+            if (result.success) {
+                currentReport.sla_due = isoValue;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA updated';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to update SLA: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Save SLA';
+        };
+
+        document.getElementById('clearSlaBtn').onclick = async () => {
+            if (!confirm('Clear SLA due date for this report?')) {
+                return;
+            }
+
+            const btn = document.getElementById('clearSlaBtn');
+            btn.disabled = true;
+
+            const result = await updateReportSlaDue(reportId, null);
+
+            if (result.success) {
+                currentReport.sla_due = null;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA cleared';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to clear SLA: ${result.error}`);
+            }
+
+            btn.disabled = false;
+        };
+        }
+
+        async function loadNotes() {
+            const result = await getNotes(reportId);
+            const notesList = document.getElementById('notesList');
+
+            if (!result.success) {
+                notesList.innerHTML = '<div class="notes-empty">Failed to load notes</div>';
+                return;
+            }
+
+            if (result.data.length === 0) {
+                notesList.innerHTML = '<div class="notes-empty">No notes yet. Add the first note above.</div>';
+                return;
+            }
+
+            notesList.innerHTML = result.data.map(note => `
+                <div class="note-item" data-note-id="${note.id}">
+                    <div class="note-header">
+                        <div>
+                            <span class="note-author">${note.csr_agent}</span>
+                            <span class="note-date">${new Date(note.created_at).toLocaleString()}</span>
+                        </div>
+                        <button class="note-delete" onclick="handleDeleteNote('${note.id}')">Delete</button>
+                    </div>
+                    <div class="note-text">${escapeHtml(note.note_text)}</div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('addNoteBtn').onclick = async () => {
+            const noteText = document.getElementById('noteText').value.trim();
+            if (!noteText) {
+                alert('Please enter a note');
+                return;
+            }
+
+            const btn = document.getElementById('addNoteBtn');
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+
+            const csrAgent = currentReport.csr_agent || 'Unknown';
+            const result = await addNote(reportId, noteText, csrAgent);
+
+            if (result.success) {
+                document.getElementById('noteText').value = '';
+                await loadNotes();
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ Note added successfully';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to add note: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Add Note';
+        };
+
+        window.handleDeleteNote = async (noteId) => {
+            if (!confirm('Are you sure you want to delete this note?')) {
+                return;
+            }
+
+            const result = await deleteNote(noteId);
+
+            if (result.success) {
+                await loadNotes();
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ Note deleted successfully';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to delete note: ${result.error}`);
+            }
+        };
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateStatusButtons(currentStatus) {
+            const buttons = document.querySelectorAll('.status-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                const statusKey = btn.dataset.status;
+                btn.textContent = formatStatusLabel(statusKey);
+
+                if (statusKey === currentStatus) {
+                    btn.classList.add('active');
+                }
+
+                btn.onclick = async () => {
+                    const newStatus = btn.dataset.status;
+                    if (newStatus === currentStatus) return;
+
+                    btn.disabled = true;
+                    btn.textContent = 'Updating...';
+
+                    const result = await updateReportStatus(reportId, newStatus);
+
+                    if (result.success) {
+                        currentReport.status = newStatus;
+                        updateStatusButtons(newStatus);
+                        updateSlaUI(currentReport);
+
+                        const notification = document.createElement('div');
+                        notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                        notification.textContent = `✓ Status updated to ${formatStatusLabel(newStatus)}`;
+                        document.body.appendChild(notification);
+
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 3000);
+                    } else {
+                        alert(`Failed to update status: ${result.error}`);
+                        updateStatusButtons(currentReport.status);
+                    }
+
+                    btn.disabled = false;
+                    btn.textContent = formatStatusLabel(newStatus);
+                };
+            });
+        }
+
+        window.openKBModal = function(kbId) {
+            alert(`KB Modal for: ${kbId}\n\nThis will open the KB article viewer modal.`);
+        };
+    </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient.js';
+import { notificationService } from './notifications.ts';
 
 export class EscalationService {
   constructor() {
@@ -8,9 +9,36 @@ export class EscalationService {
       highValueThreshold: 50000,
       unresponsiveHours: 48
     };
+    this.defaultEmailRecipients = (import.meta.env?.VITE_SLA_ALERT_RECIPIENTS || '')
+      .split(',')
+      .map(email => email.trim())
+      .filter(Boolean);
+    this.webhookUrl = import.meta.env?.VITE_SLA_ALERT_WEBHOOK_URL;
   }
 
-  async analyzeTicketForEscalation(ticketId) {
+  getResolutionWindow(priority) {
+    switch ((priority || 'medium').toLowerCase()) {
+      case 'urgent':
+      case 'high':
+        return 8;
+      case 'low':
+        return 36;
+      default:
+        return 16;
+    }
+  }
+
+  normalizePriority(priority) {
+    if (!priority) return 'medium';
+    const normalized = priority.toLowerCase();
+    if (normalized === 'urgent') return 'high';
+    if (['low', 'medium', 'high'].includes(normalized)) {
+      return normalized;
+    }
+    return 'medium';
+  }
+
+  async fetchTicket(ticketId) {
     const { data: ticket, error } = await supabase
       .from('tickets')
       .select(`
@@ -21,8 +49,18 @@ export class EscalationService {
       .eq('id', ticketId)
       .single();
 
-    if (error || !ticket) {
+    if (error) {
       console.error('Error loading ticket for escalation analysis:', error);
+      return null;
+    }
+
+    return ticket;
+  }
+
+  async analyzeTicketForEscalation(ticketId) {
+    const ticket = await this.fetchTicket(ticketId);
+
+    if (!ticket) {
       return null;
     }
 
@@ -137,13 +175,45 @@ export class EscalationService {
       })
       .eq('id', ticketId);
 
-    await this.notifyEscalation(data);
+    const ticket = await this.fetchTicket(ticketId);
+    await this.notifyEscalation(data, ticket, reasons);
 
     return data;
   }
 
-  async notifyEscalation(escalation) {
-    console.log('Escalation notification:', escalation);
+  async notifyEscalation(escalation, ticket, reasons) {
+    if (!ticket) {
+      console.warn('Escalation created without ticket context');
+      return;
+    }
+
+    const priority = this.normalizePriority(ticket.priority);
+    const hoursWindow = this.getResolutionWindow(priority);
+    const createdAt = new Date(ticket.created_at || Date.now());
+    const dueAt = new Date(createdAt.getTime() + hoursWindow * 60 * 60 * 1000);
+
+    try {
+      await notificationService.sendSlaBreachAlert({
+        reportId: ticket.ticket_number || ticket.id,
+        ticketId: undefined,
+        slaType: 'resolution',
+        severity: reasons.some(reason => /urgent|critical|high-value/i.test(reason)) ? 'critical' : 'warning',
+        breachDetectedAt: new Date(),
+        dueAt,
+        priority,
+        assignedTo: ticket.assigned_to || undefined,
+        metadata: {
+          escalationId: escalation.id,
+          reasons,
+        },
+        recipients: {
+          email: this.defaultEmailRecipients.length ? this.defaultEmailRecipients : undefined,
+          webhookUrl: this.webhookUrl,
+        },
+      });
+    } catch (error) {
+      console.error('Failed to dispatch SLA alert notification:', error);
+    }
   }
 
   async autoEscalateIfNeeded(ticketId) {
@@ -163,13 +233,15 @@ export class EscalationService {
       return null;
     }
 
-    return await this.createEscalation(
+    const escalation = await this.createEscalation(
       ticketId,
       analysis.ticket.assigned_to,
       target.id,
       analysis.reasons,
       true
     );
+
+    return escalation;
   }
 
   async manualEscalate(ticketId, escalatedTo, reason) {

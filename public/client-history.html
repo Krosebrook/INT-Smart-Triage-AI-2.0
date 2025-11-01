@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client History - INT Smart Triage AI 2.0</title>
     <link rel="stylesheet" href="/public/theme.css">
+    <link rel="stylesheet" href="/src/styles/navigation.css">
+    <script src="/scripts/navigation.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -83,9 +85,169 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+        .history-stats-card {
+            display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.35);
+        }
+
+        .history-stats-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .history-stats-card__header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .history-stats-card__subtitle {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .history-stats {
+            display: grid;
+            gap: 16px;
+        }
+
+        .history-stats__summary {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-stats__total {
+            font-size: 42px;
+            font-weight: 700;
+        }
+
+        .history-stats__subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .history-stats__bars {
+            display: grid;
+            gap: 12px;
+        }
+
+        .history-stats__row {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .history-stats__row:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .history-stats__row-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .history-stats__row-label {
+            text-transform: capitalize;
+        }
+
+        .history-stats__bar {
+            position: relative;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.25);
+            overflow: hidden;
+        }
+
+        .history-stats__bar-fill {
+            height: 100%;
+            border-radius: inherit;
+            transition: width 0.4s ease;
+        }
+
+        .history-stats__percent {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 6px;
+        }
+
+        .history-stats__highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .history-stats__highlight {
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 120px;
+        }
+
+        .history-stats__highlight--warning {
+            background: rgba(253, 186, 140, 0.3);
+        }
+
+        .history-stats__highlight--success {
+            background: rgba(134, 239, 172, 0.3);
+        }
+
+        .history-stats__highlight-count {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .history-stats__highlight-label {
+            font-size: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        .history-stats__empty {
+            font-size: 14px;
+            opacity: 0.85;
+            text-align: center;
+        }
+
+        .history-stats__bar-fill.status-new {
+            background: rgba(14, 165, 233, 0.85);
+        }
+
+        .history-stats__bar-fill.status-in_progress {
+            background: rgba(249, 115, 22, 0.85);
+        }
+
+        .history-stats__bar-fill.status-waiting_customer {
+            background: rgba(234, 179, 8, 0.85);
+        }
+
+        .history-stats__bar-fill.status-resolved {
+            background: rgba(34, 197, 94, 0.85);
+        }
+
+        .history-stats__bar-fill.status-closed {
+            background: rgba(107, 114, 128, 0.85);
+        }
+
+
         .search-form {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr auto;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
             gap: 10px;
             align-items: end;
         }
@@ -142,6 +304,16 @@
             transition: all 0.3s;
             cursor: pointer;
             position: relative;
+        }
+
+        .report-card.overdue {
+            border-color: #b91c1c;
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.15);
+        }
+
+        .report-card.due-soon {
+            border-color: #92400e;
+            box-shadow: 0 4px 12px rgba(146, 64, 14, 0.1);
         }
 
         .report-checkbox {
@@ -261,9 +433,40 @@
             color: #92400e;
         }
 
+        .status-blocked {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-escalated {
+            background: #fbcfe8;
+            color: #be185d;
+        }
+
         .status-resolved {
             background: #d1fae5;
             color: #065f46;
+        }
+
+        .sla-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .sla-badge.overdue {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .sla-badge.soon {
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .report-description {
@@ -418,6 +621,28 @@
     </style>
 </head>
 <body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="site-header__brand" href="/public/index.html">
+                INT Smart Triage
+                <span>Client Success Platform</span>
+            </a>
+            <nav class="site-nav" aria-label="Primary">
+                <button class="site-nav__toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation">
+                    <span>Menu</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path fill="currentColor" d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                    </svg>
+                </button>
+                <ul class="site-nav__list" id="primary-navigation" data-nav-list>
+                    <li><a class="site-nav__link" href="/public/index.html">Overview</a></li>
+                    <li><a class="site-nav__link" href="/public/client-history.html">Client History</a></li>
+                    <li><a class="site-nav__link" href="/public/analytics.html">Analytics</a></li>
+                    <li><a class="site-nav__link" href="/public/demo.html">Demo <span class="site-nav__badge">Live</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
         <span id="themeIcon">🌙</span>
     </button>
@@ -432,29 +657,12 @@
             </div>
         </div>
 
-        <div id="quickStats" class="search-section" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statTotal">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">Total Reports</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statNew">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">New</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statProgress">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">In Progress</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statResolved">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">Resolved</div>
-                </div>
-                <div>
-                    <div style="font-size: 32px; font-weight: 700;" id="statHigh">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">High Priority</div>
-                </div>
+        <div id="historyStatsPanel" class="history-stats-card" hidden>
+            <div class="history-stats-card__header">
+                <h2>Report Status Overview</h2>
+                <p class="history-stats-card__subtitle">Live distribution for the current result set.</p>
             </div>
+            <div id="historyStatsContainer"></div>
         </div>
 
         <div class="search-section">
@@ -465,11 +673,11 @@
                 </div>
                 <div class="form-group">
                     <label for="assignedFilter">Assigned To</label>
-                    <input type="text" id="assignedFilter" placeholder="Filter by CSR name...">
+                    <input type="text" id="assignedFilter" name="assignee" placeholder="Filter by CSR name...">
                 </div>
                 <div class="form-group">
                     <label for="priorityFilter">Priority</label>
-                    <select id="priorityFilter">
+                    <select id="priorityFilter" name="priority">
                         <option value="">All Priorities</option>
                         <option value="high">High</option>
                         <option value="medium">Medium</option>
@@ -477,14 +685,36 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter" name="status">
+                        <option value="">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="blocked">Blocked</option>
+                        <option value="escalated">Escalated</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="toneFilter">Customer Tone</label>
-                    <select id="toneFilter">
+                    <select id="toneFilter" name="tone">
                         <option value="">All Tones</option>
                         <option value="angry">Angry</option>
                         <option value="urgent">Urgent</option>
                         <option value="frustrated">Frustrated</option>
                         <option value="confused">Confused</option>
                         <option value="calm">Calm</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter" data-testid="status-filter">
+                        <option value="">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="waiting_customer">Waiting on Customer</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -521,7 +751,33 @@
     </script>
 
     <script type="module">
+        import { HistoryStats } from '/modules/HistoryStats.js';
         import { supabase, getCustomerReports, searchReports, getReportById } from '../src/supabaseClient.js';
+
+        const historyStatsPanel = document.getElementById('historyStatsPanel');
+        const historyStatsContainer = document.getElementById('historyStatsContainer');
+        const historyStatsComponent = historyStatsContainer ? new HistoryStats(historyStatsContainer) : null;
+        const statusFilterEl = document.getElementById('statusFilter');
+
+        const statusLabels = {
+            'new': 'New',
+            'in_progress': 'In Progress',
+            'waiting_customer': 'Waiting on Customer',
+            'resolved': 'Resolved',
+            'closed': 'Closed'
+        };
+
+        function hideHistoryStats() {
+            if (historyStatsComponent) {
+                historyStatsComponent.hide();
+            }
+            if (historyStatsPanel) {
+                historyStatsPanel.style.display = 'none';
+                historyStatsPanel.setAttribute('hidden', 'true');
+            }
+        }
+
+        hideHistoryStats();
 
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -578,13 +834,15 @@
             const priority = document.getElementById('priorityFilter').value;
             const tone = document.getElementById('toneFilter').value;
             const assigned = document.getElementById('assignedFilter').value;
+            const status = statusFilterEl ? statusFilterEl.value : '';
 
             showLoading();
 
             const result = await searchReports(query, {
                 priority: priority || undefined,
                 customerTone: tone || undefined,
-                assignedTo: assigned || undefined
+                assignedTo: assigned || undefined,
+                status: status || undefined
             });
 
             if (result.success) {
@@ -610,8 +868,18 @@
             exportBtn.style.display = 'block';
             updateQuickStats(reports);
 
-            container.innerHTML = reports.map(report => `
-                <div class="report-card has-checkbox">
+            const now = new Date();
+            container.innerHTML = reports.map(report => {
+                const statusKey = report.status || 'new';
+                const { className: slaBadgeClass, label: slaLabel } = getSlaBadgeState({ sla_due: report.sla_due, status: statusKey }, now);
+                const cardState = slaBadgeClass.includes('overdue')
+                    ? ' overdue'
+                    : (slaBadgeClass.includes('soon') ? ' due-soon' : '');
+                const confidence = formatConfidence(report.confidence_score);
+                const assignee = escapeHtml(report.assignee || report.assigned_to || 'Unassigned');
+
+                return `
+                <div class="report-card has-checkbox${cardState}">
                     <input type="checkbox" class="report-checkbox" value="${report.report_id}" onclick="event.stopPropagation(); toggleSelection();">
                     <div onclick="viewReport('${report.report_id}')">
                     <div class="report-header">
@@ -624,7 +892,7 @@
                             </div>
                         </div>
                         <div class="report-badges">
-                            <span class="status-badge status-${report.status}">${formatStatus(report.status)}</span>
+                            <span class="status-badge status-${statusKey}">${formatStatusLabel(statusKey)}</span>
                             <span class="badge priority-${report.priority}">${report.priority.toUpperCase()}</span>
                             <span class="badge tone-${report.customer_tone}">${report.customer_tone}</span>
                             <span class="badge category-badge">${report.category}</span>
@@ -635,9 +903,11 @@
                     </div>
                     <div class="report-footer">
                         <div class="report-stats">
-                            <div>📊 Confidence: ${report.confidence_score}%</div>
+                            <div>📊 Confidence: ${confidence}</div>
                             <div>🎯 Department: ${report.metadata?.department || 'N/A'}</div>
                             <div>👤 Agent: ${report.csr_agent}</div>
+                            <div>🧑‍🤝‍🧑 Owner: ${assignee}</div>
+                            <div>⏱️ <span class="${slaBadgeClass}">${slaLabel}</span></div>
                         </div>
                         <div class="report-actions">
                             <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); viewReport('${report.report_id}')">View Details</button>
@@ -645,11 +915,12 @@
                         </div>
                     </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function showLoading() {
+            hideHistoryStats();
             const container = document.getElementById('resultsContainer');
             container.innerHTML = Array(3).fill(0).map(() => `
                 <div class="skeleton-card">
@@ -666,6 +937,7 @@
         }
 
         function showEmpty(message) {
+            hideHistoryStats();
             const container = document.getElementById('resultsContainer');
             container.innerHTML = `
                 <div class="empty-state">
@@ -679,6 +951,7 @@
         }
 
         function showError(error) {
+            hideHistoryStats();
             const container = document.getElementById('resultsContainer');
             container.innerHTML = `
                 <div class="empty-state">
@@ -708,6 +981,19 @@
             });
         }
 
+        function formatConfidence(value) {
+            if (value === null || value === undefined || value === '') {
+                return 'N/A';
+            }
+
+            const numeric = Number(value);
+            if (Number.isNaN(numeric)) {
+                return 'N/A';
+            }
+
+            return `${numeric}%`;
+        }
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -715,21 +1001,48 @@
         }
 
         function formatStatus(status) {
-            const statusMap = {
-                'new': 'New',
-                'in_progress': 'In Progress',
-                'resolved': 'Resolved'
-            };
-            return statusMap[status] || status;
+            const formatted = statusLabels[status];
+            if (formatted) {
+                return formatted;
+            }
+            return status ? status.replace(/_/g, ' ') : 'Unknown';
         }
 
         function updateQuickStats(reports) {
-            document.getElementById('quickStats').style.display = 'block';
-            document.getElementById('statTotal').textContent = reports.length;
-            document.getElementById('statNew').textContent = reports.filter(r => r.status === 'new').length;
-            document.getElementById('statProgress').textContent = reports.filter(r => r.status === 'in_progress').length;
-            document.getElementById('statResolved').textContent = reports.filter(r => r.status === 'resolved').length;
-            document.getElementById('statHigh').textContent = reports.filter(r => r.priority === 'high').length;
+            if (!historyStatsComponent || !historyStatsPanel) {
+                return;
+            }
+
+            if (!Array.isArray(reports) || reports.length === 0) {
+                hideHistoryStats();
+                return;
+            }
+
+            const statusCounts = reports.reduce((acc, report) => {
+                const key = report.status || 'new';
+                acc[key] = (acc[key] || 0) + 1;
+                return acc;
+            }, {});
+
+            const statuses = Object.entries(statusCounts).map(([key, count]) => ({
+                key,
+                label: statusLabels[key] || key.replace(/_/g, ' '),
+                count
+            }));
+
+            const highlightMetrics = [
+                { label: 'High Priority', count: reports.filter(r => r.priority === 'high').length, accent: 'warning' },
+                { label: 'Resolved', count: statusCounts.resolved || 0, accent: 'success' }
+            ].filter(metric => metric.count > 0);
+
+            historyStatsComponent.render({
+                total: reports.length,
+                statuses,
+                highlights: highlightMetrics
+            });
+
+            historyStatsPanel.style.display = 'block';
+            historyStatsPanel.removeAttribute('hidden');
         }
 
         function toggleSelection() {
@@ -743,6 +1056,18 @@
 
             if (selected.length === 0) {
                 alert('No reports selected');
+                return;
+            }
+
+            if (!supabase) {
+                const result = await searchReports('', {});
+                if (!result.success) {
+                    alert(`Error fetching reports: ${result.error}`);
+                    return;
+                }
+
+                const filtered = result.data.filter(report => selected.includes(report.report_id));
+                exportToCSV(filtered);
                 return;
             }
 
@@ -760,15 +1085,17 @@
         };
 
         function exportToCSV(reports) {
-            const headers = ['Report ID', 'Customer', 'Subject', 'Status', 'Priority', 'Tone', 'Category', 'Created Date'];
+            const headers = ['Report ID', 'Customer', 'Subject', 'Status', 'Priority', 'Tone', 'Category', 'Assignee', 'SLA Due', 'Created Date'];
             const rows = reports.map(r => [
                 r.report_id,
                 r.customer_name,
                 r.ticket_subject,
-                r.status || 'new',
+                formatStatusLabel(r.status || 'new'),
                 r.priority,
                 r.customer_tone,
                 r.category,
+                r.assignee || '',
+                formatSlaDue(r.sla_due),
                 new Date(r.created_at).toLocaleString()
             ]);
 
