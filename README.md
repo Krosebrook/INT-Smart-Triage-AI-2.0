@@ -137,7 +137,26 @@ npm run format     # prettier write
 npm run validate   # format:check + lint + test + build
 ```
 
-### 4.6 Testing
+### 4.6 Import Validation
+
+After importing data batches (KB articles, customer data, etc.), validate the codebase:
+
+```bash
+npm run validate:imports  # comprehensive validation workflow
+```
+
+This command:
+
+1. Validates project structure
+2. Installs/updates dependencies
+3. Checks code formatting
+4. Runs linter
+5. Executes all tests
+6. Performs production build
+
+For detailed guidance, see [`docs/IMPORT_VALIDATION.md`](docs/IMPORT_VALIDATION.md).
+
+### 4.7 Testing
 
 ```bash
 npm test                # node --test suite
@@ -146,7 +165,7 @@ npm run test:coverage   # generates ./coverage and lcov report
 
 Coverage thresholds enforced at ≥70% branches/functions/lines (`npm run test:coverage-check`).
 
-### 4.7 Agent Runtime Management
+### 4.8 Agent Runtime Management
 
 The agent runtime system enables dynamic control of autonomous agents:
 

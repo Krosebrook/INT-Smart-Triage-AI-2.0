@@ -18,6 +18,7 @@
     "test:coverage-check": "c8 --check-coverage --lines 70 --functions 70 --branches 70 node --test test/*.test.js",
     "validate": "npm run format:check && npm run lint && npm test && npm run build",
     "validate:env": "node scripts/validate-env.js",
+    "validate:imports": "node scripts/validate-imports.js",
     "predeploy": "npm run validate:env",
     "prepare": "husky",
     "agents:status": "node scripts/agents-runtime.js status",
