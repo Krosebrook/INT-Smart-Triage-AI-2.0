@@ -1,16 +1,183 @@
 // Supabase client for INT Smart Triage AI 2.0
 import { createClient } from '@supabase/supabase-js';
 
+const REPORT_STATUS_VALUES = ['new', 'in_progress', 'resolved', 'blocked', 'escalated'];
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('Supabase credentials not found. Database features will be disabled.');
+    console.warn('Supabase credentials not found. Database features will operate in mock mode.');
 }
 
 export const supabase = supabaseUrl && supabaseAnonKey
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
+
+const fallbackReports = [
+    {
+        report_id: 'R-1001',
+        customer_name: 'Acme Corporation',
+        ticket_subject: 'API integration returning 500 errors',
+        issue_description: 'Production environment is intermittently returning 500 errors when calling /api/users.',
+        status: 'new',
+        priority: 'high',
+        customer_tone: 'urgent',
+        category: 'technical',
+        created_at: '2024-07-15T09:12:00Z',
+        csr_agent: 'Sarah Johnson',
+        assigned_to: 'sarah.johnson@intinc.com',
+        metadata: { department: 'Engineering' },
+        confidence_score: 92
+    },
+    {
+        report_id: 'R-1002',
+        customer_name: 'Acme Corporation',
+        ticket_subject: 'Billing discrepancy for July invoice',
+        issue_description: 'Invoice shows $5,500 but contract rate is $4,500. Need correction before payment.',
+        status: 'in_progress',
+        priority: 'medium',
+        customer_tone: 'frustrated',
+        category: 'billing',
+        created_at: '2024-07-12T14:25:00Z',
+        csr_agent: 'Mike Chen',
+        assigned_to: 'mike.chen@intinc.com',
+        metadata: { department: 'Finance' },
+        confidence_score: 88
+    },
+    {
+        report_id: 'R-1003',
+        customer_name: 'TechStart Inc',
+        ticket_subject: 'Add additional user seats',
+        issue_description: 'Requesting 5 new enterprise seats before quarterly review.',
+        status: 'waiting_customer',
+        priority: 'low',
+        customer_tone: 'calm',
+        category: 'account',
+        created_at: '2024-07-11T11:10:00Z',
+        csr_agent: 'Emma Williams',
+        assigned_to: 'emma.williams@intinc.com',
+        metadata: { department: 'Account Management' },
+        confidence_score: 76
+    },
+    {
+        report_id: 'R-1004',
+        customer_name: 'Global Enterprises',
+        ticket_subject: 'Onboarding automation failing for EU accounts',
+        issue_description: 'Automation script fails for EU tenants due to missing GDPR consent flag.',
+        status: 'resolved',
+        priority: 'high',
+        customer_tone: 'confused',
+        category: 'technical',
+        created_at: '2024-07-09T08:45:00Z',
+        resolved_at: '2024-07-10T16:30:00Z',
+        csr_agent: 'Sarah Johnson',
+        assigned_to: 'sarah.johnson@intinc.com',
+        metadata: { department: 'Engineering' },
+        confidence_score: 95
+    },
+    {
+        report_id: 'R-1005',
+        customer_name: 'Northwind Traders',
+        ticket_subject: 'Security review follow-up',
+        issue_description: 'Need confirmation that the SOC 2 audit findings have been remediated.',
+        status: 'closed',
+        priority: 'medium',
+        customer_tone: 'calm',
+        category: 'security',
+        created_at: '2024-07-05T15:05:00Z',
+        resolved_at: '2024-07-07T10:15:00Z',
+        csr_agent: 'Mike Chen',
+        assigned_to: 'mike.chen@intinc.com',
+        metadata: { department: 'Security' },
+        confidence_score: 82
+    }
+];
+
+function normalizeStatusFilter(statusFilter) {
+    if (!statusFilter) {
+        return [];
+    }
+
+    if (Array.isArray(statusFilter)) {
+        return statusFilter.filter(Boolean);
+    }
+
+    if (typeof statusFilter === 'string') {
+        return statusFilter
+            .split(',')
+            .map(status => status.trim())
+            .filter(Boolean);
+    }
+
+    return [];
+}
+
+function applyStatusFilter(queryBuilder, statuses) {
+    if (!statuses || statuses.length === 0) {
+        return queryBuilder;
+    }
+
+    if (statuses.length === 1) {
+        return queryBuilder.eq('status', statuses[0]);
+    }
+
+    return queryBuilder.in('status', statuses);
+}
+
+function filterReportsLocally(reports, filters, sanitizedQuery, statuses) {
+    return reports
+        .filter(report => {
+            if (sanitizedQuery) {
+                const haystack = [
+                    report.customer_name,
+                    report.ticket_subject,
+                    report.issue_description
+                ]
+                    .join(' ')
+                    .toLowerCase();
+
+                if (!haystack.includes(sanitizedQuery.toLowerCase())) {
+                    return false;
+                }
+            }
+
+            if (statuses.length > 0 && !statuses.includes(report.status)) {
+                return false;
+            }
+
+            if (filters.priority && report.priority !== filters.priority) {
+                return false;
+            }
+
+            if (filters.category && report.category !== filters.category) {
+                return false;
+            }
+
+            if (filters.customerTone && report.customer_tone !== filters.customerTone) {
+                return false;
+            }
+
+            if (filters.assignedTo) {
+                const assigned = report.assigned_to || report.csr_agent || '';
+                if (!assigned.toLowerCase().includes(filters.assignedTo.toLowerCase())) {
+                    return false;
+                }
+            }
+
+            if (filters.dateFrom && new Date(report.created_at) < new Date(filters.dateFrom)) {
+                return false;
+            }
+
+            if (filters.dateTo && new Date(report.created_at) > new Date(filters.dateTo)) {
+                return false;
+            }
+
+            return true;
+        })
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 100);
+}
 
 // Save triage report to database via secure serverless endpoint
 export async function saveTriageReport(reportData) {
@@ -43,17 +210,33 @@ export async function saveTriageReport(reportData) {
 }
 
 // Get all reports for a specific customer
-export async function getCustomerReports(customerName) {
+export async function getCustomerReports(customerName, options = {}) {
+    const statuses = normalizeStatusFilter(options.statuses || options.status);
+
     if (!supabase) {
-        return { success: false, error: 'Database not configured' };
+        const normalizedName = customerName?.trim().toLowerCase() || '';
+        const filtered = filterReportsLocally(
+            fallbackReports.filter(report =>
+                !normalizedName || report.customer_name.toLowerCase().includes(normalizedName)
+            ),
+            {},
+            '',
+            statuses
+        );
+
+        return { success: true, data: filtered, count: filtered.length, source: 'mock' };
     }
 
     try {
-        const { data, error } = await supabase
+        let queryBuilder = supabase
             .from('reports')
             .select('*')
             .ilike('customer_name', `%${customerName}%`)
             .order('created_at', { ascending: false });
+
+        queryBuilder = applyStatusFilter(queryBuilder, statuses);
+
+        const { data, error } = await queryBuilder;
 
         if (error) throw error;
 
@@ -67,7 +250,12 @@ export async function getCustomerReports(customerName) {
 // Get a single report by report_id
 export async function getReportById(reportId) {
     if (!supabase) {
-        return { success: false, error: 'Database not configured' };
+        const report = fallbackReports.find(item => item.report_id === reportId);
+        if (!report) {
+            return { success: false, error: 'Report not found in mock dataset' };
+        }
+
+        return { success: true, data: report, source: 'mock' };
     }
 
     try {
@@ -88,14 +276,16 @@ export async function getReportById(reportId) {
 
 // Search reports
 export async function searchReports(query, filters = {}) {
+    // Sanitize query input to prevent SQL injection
+    const sanitizedQuery = query?.trim().replace(/[%_]/g, '\\$&') || '';
+    const statuses = normalizeStatusFilter(filters.statuses || filters.status);
+
     if (!supabase) {
-        return { success: false, error: 'Database not configured' };
+        const filtered = filterReportsLocally(fallbackReports, filters, sanitizedQuery, statuses);
+        return { success: true, data: filtered, count: filtered.length, source: 'mock' };
     }
 
     try {
-        // Sanitize query input to prevent SQL injection
-        const sanitizedQuery = query?.trim().replace(/[%_]/g, '\\$&') || '';
-
         let queryBuilder = supabase
             .from('reports')
             .select('*');
@@ -119,6 +309,9 @@ export async function searchReports(query, filters = {}) {
         if (filters.customerTone) {
             queryBuilder = queryBuilder.eq('customer_tone', filters.customerTone);
         }
+        if (filters.status && REPORT_STATUS_VALUES.includes(filters.status)) {
+            queryBuilder = queryBuilder.eq('status', filters.status);
+        }
         if (filters.dateFrom) {
             queryBuilder = queryBuilder.gte('created_at', filters.dateFrom);
         }
@@ -126,10 +319,25 @@ export async function searchReports(query, filters = {}) {
             queryBuilder = queryBuilder.lte('created_at', filters.dateTo);
         }
         if (filters.assignedTo) {
-            queryBuilder = queryBuilder.ilike('assigned_to', `%${filters.assignedTo}%`);
+            queryBuilder = queryBuilder.ilike('assignee', `%${filters.assignedTo}%`);
+        }
+        if (filters.assignee) {
+            queryBuilder = queryBuilder.ilike('assignee', `%${filters.assignee}%`);
+        }
+        if (filters.slaDueAfter) {
+            queryBuilder = queryBuilder.gte('sla_due', filters.slaDueAfter);
+        }
+        if (filters.slaDueBefore) {
+            queryBuilder = queryBuilder.lte('sla_due', filters.slaDueBefore);
+        }
+        if (filters.slaDueIsNull === true) {
+            queryBuilder = queryBuilder.is('sla_due', null);
+        }
+        if (filters.excludeResolved) {
+            queryBuilder = queryBuilder.neq('status', 'resolved');
         }
 
-        queryBuilder = queryBuilder
+        queryBuilder = applyStatusFilter(queryBuilder, statuses)
             .order('created_at', { ascending: false })
             .limit(100);
 
@@ -145,42 +353,52 @@ export async function searchReports(query, filters = {}) {
 }
 
 // Get statistics
-export async function getReportStats() {
-    if (!supabase) {
-        return { success: false, error: 'Database not configured' };
-    }
+export async function getReportStats(options = {}) {
+    const statuses = normalizeStatusFilter(options.statuses || options.status);
 
-    try {
-        const { data, error } = await supabase
-            .from('reports')
-            .select('priority, category, customer_tone, created_at');
+    const computeStats = (collection) => {
+        const filtered = statuses.length ? collection.filter(item => statuses.includes(item.status)) : collection;
 
-        if (error) throw error;
-
-        // Calculate stats
         const stats = {
-            total: data.length,
+            total: filtered.length,
             byPriority: {
-                high: data.filter(r => r.priority === 'high').length,
-                medium: data.filter(r => r.priority === 'medium').length,
-                low: data.filter(r => r.priority === 'low').length
+                high: filtered.filter(r => r.priority === 'high').length,
+                medium: filtered.filter(r => r.priority === 'medium').length,
+                low: filtered.filter(r => r.priority === 'low').length
             },
             byCategory: {},
             byTone: {},
-            recentCount: data.filter(r => {
+            recentCount: filtered.filter(r => {
                 const created = new Date(r.created_at);
                 const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
                 return created > dayAgo;
             }).length
         };
 
-        // Count by category
-        data.forEach(r => {
+        filtered.forEach(r => {
             stats.byCategory[r.category] = (stats.byCategory[r.category] || 0) + 1;
             stats.byTone[r.customer_tone] = (stats.byTone[r.customer_tone] || 0) + 1;
         });
 
-        return { success: true, data: stats };
+        return stats;
+    };
+
+    if (!supabase) {
+        return { success: true, data: computeStats(fallbackReports), source: 'mock' };
+    }
+
+    try {
+        let queryBuilder = supabase
+            .from('reports')
+            .select('priority, category, customer_tone, created_at, status');
+
+        queryBuilder = applyStatusFilter(queryBuilder, statuses);
+
+        const { data, error } = await queryBuilder;
+
+        if (error) throw error;
+
+        return { success: true, data: computeStats(data) };
     } catch (error) {
         console.error('Error fetching stats:', error);
         return { success: false, error: error.message };
@@ -189,10 +407,25 @@ export async function getReportStats() {
 
 export async function updateReportStatus(reportId, status) {
     if (!supabase) {
-        return { success: false, error: 'Database not configured' };
+        const report = fallbackReports.find(item => item.report_id === reportId);
+        if (!report) {
+            return { success: false, error: 'Report not found in mock dataset' };
+        }
+
+        report.status = status;
+        report.updated_at = new Date().toISOString();
+        if (status === 'resolved') {
+            report.resolved_at = new Date().toISOString();
+        }
+
+        return { success: true, data: [report], source: 'mock' };
     }
 
     try {
+        if (!REPORT_STATUS_VALUES.includes(status)) {
+            return { success: false, error: `Invalid status: ${status}` };
+        }
+
         const updateData = {
             status,
             updated_at: new Date().toISOString()
@@ -288,11 +521,38 @@ export async function assignReport(reportId, assignedTo) {
     }
 
     try {
+        const nowIso = new Date().toISOString();
+        const updatePayload = {
+            assignee: assignedTo,
+            assigned_at: assignedTo ? nowIso : null,
+            updated_at: nowIso
+        };
+
+        const { data, error } = await supabase
+            .from('reports')
+            .update(updatePayload)
+            .eq('report_id', reportId)
+            .select();
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error assigning report:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function updateReportSlaDue(reportId, slaDue) {
+    if (!supabase) {
+        return { success: false, error: 'Database not configured' };
+    }
+
+    try {
         const { data, error } = await supabase
             .from('reports')
             .update({
-                assigned_to: assignedTo,
-                assigned_at: new Date().toISOString(),
+                sla_due: slaDue,
                 updated_at: new Date().toISOString()
             })
             .eq('report_id', reportId)
@@ -302,7 +562,7 @@ export async function assignReport(reportId, assignedTo) {
 
         return { success: true, data };
     } catch (error) {
-        console.error('Error assigning report:', error);
+        console.error('Error updating SLA due date:', error);
         return { success: false, error: error.message };
     }
 }
