@@ -57,3 +57,132 @@ export function sanitizeTriageData(data) {
     timestamp: data.timestamp || new Date().toISOString()
   };
 }
+
+export function validateReportSubmission(data) {
+  const errors = [];
+
+  if (!data || typeof data !== 'object') {
+    return {
+      isValid: false,
+      errors: ['Report payload must be an object']
+    };
+  }
+
+  if (!data.reportId || typeof data.reportId !== 'string') {
+    errors.push('Report ID is required and must be a string');
+  } else if (data.reportId.length > 50) {
+    errors.push('Report ID must be 50 characters or less');
+  }
+
+  const baseValidation = validateTriageRequest(data);
+  if (!baseValidation.isValid) {
+    errors.push(...baseValidation.errors);
+  }
+
+  const validPriorities = ['low', 'medium', 'high'];
+  if (!data.priority || typeof data.priority !== 'string' || !validPriorities.includes(data.priority.toLowerCase())) {
+    errors.push(`Priority must be one of: ${validPriorities.join(', ')}`);
+  }
+
+  if (!data.responseApproach || typeof data.responseApproach !== 'string') {
+    errors.push('Response approach is required and must be a string');
+  }
+
+  if (!Array.isArray(data.talkingPoints) || data.talkingPoints.length === 0) {
+    errors.push('Talking points are required and must be a non-empty array');
+  }
+
+  if (Array.isArray(data.talkingPoints)) {
+    for (const point of data.talkingPoints) {
+      if (typeof point !== 'string') {
+        errors.push('Talking points must contain only strings');
+        break;
+      }
+    }
+  }
+
+  if (!Array.isArray(data.knowledgeBase)) {
+    errors.push('Knowledge base entries must be provided as an array');
+  } else {
+    for (const article of data.knowledgeBase) {
+      if (typeof article !== 'string') {
+        errors.push('Knowledge base entries must be strings');
+        break;
+      }
+    }
+  }
+
+  if (data.confidence !== undefined) {
+    const confidenceValue = typeof data.confidence === 'number'
+      ? data.confidence
+      : parseFloat(String(data.confidence).replace('%', ''));
+
+    if (Number.isNaN(confidenceValue) || confidenceValue < 0 || confidenceValue > 100) {
+      errors.push('Confidence must be a number between 0 and 100');
+    }
+  }
+
+  if (data.metadata && typeof data.metadata !== 'object') {
+    errors.push('Metadata must be a valid object');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+export function sanitizeReportSubmission(data) {
+  const base = sanitizeTriageData(data);
+
+  const confidenceValue = typeof data.confidence === 'number'
+    ? data.confidence
+    : parseFloat(String(data.confidence ?? '').replace('%', ''));
+
+  const confidenceScore = Number.isFinite(confidenceValue)
+    ? Math.max(0, Math.min(100, confidenceValue))
+    : null;
+
+  const sanitizeArray = (items = [], maxLength = 500) =>
+    Array.isArray(items)
+      ? items
+          .map(item => typeof item === 'string' ? sanitizeInput(item)?.substring(0, maxLength) : null)
+          .filter(Boolean)
+      : [];
+
+  const processedAt = data.processedAt && !Number.isNaN(Date.parse(data.processedAt))
+    ? new Date(data.processedAt).toISOString()
+    : base.timestamp;
+
+  const metadata = data.metadata && typeof data.metadata === 'object'
+    ? data.metadata
+    : {};
+
+  if (data.analysis && typeof data.analysis === 'object') {
+    metadata.analysis = data.analysis;
+  }
+
+  if (data.department) {
+    metadata.department = sanitizeInput(data.department)?.substring(0, 100) || data.department;
+  }
+
+  metadata.source = metadata.source || 'public-report-submit';
+
+  return {
+    reportId: sanitizeInput(data.reportId)?.substring(0, 50),
+    customerName: base.customerName,
+    ticketSubject: base.ticketSubject,
+    issueDescription: base.issueDescription,
+    customerTone: base.customerTone,
+    csrAgent: base.csrAgent,
+    createdAt: base.timestamp,
+    priority: sanitizeInput(data.priority)?.toLowerCase(),
+    category: sanitizeInput(data.category || 'general')?.toLowerCase(),
+    responseApproach: sanitizeInput(data.responseApproach)?.substring(0, 4000),
+    talkingPoints: sanitizeArray(data.talkingPoints, 500),
+    knowledgeBase: sanitizeArray(data.knowledgeBase, 200),
+    confidenceScore,
+    processedAt,
+    metadata
+  };
+}
