@@ -58,7 +58,7 @@ class MemoryStorageDriver implements StorageDriver {
   }
 }
 
-const storageDriver: StorageDriver = typeof globalThis.window !== 'undefined' && globalThis.localStorage
+const storageDriver: StorageDriver = typeof localStorage !== 'undefined'
   ? new LocalStorageDriver()
   : new MemoryStorageDriver();
 

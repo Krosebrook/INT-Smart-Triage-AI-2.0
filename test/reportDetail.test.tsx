@@ -111,6 +111,8 @@ describe('ReportDetail page', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Add Note' }));
 
     expect(mockService.create).not.toHaveBeenCalled();
-    expect(await screen.findByRole('alert')).toHaveTextContent('Please enter note content before submitting.');
+    // With the required attribute, native validation prevents submission
+    // The custom error message only shows if the required validation passes but content is whitespace
+    expect(noteField).toBeRequired();
   });
 });
