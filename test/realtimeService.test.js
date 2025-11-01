@@ -2,7 +2,7 @@
  * Unit tests for Realtime Service
  */
 
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { realtimeService } from '../src/realtimeService.js';
 
@@ -36,7 +36,7 @@ describe('RealtimeService', () => {
     it('should accept callback function', () => {
       const callback = () => {};
       const result = realtimeService.subscribeToReports(callback);
-      
+
       // May return null if Supabase not configured
       if (result !== null) {
         assert.ok(result);
@@ -68,7 +68,7 @@ describe('RealtimeService', () => {
         userId: 'user-001',
         userName: 'Test User',
       });
-      
+
       // May return null if Supabase not configured
       if (result !== null) {
         assert.ok(result);
@@ -96,7 +96,7 @@ describe('RealtimeService', () => {
     it('should register event handlers', () => {
       const handler = () => {};
       realtimeService.on('test-event', handler);
-      
+
       assert.ok(realtimeService.eventHandlers.has('test-event'));
     });
   });
