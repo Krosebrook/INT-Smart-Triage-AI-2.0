@@ -1,6 +1,17 @@
 export class HistoryStats {
     constructor(container) {
-        this.lastRender = null;
+        Object.defineProperty(this, "container", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "lastRender", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: null
+        });
         if (!container) {
             throw new Error('HistoryStats requires a valid container element');
         }
