@@ -29,7 +29,6 @@ export class DatabaseService {
     if (!supabaseUrl || !supabaseServiceKey) {
       const errorMessage = 'Supabase configuration error: SUPABASE_SERVICE_ROLE_KEY is required for secure database access.';
       console.error('Missing Supabase configuration');
-      console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
       throw new Error(errorMessage);
     }
 
