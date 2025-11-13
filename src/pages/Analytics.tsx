@@ -190,9 +190,10 @@ const AnalyticsPage = () => {
           borderRadius: '0.75rem',
         }}
       >
-        <label style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
+        <label htmlFor="time-range-select" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
           Time Range
           <select
+            id="time-range-select"
             value={range}
             onChange={(event) => setRange(event.target.value)}
             style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
@@ -205,9 +206,10 @@ const AnalyticsPage = () => {
           </select>
         </label>
 
-        <label style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
+        <label htmlFor="agent-filter-input" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
           Agent (optional)
           <input
+            id="agent-filter-input"
             type="text"
             placeholder="e.g. jsmith"
             value={agentFilter}
@@ -216,9 +218,10 @@ const AnalyticsPage = () => {
           />
         </label>
 
-        <label style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
+        <label htmlFor="priority-filter-select" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
           Priority
           <select
+            id="priority-filter-select"
             value={priorityFilter}
             onChange={(event) => setPriorityFilter(event.target.value)}
             style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #d1d5db' }}
