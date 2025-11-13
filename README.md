@@ -17,6 +17,7 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 - **🔐 Enterprise Security**: Mandatory Row Level Security (RLS) with zero client-side database access
 - **📊 Complete Audit Trail**: Comprehensive logging with IP tracking and session management
 - **⚡ Serverless Architecture**: Vercel-hosted with automatic scaling and edge optimization
+- **🛡️ RBAC Enforcement**: Centralized role catalog and permission middleware powering policy checks
 
 ## 🛡️ Security Architecture
 
@@ -28,7 +29,7 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 
 ## 🔧 Tech Stack
 
-- **Frontend**: Vanilla JavaScript with modern CSS Grid/Flexbox
+- **Frontend**: Vanilla JavaScript plus targeted React/TypeScript views for secure consoles
 - **Backend**: Vercel Serverless Functions (Node.js)
 - **Database**: Supabase (PostgreSQL) with mandatory RLS
 - **Deployment**: Vercel with CI/CD integration
@@ -69,6 +70,10 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
    - `SUPABASE_URL`: Your Supabase project URL
    - `SUPABASE_ANON_KEY`: Your Supabase anon key (read-only operations)
    - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for write operations)
+   - `COMPLIANCE_EXPORT_BUCKET`: Hardened S3 bucket that stores audit exports
+   - `COMPLIANCE_EXPORT_REGION`: AWS region for the compliance bucket (e.g. `us-east-1`)
+   - `COMPLIANCE_EXPORT_PREFIX` *(optional)*: S3 prefix for organizing exports
+   - `COMPLIANCE_EXPORT_KMS_KEY_ID` *(optional)*: KMS key ID for envelope encryption
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
 
 3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor (re-run after pulling this update to replace the legacy anon insert policy)
@@ -142,3 +147,13 @@ For technical support or security questions, refer to the deployment documentati
 ---
 
 **Built with ❤️ for INT Inc. Customer Success** | **Security-First Design** | **Production Ready**
+## 🧾 Compliance Export Job
+
+Nightly audit packages can be generated locally or within your scheduler using:
+
+```bash
+npx tsx scripts/jobs/complianceExport.ts
+```
+
+The job signs into Supabase with the service role key, snapshots audit log activity alongside RBAC assignments, compresses the payload, and writes it to the configured S3 bucket with KMS-backed server-side encryption. The object key follows `compliance/audit-logs-<timestamp>.json.gz` (or the optional prefix). Review [scripts/jobs/complianceExport.ts](scripts/jobs/complianceExport.ts) for operational details.
+

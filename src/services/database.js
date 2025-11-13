@@ -31,7 +31,8 @@ export class DatabaseService {
       if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
         console.error('SUPABASE_SERVICE_ROLE_KEY is required for secure database access.');
       }
-      return;
+      const missingField = !supabaseUrl ? 'SUPABASE_URL' : 'SUPABASE_SERVICE_ROLE_KEY';
+      throw new Error(`${missingField} is required for secure database access.`);
     }
 
     try {
