@@ -1,0 +1,26 @@
+.main,
+.mainPadded {
+  flex: 1 1 auto;
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  box-shadow: 0 22px 45px -32px rgba(15, 23, 42, 0.35);
+  min-height: 60vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  padding: 0;
+}
+
+.mainPadded {
+  padding: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .mainPadded {
+    padding: 1rem;
+  }
+}

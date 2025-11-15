@@ -3,6 +3,8 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-lock.yaml
+yarn.lock
 
 # Environment variables (NEVER commit these)
 .env
@@ -43,6 +45,9 @@ pids
 
 # Coverage directory used by tools like istanbul
 coverage/
+.nyc_output/
+.c8/
+*.lcov
 
 # Build outputs
 dist/
@@ -66,3 +71,7 @@ temp/
 # Backup files
 *.bak
 *.backup
+data/
+
+# SDK build output
+packages/sdk/dist/

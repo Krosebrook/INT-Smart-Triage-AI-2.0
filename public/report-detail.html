@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report Detail • INT Smart Triage AI 2.0</title>
+    <link rel="stylesheet" href="/public/theme.css" />
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #1f2933;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 999px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(31, 41, 51, 0.15);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+        }
+
+        .global-nav {
+            background: #1a202c;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 64px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .nav-brand {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            outline: none;
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 16px 48px;
+        }
+
+        .page-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 18px 45px rgba(31, 41, 55, 0.18);
+        }
+
+        .page-header a {
+            text-decoration: none;
+            color: #4c51bf;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-header a:hover,
+        .page-header a:focus {
+            text-decoration: underline;
+        }
+
+        .badge,
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-primary {
+            background: rgba(99, 102, 241, 0.15);
+            color: #4338ca;
+        }
+
+        .chip-status-new {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1d4ed8;
+        }
+
+        .chip-status-in_progress {
+            background: rgba(245, 158, 11, 0.18);
+            color: #b45309;
+        }
+
+        .chip-status-resolved {
+            background: rgba(16, 185, 129, 0.18);
+            color: #047857;
+        }
+
+        .page-state {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 18px 45px rgba(31, 41, 55, 0.18);
+        }
+
+        .page-state--error {
+            color: #b91c1c;
+            border: 1px solid rgba(185, 28, 28, 0.2);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 18px 45px rgba(31, 41, 55, 0.18);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #1f2937;
+        }
+
+        .section-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .summary-title {
+            margin: 0;
+            font-size: 28px;
+            color: #111827;
+        }
+
+        .summary-subject {
+            margin: 0;
+            color: #4b5563;
+            font-size: 16px;
+        }
+
+        .status-btn.status-blocked.active {
+            border-color: #b91c1c;
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-btn.status-escalated.active {
+            border-color: #be185d;
+            background: #fbcfe8;
+            color: #be185d;
+        }
+
+        .status-btn.status-resolved.active {
+            border-color: #065f46;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .sla-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sla-controls input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sla-summary {
+            margin-top: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .sla-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .sla-badge.overdue {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .sla-badge.soon {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .summary-grid dd {
+            margin: 4px 0 0;
+            font-size: 15px;
+            color: #1f2937;
+        }
+
+        .summary-body {
+            display: grid;
+            gap: 16px;
+        }
+
+        .summary-body h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #1f2937;
+        }
+
+        .summary-body p {
+            margin: 8px 0 0;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .talking-points {
+            list-style: disc;
+            margin: 8px 0 0 20px;
+            color: #374151;
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .note-card {
+            border: 1px solid rgba(107, 114, 128, 0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            background: #f8fafc;
+            display: grid;
+            gap: 8px;
+        }
+
+        .note-card header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .note-meta {
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .note-text {
+            margin: 0;
+            line-height: 1.5;
+            color: #1f2937;
+            white-space: pre-wrap;
+        }
+
+        .note-delete {
+            background: #fee2e2;
+            border: none;
+            color: #b91c1c;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .note-delete:hover,
+        .note-delete:focus {
+            background: #fecaca;
+            outline: none;
+        }
+
+        .note-form textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 15px;
+        }
+
+        .note-form button,
+        .action-button {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
+        }
+
+        .note-form button:hover,
+        .action-button:hover,
+        .note-form button:focus,
+        .action-button:focus {
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        .action-stack {
+            display: grid;
+            gap: 16px;
+        }
+
+        .action-row {
+            display: grid;
+            gap: 12px;
+        }
+
+        .action-row label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            color: #6b7280;
+        }
+
+        .action-row select,
+        .action-row input {
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            padding: 10px 12px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .action-row .inline-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .inline-actions button.secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+            box-shadow: none;
+        }
+
+        .section-footer {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 24px 12px 36px;
+            }
+
+            .global-nav {
+                flex-direction: column;
+                gap: 10px;
+                height: auto;
+                padding: 16px;
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .theme-toggle {
+                top: 12px;
+                right: 12px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+        <span class="sr-only">Toggle theme</span>
+    </button>
+
+    <nav class="global-nav">
+        <div class="nav-brand">INT Smart Triage AI 2.0</div>
+        <div class="nav-links">
+            <a class="nav-link" href="/">New Triage</a>
+            <a class="nav-link" href="/client-history.html">Client History</a>
+            <a class="nav-link" href="/demo.html">Demo</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page-container">
+            <header class="page-header">
+                <a href="/client-history.html">← Back to Client History</a>
+                <div class="page-header-meta">
+                    <span id="priorityBadge" class="badge badge-primary">Priority</span>
+                    <span id="statusChip" class="chip chip-status-new">Status</span>
+                </div>
+            </header>
+
+            <div id="loadingState" class="page-state">Loading report details…</div>
+            <div id="errorState" class="page-state page-state--error" hidden></div>
+
+            <div id="reportShell" hidden>
+                <section class="section" aria-labelledby="summaryHeading" data-section="summary">
+                    <div class="section-header">
+                        <h2 id="summaryHeading">Summary</h2>
+                        <p id="summaryMeta">Report overview</p>
+                    </div>
+                    <article>
+                        <h1 id="summaryTitle" class="summary-title">Report</h1>
+                        <p id="summarySubject" class="summary-subject"></p>
+
+                        <dl class="summary-grid">
+                            <div>
+                                <dt>Report ID</dt>
+                                <dd id="summaryReportId">—</dd>
+                            </div>
+                            <div>
+                                <dt>Created</dt>
+                                <dd id="summaryCreatedAt">—</dd>
+                            </div>
+                            <div>
+                                <dt>Customer</dt>
+                                <dd id="summaryCustomer">—</dd>
+                            </div>
+                            <div>
+                                <dt>Assigned CSR</dt>
+                                <dd id="summaryAgent">—</dd>
+                            </div>
+                            <div>
+                                <dt>Department</dt>
+                                <dd id="summaryDepartment">—</dd>
+                            </div>
+                            <div>
+                                <dt>Customer Tone</dt>
+                                <dd id="summaryTone">—</dd>
+                            </div>
+                            <div>
+                                <dt>Category</dt>
+                                <dd id="summaryCategory">—</dd>
+                            </div>
+                            <div>
+                                <dt>Confidence</dt>
+                                <dd id="summaryConfidence">—</dd>
+                            </div>
+                            <div>
+                                <dt>Channel</dt>
+                                <dd id="summaryChannel">—</dd>
+                            </div>
+                        </dl>
+
+                        <div class="summary-body">
+                            <div>
+                                <h3>Issue Description</h3>
+                                <p id="issueDescription">—</p>
+                            </div>
+                            <div>
+                                <h3>Recommended Approach</h3>
+                                <p id="responseApproach">—</p>
+                            </div>
+                            <div id="talkingPointsBlock" hidden>
+                                <h3>Suggested Talking Points</h3>
+                                <ul id="talkingPoints" class="talking-points"></ul>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                    <div class="status-selector">
+                        <label>Report Status</label>
+                        <div class="status-buttons">
+                            <button class="status-btn status-new" data-status="new">New</button>
+                            <button class="status-btn status-in_progress" data-status="in_progress">In Progress</button>
+                            <button class="status-btn status-blocked" data-status="blocked">Blocked</button>
+                            <button class="status-btn status-escalated" data-status="escalated">Escalated</button>
+                            <button class="status-btn status-resolved" data-status="resolved">Resolved</button>
+                        </div>
+                    </div>
+                    <form id="noteForm" class="note-form">
+                        <label for="noteText" class="sr-only">Add note</label>
+                        <textarea id="noteText" name="noteText" placeholder="Document a follow-up or action item…" maxlength="1000"></textarea>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+                            <button type="submit">Add Note</button>
+                        </div>
+                        <div id="currentAssignment" style="margin-top: 10px; color: #666; font-size: 14px;"></div>
+                    </div>
+
+                    <div class="status-selector" style="margin-top: 15px;">
+                        <label>SLA Due</label>
+                        <div class="sla-controls">
+                            <input type="datetime-local" id="slaInput">
+                            <button class="btn btn-primary" id="updateSlaBtn" style="padding: 10px 20px;">Save SLA</button>
+                            <button class="btn btn-secondary" id="clearSlaBtn" style="padding: 10px 20px;">Clear</button>
+                        </div>
+                        <div id="slaSummary" class="sla-summary"></div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="window.print()">📄 Export to PDF</button>
+                        <button class="btn btn-success" id="viewCustomerBtn">👤 View Customer History</button>
+                        <a href="/client-history.html" class="btn btn-secondary">📋 Back to All Reports</a>
+                    </div>
+                    <div class="action-stack">
+                        <form id="statusForm" class="action-row">
+                            <label for="statusSelect">Status</label>
+                            <div class="inline-actions">
+                                <select id="statusSelect" name="status">
+                                    <option value="new">New</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="resolved">Resolved</option>
+                                </select>
+                                <button type="submit" class="action-button">Update Status</button>
+                            </div>
+                        </form>
+
+                        <form id="assignmentForm" class="action-row">
+                            <label for="assignmentInput">Assignment</label>
+                            <div class="inline-actions">
+                                <input id="assignmentInput" name="assignment" type="text" placeholder="Assign to CSR" autocomplete="off" />
+                                <button type="submit" class="action-button">Assign</button>
+                                <button type="button" id="clearAssignment" class="action-button secondary">Clear</button>
+                            </div>
+                        </form>
+
+                        <div class="action-row">
+                            <label>Quick Links</label>
+                            <div class="inline-actions">
+                                <button type="button" id="viewCustomer" class="action-button secondary">Customer Timeline</button>
+                                <button type="button" id="refreshReport" class="action-button secondary">Refresh</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-footer" id="actionFooter">Last updated just now.</div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { formatStatus as formatStatusLabel, getSlaBadgeState } from '/scripts/history.js';
+        import { supabase, updateReportStatus, getNotes, addNote, deleteNote, assignReport, updateReportSlaDue } from '/src/supabaseClient.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const reportId = urlParams.get('id');
+        let currentReport = null;
+
+        if (!reportId) {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('errorMessage').textContent = 'No report ID provided';
+            document.getElementById('errorMessage').style.display = 'block';
+        } else {
+            loadReport(reportId);
+        }
+
+        async function loadReport(reportId) {
+            try {
+                const { data, error } = await supabase
+                    .from('reports')
+                    .select('*')
+                    .eq('report_id', reportId)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (!data) {
+                    throw new Error('Report not found');
+                }
+
+                if (!data.assignee && data.assigned_to) {
+                    data.assignee = data.assigned_to;
+                }
+
+                currentReport = data;
+                displayReport(data);
+            } catch (error) {
+                console.error('Error loading report:', error);
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('errorMessage').textContent = `Error loading report: ${error.message}`;
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+
+        function displayReport(report) {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('reportContent').style.display = 'block';
+
+            document.getElementById('reportId').textContent = report.report_id;
+            document.getElementById('reportDate').textContent = new Date(report.created_at).toLocaleString();
+            document.getElementById('csrAgent').textContent = `CSR: ${report.csr_agent || 'N/A'}`;
+
+            const priorityBadge = document.getElementById('priorityBadge');
+            priorityBadge.className = `priority-badge priority-${report.priority}`;
+            priorityBadge.textContent = `${report.priority.toUpperCase()} PRIORITY`;
+
+            document.getElementById('customerName').textContent = report.customer_name;
+            document.getElementById('customerTone').textContent = report.customer_tone || 'N/A';
+            document.getElementById('department').textContent = report.metadata?.department || 'General';
+            document.getElementById('confidence').textContent = report.confidence_score ? `${report.confidence_score}%` : 'N/A';
+
+            document.getElementById('issueDescription').textContent = report.issue_description;
+            document.getElementById('responseApproach').textContent = report.response_approach || 'Standard empathetic response with technical focus.';
+
+            const talkingPointsList = document.getElementById('talkingPoints');
+            const talkingPoints = report.talking_points || [
+                'Acknowledge the customer\'s concern with empathy',
+                'Explain the technical steps being taken',
+                'Provide a realistic timeline for resolution'
+            ];
+            talkingPointsList.innerHTML = talkingPoints.map(point =>
+                `<li style="margin-bottom: 8px;">${point}</li>`
+            ).join('');
+
+            const kbArticlesList = document.getElementById('kbArticles');
+            const kbArticles = report.knowledge_base_articles || [];
+            if (kbArticles.length > 0) {
+                kbArticlesList.innerHTML = kbArticles.map(kb =>
+                    `<li><a href="#" onclick="openKBModal('${kb}'); return false;">${kb}</a></li>`
+                ).join('');
+            } else {
+                kbArticlesList.innerHTML = '<li>No KB articles available</li>';
+            }
+
+            document.getElementById('viewCustomerBtn').onclick = () => {
+                window.location.href = `/client-history.html?customer=${encodeURIComponent(report.customer_name)}`;
+            };
+
+            updateStatusButtons(report.status || 'new');
+            loadNotes();
+            updateAssignmentUI(report);
+            updateSlaUI(report);
+        }
+
+        function updateAssignmentUI(report) {
+            const assignInput = document.getElementById('assignInput');
+            const assignBtn = document.getElementById('assignBtn');
+            const unassignBtn = document.getElementById('unassignBtn');
+            const currentAssignment = document.getElementById('currentAssignment');
+
+            if (report.assignee) {
+                assignInput.value = report.assignee;
+                unassignBtn.style.display = 'block';
+                const assignedAt = report.assigned_at ? new Date(report.assigned_at).toLocaleString() : 'Unknown';
+                currentAssignment.textContent = `Currently assigned to: ${report.assignee} (${assignedAt})`;
+            } else {
+                assignInput.value = '';
+                unassignBtn.style.display = 'none';
+                currentAssignment.textContent = 'Not assigned';
+            }
+        }
+
+        function updateSlaUI(report) {
+            const slaInput = document.getElementById('slaInput');
+            const slaSummary = document.getElementById('slaSummary');
+
+            if (report.sla_due) {
+                const parsed = new Date(report.sla_due);
+                if (!Number.isNaN(parsed.getTime())) {
+                    const localValue = new Date(parsed.getTime() - parsed.getTimezoneOffset() * 60000)
+                        .toISOString()
+                        .slice(0, 16);
+                    slaInput.value = localValue;
+                } else {
+                    slaInput.value = '';
+                }
+            } else {
+                slaInput.value = '';
+            }
+
+            const { className, label } = getSlaBadgeState(report);
+            slaSummary.innerHTML = `<span class="${className}">${label}</span>`;
+        }
+
+        document.getElementById('assignBtn').onclick = async () => {
+            const assignTo = document.getElementById('assignInput').value.trim();
+            if (!assignTo) {
+                alert('Please enter a CSR name');
+                return;
+            }
+
+            const btn = document.getElementById('assignBtn');
+            btn.disabled = true;
+            btn.textContent = 'Assigning...';
+
+            const result = await assignReport(reportId, assignTo);
+
+            if (result.success) {
+                currentReport.assignee = assignTo;
+                currentReport.assigned_at = new Date().toISOString();
+                updateAssignmentUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = `✓ Assigned to ${assignTo}`;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to assign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Assign';
+        };
+
+        document.getElementById('unassignBtn').onclick = async () => {
+            if (!confirm('Remove assignment?')) return;
+
+            const btn = document.getElementById('unassignBtn');
+            btn.disabled = true;
+
+            const result = await assignReport(reportId, null);
+
+            if (result.success) {
+                currentReport.assignee = null;
+                currentReport.assigned_at = null;
+                updateAssignmentUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ Assignment removed';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to unassign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+        };
+
+        document.getElementById('updateSlaBtn').onclick = async () => {
+            const slaInput = document.getElementById('slaInput');
+            if (!slaInput.value) {
+                alert('Please select an SLA due date and time.');
+                return;
+            }
+
+            const parsed = new Date(slaInput.value);
+            if (Number.isNaN(parsed.getTime())) {
+                alert('Invalid SLA due date');
+                return;
+            }
+
+            const btn = document.getElementById('updateSlaBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const isoValue = parsed.toISOString();
+            const result = await updateReportSlaDue(reportId, isoValue);
+
+            if (result.success) {
+                currentReport.sla_due = isoValue;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA updated';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to update SLA: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Save SLA';
+        };
+
+        document.getElementById('clearSlaBtn').onclick = async () => {
+            if (!confirm('Clear SLA due date for this report?')) {
+                return;
+            }
+
+            const btn = document.getElementById('clearSlaBtn');
+            btn.disabled = true;
+
+            const result = await updateReportSlaDue(reportId, null);
+
+            if (result.success) {
+                currentReport.sla_due = null;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA cleared';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to clear SLA: ${result.error}`);
+            }
+
+            btn.disabled = false;
+        };
+        }
+
+        async function loadNotes() {
+            const result = await getNotes(reportId);
+            const notesList = document.getElementById('notesList');
+
+            if (!result.success) {
+                notesList.innerHTML = '<div class="notes-empty">Failed to load notes</div>';
+                return;
+            }
+
+            if (result.data.length === 0) {
+                notesList.innerHTML = '<div class="notes-empty">No notes yet. Add the first note above.</div>';
+                return;
+            }
+
+            notesList.innerHTML = result.data.map(note => `
+                <div class="note-item" data-note-id="${note.id}">
+                    <div class="note-header">
+                        <div>
+                            <span class="note-author">${note.csr_agent}</span>
+                            <span class="note-date">${new Date(note.created_at).toLocaleString()}</span>
+                        </div>
+                        <button class="note-delete" onclick="handleDeleteNote('${note.id}')">Delete</button>
+                    </div>
+                    <div class="note-text">${escapeHtml(note.note_text)}</div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('addNoteBtn').onclick = async () => {
+            const noteText = document.getElementById('noteText').value.trim();
+            if (!noteText) {
+                alert('Please enter a note');
+                return;
+            }
+
+            const btn = document.getElementById('addNoteBtn');
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+
+            const csrAgent = currentReport.csr_agent || 'Unknown';
+            const result = await addNote(reportId, noteText, csrAgent);
+
+            if (result.success) {
+                document.getElementById('noteText').value = '';
+                await loadNotes();
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ Note added successfully';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to add note: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Add Note';
+        };
+
+        window.handleDeleteNote = async (noteId) => {
+            if (!confirm('Are you sure you want to delete this note?')) {
+                return;
+            }
+
+            const result = await deleteNote(noteId);
+
+            if (result.success) {
+                await loadNotes();
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ Note deleted successfully';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to delete note: ${result.error}`);
+            }
+        };
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateStatusButtons(currentStatus) {
+            const buttons = document.querySelectorAll('.status-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                const statusKey = btn.dataset.status;
+                btn.textContent = formatStatusLabel(statusKey);
+
+                if (statusKey === currentStatus) {
+                    btn.classList.add('active');
+                }
+
+                btn.onclick = async () => {
+                    const newStatus = btn.dataset.status;
+                    if (newStatus === currentStatus) return;
+
+                    btn.disabled = true;
+                    btn.textContent = 'Updating...';
+
+                    const result = await updateReportStatus(reportId, newStatus);
+
+                    if (result.success) {
+                        currentReport.status = newStatus;
+                        updateStatusButtons(newStatus);
+                        updateSlaUI(currentReport);
+
+                        const notification = document.createElement('div');
+                        notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                        notification.textContent = `✓ Status updated to ${formatStatusLabel(newStatus)}`;
+                        document.body.appendChild(notification);
+
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 3000);
+                    } else {
+                        alert(`Failed to update status: ${result.error}`);
+                        updateStatusButtons(currentReport.status);
+                    }
+
+                    btn.disabled = false;
+                    btn.textContent = formatStatusLabel(newStatus);
+                };
+            });
+        }
+
+        window.openKBModal = function(kbId) {
+            alert(`KB Modal for: ${kbId}\n\nThis will open the KB article viewer modal.`);
+        };
+    </script>
+</body>
+</html>

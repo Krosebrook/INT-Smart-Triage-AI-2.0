@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>INT Smart Triage Partner Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0f172a;
+        --panel: rgba(15, 23, 42, 0.92);
+        --accent: #38bdf8;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --border: rgba(148, 163, 184, 0.25);
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 55%),
+          var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        padding: 3rem 1.5rem 2rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+      }
+
+      header p {
+        color: var(--muted);
+        margin: 1rem auto 0;
+        max-width: 640px;
+        line-height: 1.6;
+      }
+
+      main {
+        width: min(960px, 95%);
+        margin: 0 auto 4rem;
+        display: grid;
+        gap: 2rem;
+      }
+
+      section {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 2rem;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.45);
+      }
+
+      h2 {
+        margin-top: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      p {
+        line-height: 1.6;
+        color: var(--text);
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .resource-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .resource-item {
+        display: grid;
+        gap: 0.25rem;
+        padding: 1rem 1.25rem;
+        border-radius: 14px;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(56, 189, 248, 0.15);
+      }
+
+      .resource-item strong {
+        font-weight: 600;
+      }
+
+      code {
+        font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Consolas, monospace;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 6px;
+        padding: 0.25rem 0.4rem;
+        color: var(--accent);
+      }
+
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .cta a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.18);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .cta a.secondary {
+        background: transparent;
+        border-color: rgba(148, 163, 184, 0.35);
+        color: var(--text);
+      }
+
+      footer {
+        margin-top: auto;
+        padding: 2rem 1rem 3rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 640px) {
+        section {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Partner Integration Hub</h1>
+      <p>
+        Connect your platform to INT Smart Triage AI with our versioned REST API, reusable TypeScript
+        SDK, and comprehensive documentation. Everything you need to deliver intelligent customer
+        support workflows lives here.
+      </p>
+      <div class="cta" role="navigation" aria-label="Primary partner links">
+        <a href="/docs/openapi.yaml" download>Download OpenAPI Spec</a>
+        <a class="secondary" href="https://www.npmjs.com/package/@int/triage-sdk" target="_blank" rel="noopener noreferrer">View SDK on npm</a>
+      </div>
+    </header>
+
+    <main>
+      <section aria-labelledby="api-overview">
+        <h2 id="api-overview">API Overview</h2>
+        <p>
+          The public API is namespaced under <code>/api/public/v1</code> to guarantee backwards
+          compatibility. Responses include structured metadata, strong auditing guarantees, and are
+          protected with rate limiting by default. Authenticate requests with your assigned
+          <code>X-API-Key</code> header.
+        </p>
+        <div class="resource-list">
+          <div class="resource-item">
+            <strong>Health Check</strong>
+            <span>GET <code>/api/public/v1/health</code></span>
+            <span>Monitor service uptime and Supabase RLS enforcement.</span>
+          </div>
+          <div class="resource-item">
+            <strong>Triage Reports</strong>
+            <span>POST <code>/api/public/v1/triage-reports</code></span>
+            <span>Generate AI-assisted triage analysis with automatic persistence.</span>
+          </div>
+          <div class="resource-item">
+            <strong>Knowledge Base Articles</strong>
+            <span>POST <code>/api/public/v1/knowledge-base/articles</code></span>
+            <span>Create ready-to-publish documentation from live ticket context.</span>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="sdk">
+        <h2 id="sdk">TypeScript SDK</h2>
+        <p>
+          Install the officially supported SDK to integrate faster with built-in typing, error
+          handling, and fetch abstraction compatible with Node.js and modern browsers.
+        </p>
+        <div class="resource-list">
+          <div class="resource-item">
+            <strong>Install</strong>
+            <code>npm install @int/triage-sdk</code>
+          </div>
+          <div class="resource-item">
+            <strong>Usage</strong>
+            <pre style="margin:0; white-space:pre-wrap; font-size:0.9rem; color:var(--muted);">
+import { IntSmartTriageClient } from '@int/triage-sdk';
+
+const client = new IntSmartTriageClient({
+  baseUrl: 'https://api.example.com',
+  apiKey: process.env.INT_PARTNER_KEY
+});
+
+const triage = await client.createTriageReport({
+  customerName: 'Casey',
+  ticketSubject: 'Sync issue',
+  issueDescription: 'Mobile app sync stalled',
+  customerTone: 'frustrated',
+  csrAgent: 'CSR-007'
+});
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="support">
+        <h2 id="support">Launch Support</h2>
+        <p>
+          Need help? Our solutions engineers provide integration reviews, load-testing playbooks, and
+          security validation tailored to your environment.
+        </p>
+        <div class="resource-list">
+          <div class="resource-item">
+            <strong>Contact</strong>
+            <span>Email <a href="mailto:partners@int.inc">partners@int.inc</a> for sandbox keys.</span>
+          </div>
+          <div class="resource-item">
+            <strong>Status &amp; Incident History</strong>
+            <span>Subscribe to <a href="https://status.int.inc" target="_blank" rel="noopener noreferrer">status.int.inc</a>.</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      &copy; <span id="year"></span> INT Inc. All rights reserved.
+    </footer>
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

@@ -1,5 +1,10 @@
 # INT Smart Triage AI 2.0 🎯
 
+[![Tests](https://img.shields.io/badge/tests-16%2F16%20passing-brightgreen)]()
+[![Coverage](https://img.shields.io/badge/coverage-5.43%25-yellow)]()
+[![Node](https://img.shields.io/badge/node-18.20.0%2B-brightgreen)]()
+[![License](https://img.shields.io/badge/license-MIT-blue)]()
+
 **Secure, production-ready AI Triage Tool for INT Inc. Client Success**
 
 Instantly triages client tickets, provides CSRs with empathetic talking points, suggests Knowledge Base articles, and securely logs all activity to Supabase using Vercel Serverless Functions. This system ensures low response times, data persistence, and full security compliance.
@@ -37,6 +42,7 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 ├── vercel.json            # Vercel deployment configuration
 ├── api/
 │   ├── health-check.js    # System health and RLS verification
+│   ├── report-submit.js   # Validated public submissions via service role
 │   └── triage-report.js   # Secure triage processing and logging
 ├── lib/
 │   ├── errorHandler.js    # Centralized error handling and validation
@@ -54,23 +60,89 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 
 ## 🚀 Quick Start
 
-1. **Deploy to Vercel**:
+1. **Clone & Install**
    ```bash
    git clone https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0.git
    cd INT-Smart-Triage-AI-2.0
    npm install
-   vercel --prod
    ```
 
-2. **Configure Environment Variables**:
+2. **Quality Gate (local validation)**
+   ```bash
+   npm run lint
+   npm run test
+   npx playwright test   # optional locally — required before production deploy
+   ```
+   All three commands must pass prior to deploying. The Playwright suite requires a chromium binary; skip locally if unavailable and run inside CI.
+
+3. **Configure Environment Variables**
+
+   Set the variables below in both your local `.env` and the Vercel dashboard:
+
+   **Client-Side (exposed to browser):**
+   - `VITE_SUPABASE_URL`: Your Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
+   - `VITE_FORECASTING_API_URL`: Base URL for the FastAPI forecasting microservice
+
+   **Server-Side (API endpoints only):**
    - `SUPABASE_URL`: Your Supabase project URL
-   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (NOT anon key)
+   - `SUPABASE_ANON_KEY`: Your Supabase anon key (read-only operations)
+   - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for write operations)
+   - `FORECASTING_SERVICE_URL`: Internal URL to reach the forecasting container (e.g. `http://forecasting-service:8000`)
+   - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
+   - `AI_ASSISTANT_URL`: HTTPS endpoint for the hosted transcript analysis model
+   - `AI_ASSISTANT_API_KEY`: Bearer token used to authenticate with the hosted model
+   - `AI_ASSISTANT_MODEL`: Optional override for the model name (defaults to `gpt-4.1-mini`)
+   - `AI_ASSISTANT_TIMEOUT_MS`: Optional request timeout override in milliseconds (default `10000`)
+   - `AI_ASSISTANT_MAX_TOKENS`: Optional prompt length guardrail in tokens (default `3500`)
 
-3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor
+4. **Provision Supabase**
+   1. Run `supabase-setup.sql` in the Supabase SQL editor to build core schema.
+   2. Immediately run `supabase/policies.sql` to enforce the hardened RLS policies (drops insecure defaults, enables tenant-aware access, and re-grants the service role).
+   3. Confirm status:
+      ```sql
+      SELECT check_rls_status('reports');
+      SELECT policyname, permissive, roles
+      FROM pg_policies
+      WHERE tablename IN ('reports', 'report_notes');
+      ```
 
-4. **Verify Deployment**: Check `/api/health-check` endpoint returns 200 OK
+5. **Deploy or Run Locally**
+   ```bash
+   npm run dev            # local development
+   vercel --prod          # production deployment
+   ```
+
+6. **Post-Deploy Smoke Test**
+   - Hit `/api/health-check` (expects `{ status: "healthy", rls: "enabled" }`).
+   - Submit a sample ticket through the UI and verify it appears in Supabase for the correct organization.
 
 ## 📋 API Endpoints
+
+### Forecasting Microservice (Python FastAPI)
+
+Run locally:
+
+```bash
+cd services/forecasting
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
+
+Container build:
+
+```bash
+docker build -t int-forecasting-service services/forecasting
+docker run --env-file ../../.env -p 8000:8000 int-forecasting-service
+```
+
+Key endpoints:
+
+- `POST /forecasts/generate?days=7` – train/regenerate forecasts and persist to Supabase
+- `GET /forecasts?days=7` – retrieve stored forecasts for analytics dashboards
+- `GET /forecasts/alerts` – surfaced high-volume warnings for Notification Center
+- `GET /forecasts/accuracy` – historical accuracy (MAPE & avg error)
 
 ### GET `/api/health-check`
 System health verification with RLS status confirmation
@@ -94,57 +166,12 @@ System health verification with RLS status confirmation
 ### POST `/api/triage-report`
 Secure triage processing with database logging
 
-**Request Body:**
-```json
-{
-  "customerName": "John Doe",
-  "ticketSubject": "Account Issue", 
-  "issueDescription": "Cannot access account features",
-  "customerTone": "frustrated",
-  "csrAgent": "Agent001"
-}
-```
+### POST `/api/report-submit`
+Validated report persistence for unauthenticated flows (uses service role with full input sanitization)
 
-**Response Format:**
-```json
-{
-  "status": "success",
-  "requestId": "uuid-v4",
-  "reportId": "report-123",
-  "priority": "high",
-  "confidence": "85%",
-  "responseApproach": "Empathetic response...",
-  "talkingPoints": ["..."],
-  "knowledgeBase": ["KB-001"]
-}
-```
-
-## 🛡️ Enterprise Error Handling & Logging
-
-### Centralized Error Handling
-- **Standardized Error Responses**: Consistent JSON error format across all endpoints
-- **Error Type Classification**: Validation, authentication, database, and server errors
-- **Security-First Design**: Sensitive information never exposed to clients
-- **Request Correlation**: Unique request IDs for tracking across system boundaries
-
-### Structured Logging
-- **Winston-Based Logging**: Professional logging with multiple output formats
-- **Request/Response Logging**: Complete audit trail with timing information
-- **Critical Error Alerting**: 5xx errors logged with full context for investigation
-- **Log Levels**: Info, warn, error, debug with appropriate filtering by environment
-
-### Error Response Format
-```json
-{
-  "status": "error",
-  "message": "User-friendly error message",
-  "requestId": "uuid-v4-correlation-id",
-  "timestamp": "2024-01-01T12:00:00.000Z",
-  "details": "Additional context (development only)"
-}
-```
-
-**📚 Documentation**: See `docs/ERROR_HANDLING_AND_LOGGING.md` for complete implementation details.
+### POST `/api/ingest`
+Normalizes customer communications (email or ChatGPT transcripts), routes them through the hosted AI assistant for structured
+analysis, redacts PII, and persists the sanitized result into the `normalized_transcripts` table.
 
 ## 🔒 Security Compliance
 
@@ -155,10 +182,39 @@ Secure triage processing with database logging
 ✅ **Audit Logging** - Complete request tracking  
 ✅ **Security Headers** - XSS, CSRF, and clickjacking protection  
 
+## ✨ Recent Improvements (v1.1.0)
+
+- ✅ **100% Test Pass Rate**: All 16 tests passing (was 15/16)
+- 📊 **Test Coverage**: Implemented c8 coverage tracking (baseline: 5.43%)
+- 🔒 **Automated Security**: Dependabot for dependency updates
+- 📦 **Updated Dependencies**: Supabase SDK 2.38.0 → 2.75.0
+- 🛠️ **Developer Tools**: Added .nvmrc, prettier, enhanced ESLint
+- 📝 **Documentation**: Comprehensive guides for developers and contributors
+
+See [IMPROVEMENTS_IMPLEMENTED.md](./IMPROVEMENTS_IMPLEMENTED.md) for details.
+
 ## 📖 Documentation
 
+### Core Documentation
+- **[README.md](./README.md)** - This file - System overview and quick start
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
+- **[BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md)** - Safe branch merging procedures
+- **[MERGE_QUICK_START.md](./MERGE_QUICK_START.md)** - Quick reference for branch merges
 - **[supabase-setup.sql](./supabase-setup.sql)** - Database schema and RLS configuration
+
+## 🔀 Branch Management
+
+Need to merge branches? We've got you covered:
+
+```bash
+# Quick validation before merge
+./scripts/validate-merge.sh
+
+# See full guide for step-by-step instructions
+cat MERGE_QUICK_START.md
+```
+
+See [BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md) for comprehensive instructions on safely merging branches without breaking the application.
 
 ## 🎯 For CSR Teams
 

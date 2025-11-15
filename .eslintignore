@@ -1,0 +1,24 @@
+# ESLint ignore patterns
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+.c8/
+
+# Vercel
+.vercel/
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+
+# Lock files
+package-lock.json
