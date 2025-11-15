@@ -44,6 +44,15 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 │   ├── health-check.js    # System health and RLS verification
 │   ├── report-submit.js   # Validated public submissions via service role
 │   └── triage-report.js   # Secure triage processing and logging
+├── lib/
+│   ├── errorHandler.js    # Centralized error handling and validation
+│   └── logger.js          # Structured logging with Winston
+├── test/
+│   ├── index.test.js           # Basic application tests
+│   ├── test-error-handling.js  # Error handling module tests
+│   └── test-api-integration.js # API endpoint integration tests
+├── docs/
+│   └── ERROR_HANDLING_AND_LOGGING.md # Comprehensive error handling documentation
 ├── supabase-setup.sql     # Database schema with RLS policies
 ├── DEPLOYMENT.md          # Complete production deployment guide
 └── .gitignore            # Security-focused ignore patterns
@@ -137,6 +146,22 @@ Key endpoints:
 
 ### GET `/api/health-check`
 System health verification with RLS status confirmation
+
+**Response Format:**
+```json
+{
+  "status": "healthy",
+  "requestId": "uuid-v4",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "service": "INT Smart Triage AI 2.0",
+  "version": "1.0.0",
+  "checks": {
+    "api": "healthy",
+    "database": "healthy", 
+    "rls": "enabled"
+  }
+}
+```
 
 ### POST `/api/triage-report`
 Secure triage processing with database logging
