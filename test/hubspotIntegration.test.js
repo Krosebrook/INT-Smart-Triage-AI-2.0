@@ -24,7 +24,7 @@ describe('HubSpotIntegration', () => {
         accessToken: 'test-token',
         portalId: 'test-portal',
       });
-      
+
       assert.strictEqual(custom.accessToken, 'test-token');
       assert.strictEqual(custom.portalId, 'test-portal');
       assert.strictEqual(custom.enabled, true);
@@ -35,7 +35,7 @@ describe('HubSpotIntegration', () => {
         accessToken: null,
         portalId: null,
       });
-      
+
       assert.strictEqual(noConfig.enabled, false);
     });
   });

@@ -18,7 +18,7 @@ describe('Analytics Service', () => {
   describe('getTicketVolumeByDay()', () => {
     it('should return database not configured when no client', async () => {
       const result = await getTicketVolumeByDay(30);
-      
+
       assert.strictEqual(typeof result, 'object');
       assert.ok('success' in result);
       // Will be false when database not configured
@@ -36,7 +36,7 @@ describe('Analytics Service', () => {
   describe('getPriorityDistribution()', () => {
     it('should return database not configured when no client', async () => {
       const result = await getPriorityDistribution();
-      
+
       assert.strictEqual(typeof result, 'object');
       assert.ok('success' in result);
       if (!result.success) {
@@ -48,7 +48,7 @@ describe('Analytics Service', () => {
   describe('getDepartmentWorkload()', () => {
     it('should return database not configured when no client', async () => {
       const result = await getDepartmentWorkload();
-      
+
       assert.strictEqual(typeof result, 'object');
       assert.ok('success' in result);
       if (!result.success) {
@@ -60,7 +60,7 @@ describe('Analytics Service', () => {
   describe('getCSRPerformanceMetrics()', () => {
     it('should return database not configured when no client', async () => {
       const result = await getCSRPerformanceMetrics();
-      
+
       assert.strictEqual(typeof result, 'object');
       assert.ok('success' in result);
       if (!result.success) {
@@ -72,7 +72,7 @@ describe('Analytics Service', () => {
   describe('getResponseTimeAnalysis()', () => {
     it('should return database not configured when no client', async () => {
       const result = await getResponseTimeAnalysis();
-      
+
       assert.strictEqual(typeof result, 'object');
       assert.ok('success' in result);
       if (!result.success) {
@@ -84,7 +84,7 @@ describe('Analytics Service', () => {
   describe('getPredictiveTicketVolume()', () => {
     it('should return database not configured when no client', async () => {
       const result = await getPredictiveTicketVolume(7);
-      
+
       assert.strictEqual(typeof result, 'object');
       assert.ok('success' in result);
       if (!result.success) {
@@ -96,7 +96,7 @@ describe('Analytics Service', () => {
   describe('exportAnalyticsData()', () => {
     it('should return database not configured when no client', async () => {
       const result = await exportAnalyticsData('json', {});
-      
+
       assert.strictEqual(typeof result, 'object');
       assert.ok('success' in result);
       if (!result.success) {
