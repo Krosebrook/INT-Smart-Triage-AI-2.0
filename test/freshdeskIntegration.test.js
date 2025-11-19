@@ -24,10 +24,13 @@ describe('FreshdeskIntegration', () => {
         domain: 'testdomain.freshdesk.com',
         apiKey: 'test-api-key',
       });
-      
+
       assert.strictEqual(custom.domain, 'testdomain.freshdesk.com');
       assert.strictEqual(custom.apiKey, 'test-api-key');
-      assert.strictEqual(custom.apiBase, 'https://testdomain.freshdesk.com/api/v2');
+      assert.strictEqual(
+        custom.apiBase,
+        'https://testdomain.freshdesk.com/api/v2'
+      );
       assert.strictEqual(custom.enabled, true);
     });
 
@@ -36,7 +39,7 @@ describe('FreshdeskIntegration', () => {
         domain: null,
         apiKey: null,
       });
-      
+
       assert.strictEqual(noConfig.enabled, false);
     });
   });
