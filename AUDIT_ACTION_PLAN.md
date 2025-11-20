@@ -156,8 +156,8 @@ Auditor: [NAME]
 - [ ] Build succeeds
 - [ ] Manual testing completed
 
-**Sign-off:** ******\_\_\_****** (DevOps Lead)  
-**Date:** ******\_\_\_******
+**Sign-off:** **\*\***\_\_\_**\*\*** (DevOps Lead)  
+**Date:** **\*\***\_\_\_**\*\***
 
 ---
 
@@ -280,8 +280,8 @@ updates:
 - [ ] All tests passing
 - [ ] Coverage checks updated
 
-**Sign-off:** ******\_\_\_****** (Dev Lead)  
-**Date:** ******\_\_\_******
+**Sign-off:** **\*\***\_\_\_**\*\*** (Dev Lead)  
+**Date:** **\*\***\_\_\_**\*\***
 
 ---
 
@@ -440,8 +440,8 @@ curl https://your-domain.vercel.app/api/health-check
 - [ ] No major issues detected
 - [ ] Deployment documented
 
-**Sign-off:** ******\_\_\_****** (DevOps Lead)  
-**Date:** ******\_\_\_******
+**Sign-off:** **\*\***\_\_\_**\*\*** (DevOps Lead)  
+**Date:** **\*\***\_\_\_**\*\***
 
 ---
 
@@ -631,8 +631,8 @@ Create `test/performance.test.js`:
 - [ ] Performance benchmarks set
 - [ ] Documentation updated
 
-**Sign-off:** ******\_\_\_****** (Platform Lead)  
-**Date:** ******\_\_\_******
+**Sign-off:** **\*\***\_\_\_**\*\*** (Platform Lead)  
+**Date:** **\*\***\_\_\_**\*\***
 
 ---
 
@@ -777,9 +777,7 @@ Phase 4: Enhancements         [    ] 0%   Target: This Month
 
 -
 -
--
-
----
+- ***
 
 ## 📚 Resources
 
