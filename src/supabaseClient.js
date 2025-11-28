@@ -398,7 +398,7 @@ export async function getSuggestedResponses(issueDescription, _category) {
 
 export async function searchKnowledgeBase(query, category) {
   if (!supabase) {
-    return failure('Database not configured');
+    return notConfigured();
   }
 
   const keywords = query.toLowerCase();
