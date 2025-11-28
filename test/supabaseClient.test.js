@@ -236,14 +236,19 @@ describe('Supabase Client', () => {
   });
 
   describe('searchKnowledgeBase()', () => {
-    it('should return articles array', async () => {
-      const result = await searchKnowledgeBase('password reset', null);
-
-      assert.ok(Array.isArray(result.articles));
+    it('should return articles array when client available', async () => {
       if (supabase) {
+        const result = await searchKnowledgeBase('password reset', null);
         assert.strictEqual(result.success, true);
-      } else {
+        assert.ok(Array.isArray(result.articles));
+      }
+    });
+
+    it('should return error when no client', async () => {
+      if (!supabase) {
+        const result = await searchKnowledgeBase('password reset', null);
         assert.strictEqual(result.success, false);
+        assert.strictEqual(result.error, 'Database not configured');
       }
     });
 
@@ -260,14 +265,6 @@ describe('Supabase Client', () => {
         const result = await searchKnowledgeBase('api', 'Technical Issue');
         assert.strictEqual(result.success, true);
         assert.ok(Array.isArray(result.articles));
-      }
-    });
-
-    it('should return empty array when no Supabase client', async () => {
-      if (!supabase) {
-        const result = await searchKnowledgeBase('test', null);
-        assert.strictEqual(result.success, false);
-        assert.deepStrictEqual(result.articles, []);
       }
     });
   });

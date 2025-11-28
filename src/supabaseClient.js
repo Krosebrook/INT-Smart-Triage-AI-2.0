@@ -1,13 +1,7 @@
 // Supabase client for INT Smart Triage AI 2.0
 import { createClient } from '@supabase/supabase-js';
-
-// Support both Vite (import.meta.env) and Node.js (process.env) environments
-const getEnvVar = (key) => {
-  if (typeof import.meta !== 'undefined' && import.meta.env) {
-    return import.meta.env[key];
-  }
-  return process.env[key];
-};
+import { getEnvVar } from './lib/env.js';
+import { success, failure, notConfigured } from './lib/result.js';
 
 const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
 const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
@@ -24,7 +18,7 @@ export const supabase =
 // Save triage report to database
 export async function saveTriageReport(reportData) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -56,16 +50,16 @@ export async function saveTriageReport(reportData) {
 
     if (error) throw error;
 
-    return { success: true, data };
+    return success(data);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 // Get all reports for a specific customer
 export async function getCustomerReports(customerName) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -77,16 +71,16 @@ export async function getCustomerReports(customerName) {
 
     if (error) throw error;
 
-    return { success: true, data, count: data.length };
+    return success({ data, count: data.length });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 // Get a single report by report_id
 export async function getReportById(reportId) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -98,16 +92,16 @@ export async function getReportById(reportId) {
 
     if (error) throw error;
 
-    return { success: true, data };
+    return success(data);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 // Search reports
 export async function searchReports(query, filters = {}) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -156,16 +150,16 @@ export async function searchReports(query, filters = {}) {
 
     if (error) throw error;
 
-    return { success: true, data, count: data.length };
+    return success({ data, count: data.length });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 // Get statistics
 export async function getReportStats() {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -198,15 +192,15 @@ export async function getReportStats() {
       stats.byTone[r.customer_tone] = (stats.byTone[r.customer_tone] || 0) + 1;
     });
 
-    return { success: true, data: stats };
+    return success(stats);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function updateReportStatus(reportId, status) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -227,15 +221,15 @@ export async function updateReportStatus(reportId, status) {
 
     if (error) throw error;
 
-    return { success: true, data };
+    return success(data);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function getNotes(reportId) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -247,15 +241,15 @@ export async function getNotes(reportId) {
 
     if (error) throw error;
 
-    return { success: true, data };
+    return success(data);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function addNote(reportId, noteText, csrAgent) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -272,15 +266,15 @@ export async function addNote(reportId, noteText, csrAgent) {
 
     if (error) throw error;
 
-    return { success: true, data };
+    return success(data);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function deleteNote(noteId) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -291,15 +285,15 @@ export async function deleteNote(noteId) {
 
     if (error) throw error;
 
-    return { success: true };
+    return success(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function assignReport(reportId, assignedTo) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -315,15 +309,15 @@ export async function assignReport(reportId, assignedTo) {
 
     if (error) throw error;
 
-    return { success: true, data };
+    return success(data);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function getAvailableCSRs() {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -335,15 +329,15 @@ export async function getAvailableCSRs() {
 
     if (error) throw error;
 
-    return { success: true, data };
+    return success(data);
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function autoAssignReport(reportId) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -353,9 +347,9 @@ export async function autoAssignReport(reportId) {
 
     if (error) throw error;
 
-    return { success: true, assignedTo: data };
+    return success({ assignedTo: data });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
@@ -399,12 +393,12 @@ export async function getSuggestedResponses(issueDescription, _category) {
     });
   }
 
-  return { success: true, suggestions };
+  return success({ suggestions });
 }
 
 export async function searchKnowledgeBase(query, category) {
   if (!supabase) {
-    return { success: false, articles: [] };
+    return failure('Database not configured');
   }
 
   const keywords = query.toLowerCase();
@@ -449,5 +443,5 @@ export async function searchKnowledgeBase(query, category) {
     .sort((a, b) => b.relevance - a.relevance)
     .slice(0, 5);
 
-  return { success: true, articles: filtered };
+  return success({ articles: filtered });
 }
