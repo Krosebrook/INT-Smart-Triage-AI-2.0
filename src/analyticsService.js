@@ -1,9 +1,10 @@
 // Advanced Analytics Service
 import { supabase } from './supabaseClient.js';
+import { success, failure, notConfigured } from './lib/result.js';
 
 export async function getTicketVolumeByDay(days = 30) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -24,21 +25,20 @@ export async function getTicketVolumeByDay(days = 30) {
       volumeByDay[date] = (volumeByDay[date] || 0) + 1;
     });
 
-    return {
-      success: true,
+    return success({
       data: Object.entries(volumeByDay).map(([date, count]) => ({
         date,
         count,
       })),
-    };
+    });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function getPriorityDistribution() {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -58,8 +58,7 @@ export async function getPriorityDistribution() {
 
     const total = data.length;
 
-    return {
-      success: true,
+    return success({
       data: {
         counts: distribution,
         percentages: {
@@ -70,15 +69,15 @@ export async function getPriorityDistribution() {
         },
         total,
       },
-    };
+    });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function getDepartmentWorkload() {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -106,8 +105,7 @@ export async function getDepartmentWorkload() {
       }
     });
 
-    return {
-      success: true,
+    return success({
       data: Object.entries(workload).map(([department, stats]) => ({
         department,
         ...stats,
@@ -116,15 +114,15 @@ export async function getDepartmentWorkload() {
             ? ((stats.pending / stats.total) * 100).toFixed(1)
             : 0,
       })),
-    };
+    });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function getCSRPerformanceMetrics() {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -165,8 +163,7 @@ export async function getCSRPerformanceMetrics() {
       }
     });
 
-    return {
-      success: true,
+    return success({
       data: Object.entries(metrics).map(([agent, stats]) => ({
         agent,
         totalTickets: stats.totalTickets,
@@ -185,15 +182,15 @@ export async function getCSRPerformanceMetrics() {
               ).toFixed(1)
             : 0,
       })),
-    };
+    });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function getResponseTimeAnalysis() {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -229,8 +226,7 @@ export async function getResponseTimeAnalysis() {
         ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1)
         : 0;
 
-    return {
-      success: true,
+    return success({
       data: {
         high: {
           count: analysis.high.count,
@@ -245,15 +241,15 @@ export async function getResponseTimeAnalysis() {
           avgResponseMinutes: calculateAvg(analysis.low.times),
         },
       },
-    };
+    });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function getPredictiveTicketVolume() {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -294,18 +290,15 @@ export async function getPredictiveTicketVolume() {
       });
     }
 
-    return {
-      success: true,
-      data: predictions,
-    };
+    return success({ data: predictions });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
 export async function exportAnalyticsData(format = 'json', filters = {}) {
   if (!supabase) {
-    return { success: false, error: 'Database not configured' };
+    return notConfigured();
   }
 
   try {
@@ -330,12 +323,12 @@ export async function exportAnalyticsData(format = 'json', filters = {}) {
 
     if (format === 'csv') {
       const csvData = convertToCSV(data);
-      return { success: true, data: csvData, format: 'csv' };
+      return success({ data: csvData, format: 'csv' });
     }
 
-    return { success: true, data, format: 'json' };
+    return success({ data, format: 'json' });
   } catch (error) {
-    return { success: false, error: error.message };
+    return failure(error.message);
   }
 }
 
