@@ -21,8 +21,9 @@ export function createCache(defaultTtlMs = 60000) {
      * Set a value in the cache with optional TTL.
      *
      * @param {string} key - Cache key
-     * @param {*} value - Value to cache
+     * @param {*} value - Value to cache (including undefined, null, false, 0, etc.)
      * @param {number} [ttlMs] - Time-to-live in milliseconds (defaults to cache default)
+     * @note When caching undefined values, use has() to distinguish from missing keys
      */
     set(key, value, ttlMs = defaultTtlMs) {
       const expiresAt = Date.now() + ttlMs;
@@ -34,6 +35,7 @@ export function createCache(defaultTtlMs = 60000) {
      *
      * @param {string} key - Cache key
      * @returns {*} Cached value or undefined if not found or expired
+     * @note Returns undefined for both missing keys and keys with undefined values
      */
     get(key) {
       const entry = store.get(key);
