@@ -160,5 +160,31 @@
     },
     "activation_notes": "Requires moderation classifiers and approval workflow integration before enforcement.",
     "verification": "Audit log should show Aegis blocking high risk operations when active."
+  },
+  {
+    "id": "github-assistant",
+    "codename": "Navigator",
+    "name": "GitHub Assistant Agent",
+    "mission": "Provide intelligent repository analysis, code review, security scanning, and development guidance with 9 specialized modules.",
+    "status": "registered",
+    "owners": ["Engineering", "Developer Experience"],
+    "interfaces": {
+      "inputs": [
+        "repository_path",
+        "code_files",
+        "pr_data",
+        "issue_data",
+        "ci_config"
+      ],
+      "outputs": [
+        "analysis_reports",
+        "code_reviews",
+        "security_findings",
+        "refactoring_suggestions",
+        "test_recommendations"
+      ]
+    },
+    "activation_notes": "Available via /api/github-assistant endpoint. Supports 9 modules: Repository Understanding, Code Summarization, PR Review, Refactoring, Test Coverage, Issue Triage, Project Planning, Security Scanning, and CI/CD Inspection.",
+    "verification": "Access via GET /api/github-assistant for capabilities list, POST with request/context for analysis."
   }
 ]
