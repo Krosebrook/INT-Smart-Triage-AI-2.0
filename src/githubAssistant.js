@@ -309,7 +309,7 @@ export class RefactoringAdvisor {
   /**
    * Analyze code for refactoring opportunities
    * @param {string} code - Code to analyze
-   * @param {string} _filePath - File path for context (unused but kept for API consistency)
+   * @param {string} _filePath - File path for context
    * @returns {Promise<Object>} Refactoring suggestions
    */
   async analyzeCode(code, _filePath) {

@@ -6,6 +6,7 @@
  */
 
 import assistant from '../src/githubAssistant.js';
+import { logger } from '../src/logger.js';
 
 /**
  * Main API handler for GitHub Assistant Agent
@@ -63,8 +64,8 @@ export default async function handler(req, res) {
     const statusCode = result.success ? 200 : 400;
     return res.status(statusCode).json(result);
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('GitHub Assistant API Error:', error);
+    // Use logger for consistent serverless logging
+    logger.error('GitHub Assistant API Error', { error: error.message });
     return res.status(500).json({
       success: false,
       error: 'Internal server error',

@@ -5,6 +5,7 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert';
 import { writeFile, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import {
   RepoUnderstander,
@@ -19,14 +20,14 @@ import {
   GitHubAssistant,
 } from '../src/githubAssistant.js';
 
-const TEST_DIR = '/tmp/github-assistant-test';
+const TEST_DIR = path.join(tmpdir(), 'github-assistant-test');
 
 // Helper to create test directory
 async function setupTestDir() {
   try {
     await rm(TEST_DIR, { recursive: true, force: true });
   } catch {
-    // Directory doesn't exist, continue
+    // Expected error when directory doesn't exist
   }
   await mkdir(TEST_DIR, { recursive: true });
 }
