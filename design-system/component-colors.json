@@ -1,0 +1,325 @@
+{
+  "buttons": {
+    "primary": {
+      "default": {
+        "background": "hsl(271, 91%, 65%)",
+        "foreground": "hsl(270, 100%, 98%)",
+        "border": "hsl(271, 91%, 65%)",
+        "shadow": "0 0 20px rgba(168, 85, 247, 0.4)"
+      },
+      "hover": {
+        "background": "hsl(271, 81%, 56%)",
+        "foreground": "hsl(270, 100%, 98%)",
+        "border": "hsl(271, 81%, 56%)",
+        "shadow": "0 0 40px rgba(168, 85, 247, 0.6)"
+      },
+      "active": {
+        "background": "hsl(272, 72%, 47%)",
+        "foreground": "hsl(270, 100%, 98%)",
+        "border": "hsl(272, 72%, 47%)",
+        "shadow": "0 0 20px rgba(168, 85, 247, 0.4)"
+      },
+      "disabled": {
+        "background": "hsl(0, 0%, 83%)",
+        "foreground": "hsl(0, 0%, 64%)",
+        "border": "hsl(0, 0%, 83%)",
+        "shadow": "none"
+      }
+    },
+    "secondary": {
+      "default": {
+        "background": "hsl(330, 85%, 70%)",
+        "foreground": "hsl(357, 100%, 97%)",
+        "border": "hsl(330, 85%, 70%)",
+        "shadow": "0 0 20px rgba(244, 114, 182, 0.4)"
+      },
+      "hover": {
+        "background": "hsl(330, 81%, 60%)",
+        "foreground": "hsl(357, 100%, 97%)",
+        "border": "hsl(330, 81%, 60%)",
+        "shadow": "0 0 40px rgba(244, 114, 182, 0.6)"
+      },
+      "active": {
+        "background": "hsl(335, 78%, 42%)",
+        "foreground": "hsl(357, 100%, 97%)",
+        "border": "hsl(335, 78%, 42%)",
+        "shadow": "0 0 20px rgba(244, 114, 182, 0.4)"
+      },
+      "disabled": {
+        "background": "hsl(0, 0%, 83%)",
+        "foreground": "hsl(0, 0%, 64%)",
+        "border": "hsl(0, 0%, 83%)",
+        "shadow": "none"
+      }
+    },
+    "outline": {
+      "default": {
+        "background": "transparent",
+        "foreground": "hsl(271, 91%, 65%)",
+        "border": "hsl(271, 91%, 65%)",
+        "shadow": "none"
+      },
+      "hover": {
+        "background": "hsl(270, 100%, 95%)",
+        "foreground": "hsl(271, 91%, 65%)",
+        "border": "hsl(271, 91%, 65%)",
+        "shadow": "0 0 20px rgba(168, 85, 247, 0.2)"
+      },
+      "active": {
+        "background": "hsl(270, 100%, 92%)",
+        "foreground": "hsl(271, 91%, 65%)",
+        "border": "hsl(271, 91%, 65%)",
+        "shadow": "none"
+      },
+      "disabled": {
+        "background": "transparent",
+        "foreground": "hsl(0, 0%, 64%)",
+        "border": "hsl(0, 0%, 83%)",
+        "shadow": "none"
+      }
+    },
+    "ghost": {
+      "default": {
+        "background": "transparent",
+        "foreground": "hsl(271, 91%, 65%)",
+        "border": "transparent",
+        "shadow": "none"
+      },
+      "hover": {
+        "background": "hsl(270, 100%, 95%)",
+        "foreground": "hsl(271, 91%, 65%)",
+        "border": "transparent",
+        "shadow": "none"
+      },
+      "active": {
+        "background": "hsl(270, 100%, 92%)",
+        "foreground": "hsl(271, 91%, 65%)",
+        "border": "transparent",
+        "shadow": "none"
+      },
+      "disabled": {
+        "background": "transparent",
+        "foreground": "hsl(0, 0%, 64%)",
+        "border": "transparent",
+        "shadow": "none"
+      }
+    }
+  },
+  "forms": {
+    "input": {
+      "default": {
+        "background": "hsl(0, 0%, 100%)",
+        "foreground": "hsl(273, 66%, 10%)",
+        "border": "hsl(0, 0%, 90%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      },
+      "hover": {
+        "background": "hsl(0, 0%, 100%)",
+        "foreground": "hsl(273, 66%, 10%)",
+        "border": "hsl(0, 0%, 83%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      },
+      "focus": {
+        "background": "hsl(0, 0%, 100%)",
+        "foreground": "hsl(273, 66%, 10%)",
+        "border": "hsl(271, 91%, 65%)",
+        "placeholder": "hsl(0, 0%, 64%)",
+        "ring": "hsl(271, 91%, 65%)"
+      },
+      "disabled": {
+        "background": "hsl(0, 0%, 96%)",
+        "foreground": "hsl(0, 0%, 64%)",
+        "border": "hsl(0, 0%, 90%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      },
+      "error": {
+        "background": "hsl(0, 86%, 97%)",
+        "foreground": "hsl(273, 66%, 10%)",
+        "border": "hsl(0, 84%, 60%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      }
+    },
+    "inputDark": {
+      "default": {
+        "background": "hsl(273, 60%, 10%)",
+        "foreground": "hsl(270, 100%, 95%)",
+        "border": "hsl(273, 50%, 20%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      },
+      "hover": {
+        "background": "hsl(273, 60%, 10%)",
+        "foreground": "hsl(270, 100%, 95%)",
+        "border": "hsl(273, 50%, 25%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      },
+      "focus": {
+        "background": "hsl(273, 60%, 10%)",
+        "foreground": "hsl(270, 100%, 95%)",
+        "border": "hsl(271, 91%, 65%)",
+        "placeholder": "hsl(0, 0%, 64%)",
+        "ring": "hsl(271, 91%, 65%)"
+      },
+      "disabled": {
+        "background": "hsl(0, 0%, 15%)",
+        "foreground": "hsl(0, 0%, 64%)",
+        "border": "hsl(273, 50%, 20%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      },
+      "error": {
+        "background": "hsl(0, 63%, 15%)",
+        "foreground": "hsl(270, 100%, 95%)",
+        "border": "hsl(0, 84%, 60%)",
+        "placeholder": "hsl(0, 0%, 64%)"
+      }
+    }
+  },
+  "alerts": {
+    "success": {
+      "default": {
+        "background": "hsl(141, 84%, 93%)",
+        "foreground": "hsl(144, 61%, 20%)",
+        "border": "hsl(142, 71%, 45%)",
+        "icon": "hsl(142, 71%, 45%)"
+      }
+    },
+    "warning": {
+      "default": {
+        "background": "hsl(48, 96%, 89%)",
+        "foreground": "hsl(22, 78%, 26%)",
+        "border": "hsl(38, 92%, 50%)",
+        "icon": "hsl(38, 92%, 50%)"
+      }
+    },
+    "error": {
+      "default": {
+        "background": "hsl(0, 93%, 94%)",
+        "foreground": "hsl(0, 63%, 31%)",
+        "border": "hsl(0, 84%, 60%)",
+        "icon": "hsl(0, 84%, 60%)"
+      }
+    },
+    "info": {
+      "default": {
+        "background": "hsl(214, 95%, 93%)",
+        "foreground": "hsl(224, 64%, 33%)",
+        "border": "hsl(217, 91%, 60%)",
+        "icon": "hsl(217, 91%, 60%)"
+      }
+    }
+  },
+  "cards": {
+    "default": {
+      "background": "hsl(0, 0%, 100%)",
+      "foreground": "hsl(273, 66%, 10%)",
+      "border": "hsl(0, 0%, 90%)",
+      "shadow": "0 1px 3px 0 rgb(0 0 0 / 0.1)"
+    },
+    "hover": {
+      "background": "hsl(0, 0%, 100%)",
+      "foreground": "hsl(273, 66%, 10%)",
+      "border": "hsl(0, 0%, 83%)",
+      "shadow": "0 4px 6px -1px rgb(0 0 0 / 0.1)"
+    },
+    "glass": {
+      "background": "rgba(255, 255, 255, 0.1)",
+      "foreground": "hsl(270, 100%, 95%)",
+      "border": "rgba(255, 255, 255, 0.2)",
+      "shadow": "0 8px 32px 0 rgba(168, 85, 247, 0.15)",
+      "backdropBlur": "12px"
+    },
+    "dark": {
+      "background": "hsl(273, 60%, 10%)",
+      "foreground": "hsl(270, 100%, 95%)",
+      "border": "hsl(273, 50%, 20%)",
+      "shadow": "0 1px 3px 0 rgb(0 0 0 / 0.5)"
+    },
+    "darkHover": {
+      "background": "hsl(273, 60%, 12%)",
+      "foreground": "hsl(270, 100%, 95%)",
+      "border": "hsl(273, 50%, 25%)",
+      "shadow": "0 4px 6px -1px rgb(0 0 0 / 0.5)"
+    }
+  },
+  "navigation": {
+    "default": {
+      "background": "hsl(0, 0%, 100%)",
+      "foreground": "hsl(273, 66%, 10%)",
+      "border": "hsl(0, 0%, 90%)"
+    },
+    "link": {
+      "default": {
+        "foreground": "hsl(0, 0%, 45%)"
+      },
+      "hover": {
+        "foreground": "hsl(271, 91%, 65%)",
+        "background": "hsl(270, 100%, 95%)"
+      },
+      "active": {
+        "foreground": "hsl(271, 91%, 65%)",
+        "background": "hsl(270, 100%, 92%)",
+        "border": "hsl(271, 91%, 65%)"
+      }
+    },
+    "dark": {
+      "background": "hsl(273, 60%, 10%)",
+      "foreground": "hsl(270, 100%, 95%)",
+      "border": "hsl(273, 50%, 20%)"
+    },
+    "linkDark": {
+      "default": {
+        "foreground": "hsl(0, 0%, 64%)"
+      },
+      "hover": {
+        "foreground": "hsl(270, 100%, 95%)",
+        "background": "hsl(273, 60%, 15%)"
+      },
+      "active": {
+        "foreground": "hsl(271, 91%, 65%)",
+        "background": "hsl(273, 60%, 15%)",
+        "border": "hsl(271, 91%, 65%)"
+      }
+    }
+  },
+  "badges": {
+    "primary": {
+      "background": "hsl(271, 91%, 65%)",
+      "foreground": "hsl(270, 100%, 98%)",
+      "border": "hsl(271, 91%, 65%)"
+    },
+    "secondary": {
+      "background": "hsl(330, 85%, 70%)",
+      "foreground": "hsl(357, 100%, 97%)",
+      "border": "hsl(330, 85%, 70%)"
+    },
+    "success": {
+      "background": "hsl(142, 71%, 45%)",
+      "foreground": "hsl(138, 76%, 97%)",
+      "border": "hsl(142, 71%, 45%)"
+    },
+    "warning": {
+      "background": "hsl(38, 92%, 50%)",
+      "foreground": "hsl(48, 100%, 97%)",
+      "border": "hsl(38, 92%, 50%)"
+    },
+    "error": {
+      "background": "hsl(0, 84%, 60%)",
+      "foreground": "hsl(0, 86%, 97%)",
+      "border": "hsl(0, 84%, 60%)"
+    },
+    "info": {
+      "background": "hsl(217, 91%, 60%)",
+      "foreground": "hsl(214, 100%, 97%)",
+      "border": "hsl(217, 91%, 60%)"
+    },
+    "neutral": {
+      "background": "hsl(0, 0%, 90%)",
+      "foreground": "hsl(0, 0%, 25%)",
+      "border": "hsl(0, 0%, 90%)"
+    },
+    "outline": {
+      "background": "transparent",
+      "foreground": "hsl(271, 91%, 65%)",
+      "border": "hsl(271, 91%, 65%)"
+    }
+  }
+}

@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 273 66% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 273 66% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 273 66% 10%;
+    --primary: 271 91% 65%;
+    --primary-foreground: 270 100% 98%;
+    --secondary: 330 85% 70%;
+    --secondary-foreground: 357 100% 97%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 271 91% 65%;
+    --accent-foreground: 270 100% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 86% 97%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 271 91% 65%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 273 66% 5%;
+    --foreground: 270 100% 95%;
+    --card: 273 60% 10%;
+    --card-foreground: 270 100% 95%;
+    --popover: 273 60% 10%;
+    --popover-foreground: 270 100% 95%;
+    --primary: 271 91% 65%;
+    --primary-foreground: 270 100% 98%;
+    --secondary: 330 85% 70%;
+    --secondary-foreground: 357 100% 97%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 271 91% 65%;
+    --accent-foreground: 270 100% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 86% 97%;
+    --border: 273 50% 20%;
+    --input: 273 50% 20%;
+    --ring: 271 91% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-dark {
+    background: rgba(15, 6, 24, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+  }
+
+  .glow-text-secondary {
+    text-shadow: 0 0 20px rgba(244, 114, 182, 0.5);
+  }
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap');
+}
