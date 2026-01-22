@@ -107,6 +107,16 @@ export class NotificationCenter {
   }
 
   setupRealtimeListeners() {
+    if (isGuestDemoMode()) {
+      this.showNotification({
+        type: 'info',
+        title: 'Demo Mode',
+        message: 'Realtime notifications are paused while browsing demo data.',
+        icon: '🔔',
+        duration: 7000
+      });
+      return;
+    }
     const ticketChannel = supabase
       .channel('ticket-notifications')
       .on('postgres_changes',

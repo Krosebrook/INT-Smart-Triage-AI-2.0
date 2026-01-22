@@ -1,4 +1,6 @@
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class TicketDashboard {
   constructor(containerId) {
@@ -16,6 +18,17 @@ export class TicketDashboard {
   }
 
   async loadTickets() {
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('tickets');
+      if (error) {
+        console.error('Error loading demo tickets:', error);
+        this.tickets = [];
+        return;
+      }
+      this.tickets = data?.tickets || [];
+      return;
+    }
+
     const { data, error } = await supabase
       .from('tickets')
       .select(`
@@ -35,6 +48,9 @@ export class TicketDashboard {
   }
 
   setupRealtimeSubscription() {
+    if (isGuestDemoMode()) {
+      return;
+    }
     this.subscription = supabase
       .channel('tickets-changes')
       .on('postgres_changes',
@@ -246,6 +262,10 @@ export class TicketDashboard {
   }
 
   async assignToMe(ticketId) {
+    if (isGuestDemoMode()) {
+      alert('Demo mode is read-only. Sign in to claim tickets.');
+      return;
+    }
     const { error } = await supabase
       .from('tickets')
       .update({

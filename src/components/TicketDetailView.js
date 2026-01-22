@@ -1,6 +1,8 @@
 import { supabase } from '../services/supabaseClient.js';
 import { qualityAssuranceService } from '../services/qualityAssuranceService.js';
 import { escalationService } from '../services/escalationService.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class TicketDetailView {
   constructor(containerId) {
@@ -13,6 +15,18 @@ export class TicketDetailView {
 
   async loadTicket(ticketId) {
     this.ticketId = ticketId;
+
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('ticket-detail', { ticketId });
+      if (error || !data?.ticket) {
+        console.error('Error loading demo ticket detail:', error);
+        return;
+      }
+      this.ticket = data.ticket;
+      this.messages = data.ticket.messages || [];
+      this.render();
+      return;
+    }
 
     const { data: ticket, error } = await supabase
       .from('tickets')
@@ -39,6 +53,10 @@ export class TicketDetailView {
   }
 
   async sendResponse(responseText, useQA = true) {
+    if (isGuestDemoMode()) {
+      alert('Demo mode is read-only. Responses cannot be sent.');
+      return { success: false, reason: 'demo_read_only' };
+    }
     if (useQA) {
       const qaResult = await qualityAssuranceService.reviewResponse(
         this.ticketId,
@@ -93,6 +111,10 @@ export class TicketDetailView {
   }
 
   async updateTicketStatus(status) {
+    if (isGuestDemoMode()) {
+      alert('Demo mode is read-only. Ticket status cannot be changed.');
+      return;
+    }
     const updates = {
       status,
       updated_at: new Date().toISOString()
@@ -118,6 +140,10 @@ export class TicketDetailView {
   }
 
   async escalateTicket() {
+    if (isGuestDemoMode()) {
+      alert('Demo escalations are disabled in read-only demo mode.');
+      return;
+    }
     try {
       const escalation = await escalationService.autoEscalateIfNeeded(this.ticketId);
       if (escalation) {
@@ -260,19 +286,32 @@ export class TicketDetailView {
   }
 
   async loadTemplates() {
-    const { data: templates, error } = await supabase
-      .from('response_templates')
-      .select('*')
-      .eq('category', this.ticket.category)
-      .order('usage_count', { ascending: false })
-      .limit(10);
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('response-templates');
+      if (error) {
+        console.error('Error loading demo templates:', error);
+        this.templates = [];
+      } else {
+        const allTemplates = data?.templates || [];
+        this.templates = allTemplates
+          .filter(template => template.category === this.ticket.category)
+          .slice(0, 10);
+      }
+    } else {
+      const { data: templates, error } = await supabase
+        .from('response_templates')
+        .select('*')
+        .eq('category', this.ticket.category)
+        .order('usage_count', { ascending: false })
+        .limit(10);
 
-    if (error) {
-      console.error('Error loading templates:', error);
-      return;
+      if (error) {
+        console.error('Error loading templates:', error);
+        return;
+      }
+
+      this.templates = templates || [];
     }
-
-    this.templates = templates || [];
 
     const templateList = document.getElementById('templateList');
     templateList.innerHTML = `

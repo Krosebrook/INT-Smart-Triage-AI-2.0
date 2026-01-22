@@ -1,4 +1,6 @@
 import { supabase } from '../services/supabaseClient.js';
+import { isGuestDemoMode } from '../services/sessionState.js';
+import { fetchDemoData } from '../services/demoApiClient.js';
 
 export class MultiChannelHub {
   constructor(containerId) {
@@ -15,6 +17,17 @@ export class MultiChannelHub {
   }
 
   async loadMessages() {
+    if (isGuestDemoMode()) {
+      const { data, error } = await fetchDemoData('channel-messages', { channel: this.selectedChannel });
+      if (error) {
+        console.error('Error loading demo channel messages:', error);
+        this.messages = [];
+        return;
+      }
+      this.messages = data?.messages || [];
+      return;
+    }
+
     const query = supabase
       .from('channel_integrations')
       .select(`
@@ -40,6 +53,9 @@ export class MultiChannelHub {
   }
 
   setupRealtimeSubscription() {
+    if (isGuestDemoMode()) {
+      return;
+    }
     this.subscription = supabase
       .channel('channel-integrations')
       .on('postgres_changes',
@@ -64,6 +80,11 @@ export class MultiChannelHub {
   async processMessage(messageId) {
     const message = this.messages.find(m => m.id === messageId);
     if (!message) return;
+
+    if (isGuestDemoMode()) {
+      alert('Message processing is disabled in demo mode.');
+      return null;
+    }
 
     let ticketId = message.ticket_id;
 
@@ -90,6 +111,9 @@ export class MultiChannelHub {
   }
 
   async createTicketFromMessage(message) {
+    if (isGuestDemoMode()) {
+      throw new Error('Ticket creation is disabled in demo mode.');
+    }
     const ticketNumber = `TKT-${Date.now().toString().slice(-8)}`;
 
     const extractedContent = this.extractMessageContent(message.raw_message);
