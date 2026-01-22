@@ -14,17 +14,19 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 - **🎯 Intelligent Ticket Triage**: AI-powered priority assignment with confidence scoring
 - **💬 Empathetic Response Guidelines**: Tone-aware talking points for improved customer relations
 - **📚 Knowledge Base Integration**: Contextual article suggestions based on issue analysis
-- **🔐 Enterprise Security**: Mandatory Row Level Security (RLS) with zero client-side database access
+- **🔐 Enterprise Security**: Browser-based Supabase client protected by mandatory Row Level Security (RLS) and default-deny policies
 - **📊 Complete Audit Trail**: Comprehensive logging with IP tracking and session management
 - **⚡ Serverless Architecture**: Vercel-hosted with automatic scaling and edge optimization
 
 ## 🛡️ Security Architecture
 
-- **Mandatory RLS Enforcement**: Database access restricted to server-side operations only
-- **Service Role Authentication**: Secure API-to-database communications
+- **Mandatory RLS Enforcement**: All tables queried by the browser client (`tickets`, `response_templates`, `knowledge_base_articles`, etc.) require restrictive RLS
+- **Scoped Client Authentication**: Browser uses Supabase anon key with least-privilege policies; service role keys remain server-only
 - **Comprehensive Security Headers**: Protection against XSS, CSRF, and clickjacking
 - **Input Sanitization**: Full validation and sanitization of all user inputs
 - **Environment Variable Security**: All secrets managed through Vercel's encrypted storage
+
+> ℹ️ **Why a browser Supabase client?** The CSR workspace needs low-latency reads and optimistic UI updates. By keeping the Supabase JS client in the browser we preserve real-time subscriptions and avoid duplicating complex filtering logic. This is only safe because every exposed table enforces **default-deny RLS policies** that scope access to the authenticated CSR and masks sensitive fields. Misconfigured policies will immediately expose data, so deployment operators must treat RLS verification as a release gate.
 
 ## 🔧 Tech Stack
 
@@ -175,7 +177,7 @@ analysis, redacts PII, and persists the sanitized result into the `normalized_tr
 
 ## 🔒 Security Compliance
 
-✅ **Row Level Security (RLS)** - Enforced with public access denied  
+✅ **Row Level Security (RLS)** - Enforced with public access denied (browser Supabase client limited by default-deny policies)
 ✅ **Environment Variables** - Stored as Vercel secrets  
 ✅ **HTTPS Enforcement** - All communications encrypted  
 ✅ **Input Validation** - Comprehensive sanitization  
