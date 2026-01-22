@@ -72,3 +72,6 @@ temp/
 *.bak
 *.backup
 data/
+
+# SDK build output
+packages/sdk/dist/

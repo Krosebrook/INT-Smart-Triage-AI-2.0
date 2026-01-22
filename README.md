@@ -44,6 +44,15 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 │   ├── health-check.js    # System health and RLS verification
 │   ├── report-submit.js   # Validated public submissions via service role
 │   └── triage-report.js   # Secure triage processing and logging
+├── lib/
+│   ├── errorHandler.js    # Centralized error handling and validation
+│   └── logger.js          # Structured logging with Winston
+├── test/
+│   ├── index.test.js           # Basic application tests
+│   ├── test-error-handling.js  # Error handling module tests
+│   └── test-api-integration.js # API endpoint integration tests
+├── docs/
+│   └── ERROR_HANDLING_AND_LOGGING.md # Comprehensive error handling documentation
 ├── supabase-setup.sql     # Database schema with RLS policies
 ├── DEPLOYMENT.md          # Complete production deployment guide
 └── .gitignore            # Security-focused ignore patterns
@@ -51,45 +60,118 @@ Instantly triages client tickets, provides CSRs with empathetic talking points, 
 
 ## 🚀 Quick Start
 
-1. **Deploy to Vercel**:
+1. **Clone & Install**
    ```bash
    git clone https://github.com/Krosebrook/INT-Smart-Triage-AI-2.0.git
    cd INT-Smart-Triage-AI-2.0
    npm install
-   vercel --prod
    ```
 
-2. **Configure Environment Variables** in Vercel Dashboard:
-   
+2. **Quality Gate (local validation)**
+   ```bash
+   npm run lint
+   npm run test
+   npx playwright test   # optional locally — required before production deploy
+   ```
+   All three commands must pass prior to deploying. The Playwright suite requires a chromium binary; skip locally if unavailable and run inside CI.
+
+3. **Configure Environment Variables**
+
+   Set the variables below in both your local `.env` and the Vercel dashboard:
+
    **Client-Side (exposed to browser):**
    - `VITE_SUPABASE_URL`: Your Supabase project URL
    - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
-   - `VITE_DEMO_MODE`: Set to `true` to enable guest demo access
-   - `VITE_DEMO_EMAIL` / `VITE_DEMO_PASSWORD`: Seeded demo credentials for Supabase sign-in
-   - `VITE_DEMO_PROXY_KEY`: Shared token used to call the secure `/api/demo-data` proxy
+   - `VITE_FORECASTING_API_URL`: Base URL for the FastAPI forecasting microservice
 
    **Server-Side (API endpoints only):**
    - `SUPABASE_URL`: Your Supabase project URL
    - `SUPABASE_ANON_KEY`: Your Supabase anon key (read-only operations)
    - `SUPABASE_SERVICE_ROLE_KEY`: Service role key (required for write operations)
+   - `FORECASTING_SERVICE_URL`: Internal URL to reach the forecasting container (e.g. `http://forecasting-service:8000`)
    - `GEMINI_API_KEY`: Google Gemini API key (optional, for AI features)
-   - `DEMO_MODE`: Mirror of `VITE_DEMO_MODE` that enables the mock data proxy on the server
-   - `DEMO_PROXY_KEY`: Token that must match `VITE_DEMO_PROXY_KEY` for demo requests
+   - `AI_ASSISTANT_URL`: HTTPS endpoint for the hosted transcript analysis model
+   - `AI_ASSISTANT_API_KEY`: Bearer token used to authenticate with the hosted model
+   - `AI_ASSISTANT_MODEL`: Optional override for the model name (defaults to `gpt-4.1-mini`)
+   - `AI_ASSISTANT_TIMEOUT_MS`: Optional request timeout override in milliseconds (default `10000`)
+   - `AI_ASSISTANT_MAX_TOKENS`: Optional prompt length guardrail in tokens (default `3500`)
 
-3. **Setup Database**: Execute `supabase-setup.sql` in your Supabase SQL editor (re-run after pulling this update to replace the legacy anon insert policy)
+4. **Provision Supabase**
+   1. Run `supabase-setup.sql` in the Supabase SQL editor to build core schema.
+   2. Immediately run `supabase/policies.sql` to enforce the hardened RLS policies (drops insecure defaults, enables tenant-aware access, and re-grants the service role).
+   3. Confirm status:
+      ```sql
+      SELECT check_rls_status('reports');
+      SELECT policyname, permissive, roles
+      FROM pg_policies
+      WHERE tablename IN ('reports', 'report_notes');
+      ```
 
-4. **Verify Deployment**: Check `/api/health-check` endpoint returns 200 OK
+5. **Deploy or Run Locally**
+   ```bash
+   npm run dev            # local development
+   vercel --prod          # production deployment
+   ```
+
+6. **Post-Deploy Smoke Test**
+   - Hit `/api/health-check` (expects `{ status: "healthy", rls: "enabled" }`).
+   - Submit a sample ticket through the UI and verify it appears in Supabase for the correct organization.
 
 ## 📋 API Endpoints
 
+### Forecasting Microservice (Python FastAPI)
+
+Run locally:
+
+```bash
+cd services/forecasting
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
+
+Container build:
+
+```bash
+docker build -t int-forecasting-service services/forecasting
+docker run --env-file ../../.env -p 8000:8000 int-forecasting-service
+```
+
+Key endpoints:
+
+- `POST /forecasts/generate?days=7` – train/regenerate forecasts and persist to Supabase
+- `GET /forecasts?days=7` – retrieve stored forecasts for analytics dashboards
+- `GET /forecasts/alerts` – surfaced high-volume warnings for Notification Center
+- `GET /forecasts/accuracy` – historical accuracy (MAPE & avg error)
+
 ### GET `/api/health-check`
 System health verification with RLS status confirmation
+
+**Response Format:**
+```json
+{
+  "status": "healthy",
+  "requestId": "uuid-v4",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "service": "INT Smart Triage AI 2.0",
+  "version": "1.0.0",
+  "checks": {
+    "api": "healthy",
+    "database": "healthy", 
+    "rls": "enabled"
+  }
+}
+```
 
 ### POST `/api/triage-report`
 Secure triage processing with database logging
 
 ### POST `/api/report-submit`
 Validated report persistence for unauthenticated flows (uses service role with full input sanitization)
+
+### POST `/api/ingest`
+Normalizes customer communications (email or ChatGPT transcripts), routes them through the hosted AI assistant for structured
+analysis, redacts PII, and persists the sanitized result into the `normalized_transcripts` table.
 
 ## 🔒 Security Compliance
 
@@ -113,6 +195,8 @@ See [IMPROVEMENTS_IMPLEMENTED.md](./IMPROVEMENTS_IMPLEMENTED.md) for details.
 
 ## 📖 Documentation
 
+### Core Documentation
+- **[README.md](./README.md)** - This file - System overview and quick start
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete production deployment guide
 - **[BRANCH_MERGE_GUIDE.md](./BRANCH_MERGE_GUIDE.md)** - Safe branch merging procedures
 - **[MERGE_QUICK_START.md](./MERGE_QUICK_START.md)** - Quick reference for branch merges

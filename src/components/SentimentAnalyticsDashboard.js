@@ -1,6 +1,5 @@
 import { supabase } from '../services/supabaseClient.js';
-import { isGuestDemoMode } from '../services/sessionState.js';
-import { fetchDemoData } from '../services/demoApiClient.js';
+import { forecastingService } from '../services/forecastingService.js';
 
 export class SentimentAnalyticsDashboard {
   constructor(containerId) {
@@ -8,6 +7,8 @@ export class SentimentAnalyticsDashboard {
     this.timeRange = 'week';
     this.analyticsData = null;
     this.csrPerformance = [];
+    this.forecastInsights = null;
+    this.forecastAlerts = [];
   }
 
   async init() {
@@ -18,45 +19,45 @@ export class SentimentAnalyticsDashboard {
   async loadAnalytics() {
     const { startDate, endDate } = this.getDateRange();
 
-    if (isGuestDemoMode()) {
-      const { data, error } = await fetchDemoData('sentiment-analytics', { startDate, endDate });
-      if (error) {
-        console.error('Error loading demo sentiment analytics:', error);
-        this.sentimentData = [];
-        this.csrPerformance = [];
-        this.tickets = [];
-      } else {
-        this.sentimentData = data?.sentiment || [];
-        this.csrPerformance = data?.performance || [];
-        this.tickets = data?.tickets || [];
-      }
-    } else {
-      const [sentimentResult, performanceResult, ticketsResult] = await Promise.all([
-        supabase
-          .from('sentiment_analytics')
-          .select('*')
-          .gte('period_start', startDate)
-          .lte('period_end', endDate),
+    const [sentimentResult, performanceResult, ticketsResult] = await Promise.all([
+      supabase
+        .from('sentiment_analytics')
+        .select('*')
+        .gte('period_start', startDate)
+        .lte('period_end', endDate),
 
-        supabase
-          .from('csr_performance')
-          .select('*, csr:users(name, email)')
-          .gte('period_start', startDate)
-          .lte('period_end', endDate),
+      supabase
+        .from('csr_performance')
+        .select('*, csr:users(name, email)')
+        .gte('period_start', startDate)
+        .lte('period_end', endDate),
 
-        supabase
-          .from('tickets')
-          .select('sentiment_score, status, priority, created_at')
-          .gte('created_at', startDate)
-          .lte('created_at', endDate)
-      ]);
+      supabase
+        .from('tickets')
+        .select('sentiment_score, status, priority, created_at')
+        .gte('created_at', startDate)
+        .lte('created_at', endDate)
+    ]);
 
-      this.sentimentData = sentimentResult.data || [];
-      this.csrPerformance = performanceResult.data || [];
-      this.tickets = ticketsResult.data || [];
-    }
+    this.sentimentData = sentimentResult.data || [];
+   this.csrPerformance = performanceResult.data || [];
+   this.tickets = ticketsResult.data || [];
 
     this.analyticsData = this.computeAnalytics();
+
+    await this.loadForecastInsights();
+  }
+
+  async loadForecastInsights() {
+    try {
+      const forecasts = await forecastingService.getForecasts(7);
+      this.forecastInsights = forecastingService.summarizeForecasts(forecasts);
+      this.forecastAlerts = await forecastingService.getForecastAlerts(7);
+    } catch (error) {
+      console.error('Failed to load forecast insights', error);
+      this.forecastInsights = null;
+      this.forecastAlerts = [];
+    }
   }
 
   getDateRange() {
@@ -235,6 +236,8 @@ export class SentimentAnalyticsDashboard {
             <h4>CSR Performance</h4>
             ${this.renderCSRPerformance()}
           </div>
+
+          ${this.renderForecastInsightsCard()}
         </div>
       </div>
     `;
@@ -416,6 +419,65 @@ export class SentimentAnalyticsDashboard {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  renderForecastInsightsCard() {
+    if (!this.forecastInsights) {
+      return `
+        <div class="analytics-card full-width forecast-outlook">
+          <h4>Operational Forecast Outlook</h4>
+          <div class="empty-state">Forecasting service data not available.</div>
+        </div>
+      `;
+    }
+
+    const peakDate = new Date(this.forecastInsights.peakDay.forecast_date);
+    const peakVolume = this.forecastInsights.peakDay.predicted_volume;
+    const growth = this.forecastInsights.growth;
+    const growthLabel = `${growth >= 0 ? '+' : ''}${growth}%`;
+    const highConfidence = this.forecastInsights.highConfidenceDays;
+    const alerts = (this.forecastAlerts || []).slice(0, 2);
+
+    return `
+      <div class="analytics-card full-width forecast-outlook">
+        <h4>Operational Forecast Outlook</h4>
+        <div class="forecast-summary">
+          <div class="summary-metric">
+            <div class="metric-label">Peak Day</div>
+            <div class="metric-value">${peakDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+            <div class="metric-subvalue">${peakVolume} tickets</div>
+          </div>
+          <div class="summary-metric">
+            <div class="metric-label">Average Volume</div>
+            <div class="metric-value">${this.forecastInsights.averageVolume}</div>
+            <div class="metric-subvalue">Next 7 days</div>
+          </div>
+          <div class="summary-metric ${growth >= 0 ? 'positive' : 'negative'}">
+            <div class="metric-label">Growth Trend</div>
+            <div class="metric-value">${growthLabel}</div>
+            <div class="metric-subvalue">vs start of week</div>
+          </div>
+          <div class="summary-metric">
+            <div class="metric-label">High Confidence Days</div>
+            <div class="metric-value">${highConfidence}</div>
+            <div class="metric-subvalue">≥ 85% confidence</div>
+          </div>
+        </div>
+        <div class="forecast-alerts">
+          <h5>Upcoming Alerts</h5>
+          ${alerts.length === 0 ? '<div class="empty-state">No forecast alerts detected</div>' : `
+            <ul class="forecast-alert-list">
+              ${alerts.map(alert => `
+                <li class="forecast-alert ${alert.severity}">
+                  <div class="alert-date">${new Date(alert.forecast_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                  <div class="alert-message">${alert.message}</div>
+                </li>
+              `).join('')}
+            </ul>
+          `}
+        </div>
+      </div>
+    `;
   }
 
   attachEventListeners() {

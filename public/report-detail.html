@@ -1,185 +1,274 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Details - INT Smart Triage AI 2.0</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report Detail • INT Smart Triage AI 2.0</title>
+    <link rel="stylesheet" href="/public/theme.css" />
     <style>
+        :root {
+            color-scheme: light dark;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
+            margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 0;
+            display: flex;
+            flex-direction: column;
+            color: #1f2933;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 999px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(31, 41, 51, 0.15);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
         }
 
         .global-nav {
             background: #1a202c;
-            color: white;
-            padding: 0 20px;
+            color: #fff;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            height: 60px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 64px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
         }
 
         .nav-brand {
             font-size: 18px;
             font-weight: 700;
-            color: white;
+            letter-spacing: 0.02em;
         }
 
         .nav-links {
             display: flex;
-            gap: 5px;
+            gap: 12px;
         }
 
         .nav-link {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             padding: 8px 16px;
-            border-radius: 5px;
-            transition: all 0.3s;
+            border-radius: 6px;
             font-weight: 500;
+            transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .nav-link:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
+        .nav-link:hover,
+        .nav-link:focus {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            outline: none;
         }
 
-        .nav-link.active {
-            background: #667eea;
-            color: white;
+        main {
+            flex: 1;
+            padding: 32px 16px 48px;
         }
 
-        .page-wrapper {
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
+        .page-container {
+            max-width: 1100px;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .breadcrumb {
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 18px 45px rgba(31, 41, 55, 0.18);
         }
 
-        .breadcrumb a {
-            color: #667eea;
+        .page-header a {
             text-decoration: none;
+            color: #4c51bf;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .breadcrumb a:hover {
+        .page-header a:hover,
+        .page-header a:focus {
             text-decoration: underline;
         }
 
-        .report-header {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .report-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .report-title h1 {
-            color: #2c3e50;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .report-meta {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .priority-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 14px;
+        .badge,
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
             text-transform: uppercase;
         }
 
-        .priority-high { background: #fee; color: #c00; }
-        .priority-medium { background: #ffeaa7; color: #d63031; }
-        .priority-low { background: #dfe6e9; color: #2d3436; }
-
-        .status-selector {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .badge-primary {
+            background: rgba(99, 102, 241, 0.15);
+            color: #4338ca;
         }
 
-        .status-selector label {
-            display: block;
+        .chip-status-new {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1d4ed8;
+        }
+
+        .chip-status-in_progress {
+            background: rgba(245, 158, 11, 0.18);
+            color: #b45309;
+        }
+
+        .chip-status-resolved {
+            background: rgba(16, 185, 129, 0.18);
+            color: #047857;
+        }
+
+        .page-state {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            box-shadow: 0 18px 45px rgba(31, 41, 55, 0.18);
         }
 
-        .status-buttons {
+        .page-state--error {
+            color: #b91c1c;
+            border: 1px solid rgba(185, 28, 28, 0.2);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 18px 45px rgba(31, 41, 55, 0.18);
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .status-btn {
-            flex: 1;
-            padding: 12px 20px;
-            border: 2px solid #e0e0e0;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .status-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .section-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #1f2937;
         }
 
-        .status-btn.active {
-            border-color: #667eea;
-            background: #667eea;
-            color: white;
+        .section-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
         }
 
-        .status-btn.status-new.active {
-            border-color: #1e40af;
-            background: #dbeafe;
-            color: #1e40af;
+        .summary-title {
+            margin: 0;
+            font-size: 28px;
+            color: #111827;
         }
 
-        .status-btn.status-in_progress.active {
-            border-color: #92400e;
-            background: #fef3c7;
-            color: #92400e;
+        .summary-subject {
+            margin: 0;
+            color: #4b5563;
+            font-size: 16px;
+        }
+
+        .status-btn.status-blocked.active {
+            border-color: #b91c1c;
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-btn.status-escalated.active {
+            border-color: #be185d;
+            background: #fbcfe8;
+            color: #be185d;
         }
 
         .status-btn.status-resolved.active {
             border-color: #065f46;
             background: #d1fae5;
             color: #065f46;
+        }
+
+        .sla-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sla-controls input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sla-summary {
+            margin-top: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .sla-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .sla-badge.overdue {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .sla-badge.soon {
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .section {
@@ -190,276 +279,325 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .section h2 {
-            color: #2c3e50;
-            font-size: 20px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
+        .summary-grid dd {
+            margin: 4px 0 0;
+            font-size: 15px;
+            color: #1f2937;
         }
 
-        .field-group {
-            margin-bottom: 15px;
-        }
-
-        .field-label {
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        .field-value {
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .kb-list {
-            list-style: none;
-        }
-
-        .kb-list li {
-            padding: 10px;
-            margin-bottom: 8px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .kb-list li:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-
-        .kb-list a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #7f8c8d;
-        }
-
-        .btn-success {
-            background: #27ae60;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #229954;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: white;
-            font-size: 18px;
-        }
-
-        .error {
-            background: #fee;
-            border: 1px solid #fcc;
-            color: #c00;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .info-grid {
+        .summary-body {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            gap: 16px;
         }
 
-        @media print {
-            .global-nav, .breadcrumb, .action-buttons, .status-selector {
-                display: none;
-            }
-            body {
-                background: white;
-            }
+        .summary-body h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #1f2937;
         }
 
-        .notes-section {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .summary-body p {
+            margin: 8px 0 0;
+            line-height: 1.6;
+            color: #374151;
         }
 
-        .note-form {
-            margin-bottom: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
+        .talking-points {
+            list-style: disc;
+            margin: 8px 0 0 20px;
+            color: #374151;
         }
 
-        .note-form textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 80px;
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .note-form textarea:focus {
-            outline: none;
-            border-color: #667eea;
+        .note-card {
+            border: 1px solid rgba(107, 114, 128, 0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            background: #f8fafc;
+            display: grid;
+            gap: 8px;
         }
 
-        .note-item {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-
-        .note-header {
+        .note-card header {
             display: flex;
             justify-content: space-between;
+            gap: 12px;
             align-items: center;
-            margin-bottom: 10px;
         }
 
-        .note-author {
-            font-weight: 600;
-            color: #667eea;
-        }
-
-        .note-date {
-            font-size: 12px;
-            color: #999;
+        .note-meta {
+            font-size: 13px;
+            color: #475569;
         }
 
         .note-text {
-            color: #333;
-            line-height: 1.6;
+            margin: 0;
+            line-height: 1.5;
+            color: #1f2937;
             white-space: pre-wrap;
         }
 
         .note-delete {
-            background: #e74c3c;
-            color: white;
+            background: #fee2e2;
             border: none;
-            padding: 4px 10px;
-            border-radius: 4px;
+            color: #b91c1c;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 12px;
         }
 
-        .note-delete:hover {
-            background: #c0392b;
+        .note-delete:hover,
+        .note-delete:focus {
+            background: #fecaca;
+            outline: none;
         }
 
-        .notes-empty {
-            text-align: center;
-            padding: 30px;
-            color: #999;
+        .note-form textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 15px;
+        }
+
+        .note-form button,
+        .action-button {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
+        }
+
+        .note-form button:hover,
+        .action-button:hover,
+        .note-form button:focus,
+        .action-button:focus {
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        .action-stack {
+            display: grid;
+            gap: 16px;
+        }
+
+        .action-row {
+            display: grid;
+            gap: 12px;
+        }
+
+        .action-row label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            color: #6b7280;
+        }
+
+        .action-row select,
+        .action-row input {
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            padding: 10px 12px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .action-row .inline-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .inline-actions button.secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+            box-shadow: none;
+        }
+
+        .section-footer {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
 
         @media (max-width: 768px) {
-            .report-title {
-                flex-direction: column;
+            main {
+                padding: 24px 12px 36px;
             }
-            .action-buttons, .status-buttons {
+
+            .global-nav {
                 flex-direction: column;
+                gap: 10px;
+                height: auto;
+                padding: 16px;
+                text-align: center;
             }
-            .btn, .status-btn {
-                width: 100%;
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .theme-toggle {
+                top: 12px;
+                right: 12px;
+            }
+
+            .section {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+        <span class="sr-only">Toggle theme</span>
+    </button>
+
     <nav class="global-nav">
         <div class="nav-brand">INT Smart Triage AI 2.0</div>
         <div class="nav-links">
-            <a href="/" class="nav-link">New Triage</a>
-            <a href="/client-history.html" class="nav-link">Client History</a>
-            <a href="/demo.html" class="nav-link">Demo</a>
+            <a class="nav-link" href="/">New Triage</a>
+            <a class="nav-link" href="/client-history.html">Client History</a>
+            <a class="nav-link" href="/demo.html">Demo</a>
         </div>
     </nav>
 
-    <div class="page-wrapper">
-        <div class="container">
-            <div class="breadcrumb">
+    <main>
+        <div class="page-container">
+            <header class="page-header">
                 <a href="/client-history.html">← Back to Client History</a>
-            </div>
+                <div class="page-header-meta">
+                    <span id="priorityBadge" class="badge badge-primary">Priority</span>
+                    <span id="statusChip" class="chip chip-status-new">Status</span>
+                </div>
+            </header>
 
-            <div id="loadingMessage" class="loading">
-                Loading report details...
-            </div>
+            <div id="loadingState" class="page-state">Loading report details…</div>
+            <div id="errorState" class="page-state page-state--error" hidden></div>
 
-            <div id="errorMessage" class="error" style="display: none;"></div>
+            <div id="reportShell" hidden>
+                <section class="section" aria-labelledby="summaryHeading" data-section="summary">
+                    <div class="section-header">
+                        <h2 id="summaryHeading">Summary</h2>
+                        <p id="summaryMeta">Report overview</p>
+                    </div>
+                    <article>
+                        <h1 id="summaryTitle" class="summary-title">Report</h1>
+                        <p id="summarySubject" class="summary-subject"></p>
 
-            <div id="reportContent" style="display: none;">
-                <div class="report-header">
-                    <div class="report-title">
-                        <div>
-                            <h1 id="reportId"></h1>
-                            <div class="report-meta">
-                                <span id="reportDate"></span> |
-                                <span id="csrAgent"></span>
+                        <dl class="summary-grid">
+                            <div>
+                                <dt>Report ID</dt>
+                                <dd id="summaryReportId">—</dd>
+                            </div>
+                            <div>
+                                <dt>Created</dt>
+                                <dd id="summaryCreatedAt">—</dd>
+                            </div>
+                            <div>
+                                <dt>Customer</dt>
+                                <dd id="summaryCustomer">—</dd>
+                            </div>
+                            <div>
+                                <dt>Assigned CSR</dt>
+                                <dd id="summaryAgent">—</dd>
+                            </div>
+                            <div>
+                                <dt>Department</dt>
+                                <dd id="summaryDepartment">—</dd>
+                            </div>
+                            <div>
+                                <dt>Customer Tone</dt>
+                                <dd id="summaryTone">—</dd>
+                            </div>
+                            <div>
+                                <dt>Category</dt>
+                                <dd id="summaryCategory">—</dd>
+                            </div>
+                            <div>
+                                <dt>Confidence</dt>
+                                <dd id="summaryConfidence">—</dd>
+                            </div>
+                            <div>
+                                <dt>Channel</dt>
+                                <dd id="summaryChannel">—</dd>
+                            </div>
+                        </dl>
+
+                        <div class="summary-body">
+                            <div>
+                                <h3>Issue Description</h3>
+                                <p id="issueDescription">—</p>
+                            </div>
+                            <div>
+                                <h3>Recommended Approach</h3>
+                                <p id="responseApproach">—</p>
+                            </div>
+                            <div id="talkingPointsBlock" hidden>
+                                <h3>Suggested Talking Points</h3>
+                                <ul id="talkingPoints" class="talking-points"></ul>
                             </div>
                         </div>
-                        <div id="priorityBadge"></div>
-                    </div>
+                    </article>
+                </section>
 
                     <div class="status-selector">
                         <label>Report Status</label>
                         <div class="status-buttons">
                             <button class="status-btn status-new" data-status="new">New</button>
                             <button class="status-btn status-in_progress" data-status="in_progress">In Progress</button>
+                            <button class="status-btn status-blocked" data-status="blocked">Blocked</button>
+                            <button class="status-btn status-escalated" data-status="escalated">Escalated</button>
                             <button class="status-btn status-resolved" data-status="resolved">Resolved</button>
                         </div>
                     </div>
-
-                    <div class="status-selector" style="margin-top: 15px;">
-                        <label>Assigned To</label>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="text" id="assignInput" placeholder="Enter CSR name..." style="flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;">
-                            <button class="btn btn-primary" id="assignBtn" style="padding: 10px 20px;">Assign</button>
-                            <button class="btn btn-secondary" id="unassignBtn" style="padding: 10px 20px; display: none;">Unassign</button>
+                    <form id="noteForm" class="note-form">
+                        <label for="noteText" class="sr-only">Add note</label>
+                        <textarea id="noteText" name="noteText" placeholder="Document a follow-up or action item…" maxlength="1000"></textarea>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+                            <button type="submit">Add Note</button>
                         </div>
                         <div id="currentAssignment" style="margin-top: 10px; color: #666; font-size: 14px;"></div>
+                    </div>
+
+                    <div class="status-selector" style="margin-top: 15px;">
+                        <label>SLA Due</label>
+                        <div class="sla-controls">
+                            <input type="datetime-local" id="slaInput">
+                            <button class="btn btn-primary" id="updateSlaBtn" style="padding: 10px 20px;">Save SLA</button>
+                            <button class="btn btn-secondary" id="clearSlaBtn" style="padding: 10px 20px;">Clear</button>
+                        </div>
+                        <div id="slaSummary" class="sla-summary"></div>
                     </div>
 
                     <div class="action-buttons">
@@ -467,67 +605,45 @@
                         <button class="btn btn-success" id="viewCustomerBtn">👤 View Customer History</button>
                         <a href="/client-history.html" class="btn btn-secondary">📋 Back to All Reports</a>
                     </div>
-                </div>
+                    <div class="action-stack">
+                        <form id="statusForm" class="action-row">
+                            <label for="statusSelect">Status</label>
+                            <div class="inline-actions">
+                                <select id="statusSelect" name="status">
+                                    <option value="new">New</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="resolved">Resolved</option>
+                                </select>
+                                <button type="submit" class="action-button">Update Status</button>
+                            </div>
+                        </form>
 
-                <div class="section">
-                    <h2>Customer Information</h2>
-                    <div class="info-grid">
-                        <div class="field-group">
-                            <div class="field-label">Customer Name</div>
-                            <div class="field-value" id="customerName"></div>
-                        </div>
-                        <div class="field-group">
-                            <div class="field-label">Tone Detected</div>
-                            <div class="field-value" id="customerTone"></div>
-                        </div>
-                        <div class="field-group">
-                            <div class="field-label">Department</div>
-                            <div class="field-value" id="department"></div>
-                        </div>
-                        <div class="field-group">
-                            <div class="field-label">Confidence Score</div>
-                            <div class="field-value" id="confidence"></div>
+                        <form id="assignmentForm" class="action-row">
+                            <label for="assignmentInput">Assignment</label>
+                            <div class="inline-actions">
+                                <input id="assignmentInput" name="assignment" type="text" placeholder="Assign to CSR" autocomplete="off" />
+                                <button type="submit" class="action-button">Assign</button>
+                                <button type="button" id="clearAssignment" class="action-button secondary">Clear</button>
+                            </div>
+                        </form>
+
+                        <div class="action-row">
+                            <label>Quick Links</label>
+                            <div class="inline-actions">
+                                <button type="button" id="viewCustomer" class="action-button secondary">Customer Timeline</button>
+                                <button type="button" id="refreshReport" class="action-button secondary">Refresh</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="section">
-                    <h2>Issue Description</h2>
-                    <div class="field-value" id="issueDescription"></div>
-                </div>
-
-                <div class="section">
-                    <h2>AI Analysis</h2>
-                    <div class="field-group">
-                        <div class="field-label">Recommended Response Approach</div>
-                        <div class="field-value" id="responseApproach"></div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h2>Suggested Talking Points</h2>
-                    <ul id="talkingPoints" style="margin-left: 20px;"></ul>
-                </div>
-
-                <div class="section">
-                    <h2>Knowledge Base Articles</h2>
-                    <ul id="kbArticles" class="kb-list"></ul>
-                </div>
-
-                <div class="notes-section">
-                    <h2>Case Notes</h2>
-                    <div class="note-form">
-                        <textarea id="noteText" placeholder="Add a note about this case..."></textarea>
-                        <button class="btn btn-primary" id="addNoteBtn" style="margin-top: 10px;">Add Note</button>
-                    </div>
-                    <div id="notesList"></div>
-                </div>
+                    <div class="section-footer" id="actionFooter">Last updated just now.</div>
+                </section>
             </div>
         </div>
     </div>
 
     <script type="module">
-        import { supabase, updateReportStatus, getNotes, addNote, deleteNote, assignReport } from '/src/supabaseClient.js';
+        import { formatStatus as formatStatusLabel, getSlaBadgeState } from '/scripts/history.js';
+        import { supabase, updateReportStatus, getNotes, addNote, deleteNote, assignReport, updateReportSlaDue } from '/src/supabaseClient.js';
 
         const urlParams = new URLSearchParams(window.location.search);
         const reportId = urlParams.get('id');
@@ -553,6 +669,10 @@
 
                 if (!data) {
                     throw new Error('Report not found');
+                }
+
+                if (!data.assignee && data.assigned_to) {
+                    data.assignee = data.assigned_to;
                 }
 
                 currentReport = data;
@@ -612,6 +732,7 @@
             updateStatusButtons(report.status || 'new');
             loadNotes();
             updateAssignmentUI(report);
+            updateSlaUI(report);
         }
 
         function updateAssignmentUI(report) {
@@ -620,15 +741,38 @@
             const unassignBtn = document.getElementById('unassignBtn');
             const currentAssignment = document.getElementById('currentAssignment');
 
-            if (report.assigned_to) {
-                assignInput.value = report.assigned_to;
+            if (report.assignee) {
+                assignInput.value = report.assignee;
                 unassignBtn.style.display = 'block';
-                currentAssignment.textContent = `Currently assigned to: ${report.assigned_to} (${new Date(report.assigned_at).toLocaleString()})`;
+                const assignedAt = report.assigned_at ? new Date(report.assigned_at).toLocaleString() : 'Unknown';
+                currentAssignment.textContent = `Currently assigned to: ${report.assignee} (${assignedAt})`;
             } else {
                 assignInput.value = '';
                 unassignBtn.style.display = 'none';
                 currentAssignment.textContent = 'Not assigned';
             }
+        }
+
+        function updateSlaUI(report) {
+            const slaInput = document.getElementById('slaInput');
+            const slaSummary = document.getElementById('slaSummary');
+
+            if (report.sla_due) {
+                const parsed = new Date(report.sla_due);
+                if (!Number.isNaN(parsed.getTime())) {
+                    const localValue = new Date(parsed.getTime() - parsed.getTimezoneOffset() * 60000)
+                        .toISOString()
+                        .slice(0, 16);
+                    slaInput.value = localValue;
+                } else {
+                    slaInput.value = '';
+                }
+            } else {
+                slaInput.value = '';
+            }
+
+            const { className, label } = getSlaBadgeState(report);
+            slaSummary.innerHTML = `<span class="${className}">${label}</span>`;
         }
 
         document.getElementById('assignBtn').onclick = async () => {
@@ -645,7 +789,7 @@
             const result = await assignReport(reportId, assignTo);
 
             if (result.success) {
-                currentReport.assigned_to = assignTo;
+                currentReport.assignee = assignTo;
                 currentReport.assigned_at = new Date().toISOString();
                 updateAssignmentUI(currentReport);
 
@@ -674,7 +818,7 @@
             const result = await assignReport(reportId, null);
 
             if (result.success) {
-                currentReport.assigned_to = null;
+                currentReport.assignee = null;
                 currentReport.assigned_at = null;
                 updateAssignmentUI(currentReport);
 
@@ -688,6 +832,75 @@
                 }, 3000);
             } else {
                 alert(`Failed to unassign: ${result.error}`);
+            }
+
+            btn.disabled = false;
+        };
+
+        document.getElementById('updateSlaBtn').onclick = async () => {
+            const slaInput = document.getElementById('slaInput');
+            if (!slaInput.value) {
+                alert('Please select an SLA due date and time.');
+                return;
+            }
+
+            const parsed = new Date(slaInput.value);
+            if (Number.isNaN(parsed.getTime())) {
+                alert('Invalid SLA due date');
+                return;
+            }
+
+            const btn = document.getElementById('updateSlaBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const isoValue = parsed.toISOString();
+            const result = await updateReportSlaDue(reportId, isoValue);
+
+            if (result.success) {
+                currentReport.sla_due = isoValue;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA updated';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to update SLA: ${result.error}`);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Save SLA';
+        };
+
+        document.getElementById('clearSlaBtn').onclick = async () => {
+            if (!confirm('Clear SLA due date for this report?')) {
+                return;
+            }
+
+            const btn = document.getElementById('clearSlaBtn');
+            btn.disabled = true;
+
+            const result = await updateReportSlaDue(reportId, null);
+
+            if (result.success) {
+                currentReport.sla_due = null;
+                updateSlaUI(currentReport);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
+                notification.textContent = '✓ SLA cleared';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            } else {
+                alert(`Failed to clear SLA: ${result.error}`);
             }
 
             btn.disabled = false;
@@ -789,7 +1002,10 @@
             const buttons = document.querySelectorAll('.status-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.dataset.status === currentStatus) {
+                const statusKey = btn.dataset.status;
+                btn.textContent = formatStatusLabel(statusKey);
+
+                if (statusKey === currentStatus) {
                     btn.classList.add('active');
                 }
 
@@ -805,10 +1021,11 @@
                     if (result.success) {
                         currentReport.status = newStatus;
                         updateStatusButtons(newStatus);
+                        updateSlaUI(currentReport);
 
                         const notification = document.createElement('div');
                         notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #27ae60; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000;';
-                        notification.textContent = `✓ Status updated to ${formatStatus(newStatus)}`;
+                        notification.textContent = `✓ Status updated to ${formatStatusLabel(newStatus)}`;
                         document.body.appendChild(notification);
 
                         setTimeout(() => {
@@ -820,18 +1037,9 @@
                     }
 
                     btn.disabled = false;
-                    btn.textContent = formatStatus(newStatus);
+                    btn.textContent = formatStatusLabel(newStatus);
                 };
             });
-        }
-
-        function formatStatus(status) {
-            const statusMap = {
-                'new': 'New',
-                'in_progress': 'In Progress',
-                'resolved': 'Resolved'
-            };
-            return statusMap[status] || status;
         }
 
         window.openKBModal = function(kbId) {
